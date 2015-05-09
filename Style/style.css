@@ -1,1 +1,14 @@
 @CHARSET "ISO-8859-1";
+
+#form_login
+{
+	float:right;
+	padding-right:2%;
+}
+
+#nav_header
+{
+	width:40%;
+	background:green;
+	text-align:center;
+}
