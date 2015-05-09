@@ -1,14 +1,33 @@
-@CHARSET "ISO-8859-1";
 
-#form_login
+#div_header
 {
-	float:right;
-	padding-right:2%;
+	
 }
 
 #nav_header
 {
-	width:40%;
+	width:50%;
+	padding-left:10%;
+	float:left;
 	background:green;
-	text-align:center;
+}
+.menu_a
+{
+	padding-left:1%;
+}
+
+/*************************************/
+
+#login_submit
+{
+
+}
+
+#form_login
+{
+}
+
+#div_login
+{
+	float:right;
 }
