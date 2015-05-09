@@ -12,9 +12,9 @@ $db = new Database($GLOBAL['database']);
 <div style="width: 100%; overflow: hidden;">
 	<div id='div_header'>
         <nav id='nav_header'>
-            <a class='menu_a' href='index.php'>Site1</a>
-            <a class='menu_a' href=''>Site2</a>
-            <a class='menu_a' href=''>Site3</a>
+            <a class='menu_a' href='index.php'>Startsida</a>
+            <a class='menu_a' href='news.php'>Nyheter</a>
+            <a class='menu_a' href='guestbook.php'>Gästbook</a>
             <a class='menu_a' href=''>Site4</a>
         </nav>
         <div id='div_login'>
@@ -25,6 +25,5 @@ $db = new Database($GLOBAL['database']);
 
 </head>
 <body>
-asdasd
 
 

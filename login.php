@@ -1,7 +1,7 @@
 <?php
 if(isset($_POST['login']))
 {
-	$username = $_POST['username'];
+    $username = strip_tags($_POST['username']);
     $password = md5($_POST['passwd'] . $GLOBAL['salt_char']);
     $sql = "SELECT * FROM users WHERE name=? AND password=? LIMIT 1";
 
