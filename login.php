@@ -19,13 +19,13 @@ if(isset($_POST['login']))
 }
 if(isset($_SESSION['uid']))
 {
-	$form = "Anv‰ndare: " . $_SESSION['username'] . "&nbsp;&nbsp;&nbsp;<input type='submit' value='Logga ut' onClick=\"window.location='logout.php'\"/>";
+	$form = "Anv√§ndare: " . $_SESSION['username'] . "&nbsp;&nbsp;&nbsp;<input type='submit' value='Logga ut' onClick=\"window.location='logout.php'\"/>";
 }
 else
 {
     $form = "<div id='div_login'><form id='form_login' method='post'>
-              <input type='text' name='username' placeholder='Anv‰ndarnamn'>
-              <input type='password' name='passwd' placeholder='Lˆsenord'>
+              <input type='text' name='username' placeholder='Anv√§ndarnamn'>
+              <input type='password' name='passwd' placeholder='L√∂senord'>
               <input id='login_submit'type='submit' value='Login' name='login'>
          </form>
          </div>";
