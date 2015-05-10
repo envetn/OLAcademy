@@ -1,14 +1,47 @@
-@CHARSET "ISO-8859-1";
-
-#form_login
+html
 {
-	float:right;
-	padding-right:2%;
+	margin:0;
+	padding:0;
+}
+
+body
+{
+	overflow-y: scroll; /*shadow scrollbar*/
+	margin:1%;
+	min-height:600px;
+	border:1px solid black; /*added to be able to see where the body are */
+}
+
+
+#div_header
+{
+	
 }
 
 #nav_header
 {
-	width:40%;
+	width:50%;
+	padding-left:10%;
+	float:left;
 	background:green;
-	text-align:center;
+}
+.menu_a
+{
+	padding-left:1%;
+}
+
+/*************************************/
+
+#login_submit
+{
+
+}
+
+#form_login
+{
+}
+
+#div_login
+{
+	float:right;
 }
