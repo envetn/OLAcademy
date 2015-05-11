@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: 127.0.0.1
--- Tid vid skapande: 11 maj 2015 kl 16:33
+-- Tid vid skapande: 11 maj 2015 kl 16:36
 -- Serverversion: 5.6.17
 -- PHP-version: 5.5.12
 
@@ -19,6 +19,31 @@ SET time_zone = "+00:00";
 --
 -- Databas: `olacademy`
 --
+CREATE DATABASE IF NOT EXISTS `olacademy` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `olacademy`;
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `events`
+--
+
+CREATE TABLE IF NOT EXISTS `events` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date` date NOT NULL,
+  `startTime` time NOT NULL,
+  `eventName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `info` text COLLATE utf8_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
+
+--
+-- Dumpning av Data i tabell `events`
+--
+
+INSERT INTO `events` (`id`, `date`, `startTime`, `eventName`, `info`) VALUES
+(7, '2015-05-11', '17:30:00', 'BacklÃ¶pning', 'Samling Bryggarberget'),
+(8, '2015-05-11', '19:00:00', 'Styrka', 'Samling Gymmet');
 
 -- --------------------------------------------------------
 
@@ -56,6 +81,29 @@ INSERT INTO `posts` (`id`, `name`, `text`, `date`) VALUES
 (90, 'wer', 'df', '2015-05-09 23:13:44'),
 (91, 'Olof', 'Jag Ã¤r trÃ¶tt\r\n', '2015-05-10 00:46:23'),
 (92, 'test', 'test', '2015-05-11 15:45:00');
+
+-- --------------------------------------------------------
+
+--
+-- Tabellstruktur `users`
+--
+
+CREATE TABLE IF NOT EXISTS `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `password` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
+  `Privilege` int(11) NOT NULL,
+  `regDate` date NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+
+--
+-- Dumpning av Data i tabell `users`
+--
+
+INSERT INTO `users` (`id`, `name`, `password`, `email`, `Privilege`, `regDate`) VALUES
+(1, 'Nisse', '123', '123@123.com', 1, '2015-05-13');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

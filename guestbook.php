@@ -15,6 +15,6 @@ if (isset($_POST['submit']))
 	<label><input type="submit" name="submit" value="Submit"/></label><br>
 </form>
 
-<?php presentPost($db, $offset); ?>
+<?php presentPost($db, $offset, $limit); ?>
 
 <?php include("include/footer.php"); ?>
