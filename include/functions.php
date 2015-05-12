@@ -78,4 +78,42 @@ function presentPost($db, $offset, $limit)
 
 
 
+
+function validateText($text)
+{
+	if(strlen($text) > 300)
+	{
+		$text = substr($text, 0, 100) . "...";
+	}
+	return $text;
+	//if there is no white space in the first 150chars. Then cast error or do asdasd-sadasd
+}
+
+function exceptions_error_handler($severity, $message, $filename, $lineno) {
+	if (error_reporting() == 0) {
+		return;
+	}
+	if (error_reporting() & $severity) {
+		throw new ErrorException($message, 0, $severity, $filename, $lineno);
+	}
+}
+
+function displayErrorMessage($message)
+{
+	if(preg_match("/parse/", getcwd()))
+	{
+		return "<div class='youShallNotPassDiv'>
+		<img class='youShallNotPassPicture' src='../userImg/youShallNotPass.jpg'/>
+		<div class='youShallNotPassDivP'><p>The Wizard says: </p> <p style='color:red'>$message </p></div>
+		</div>";
+	}
+	else
+	{
+		return "<div class='youShallNotPassDiv'>
+		<img class='youShallNotPassPicture' src='userImg/youShallNotPass.jpg'/>
+		<div class='youShallNotPassDivP'><p>The Wizard says: </p> <p style='color:red'>$message </p></div>
+		</div>";
+	}
+
+}
 ?>

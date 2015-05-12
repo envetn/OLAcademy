@@ -3,62 +3,62 @@ include("include/header.php");
 
 $sql = "SELECT * FROM news";
 $res = $db->queryAndFetch($sql);
-$article = "<h4>Nyheter</h4><article>";
+$side_article = "<article id='side_article'><h4>Nyheter</h4>";
+$listOfArticle[0] = "";
+$latestArticle = 0;
+$i=0;
 foreach ($res as $key)
 {
-	validateText();
-	$article .= "<section>";
-	$article .= "<a href='news.php?p=".$key->id."'<h3>". $key->title ."</h3>";
-	$article .= "<p class='date_p'>". $key->added . "</p>";
-	$article .= "<p>". $key->content ."</p>";
-	$article .= "<p>". $key->author ."</p></a>";
-	$article .= "</section><hr/>";
+	//sidebar
+	$side_article .= "<section>";
+	$side_article .= "<a href='news.php?p=".$key->id."'<h3>". $key->title ."</h3>";
+	$side_article .= "<p class='date_p'>". $key->added . "</p>";
+	$side_article .= "<p>". validateText($key->content) ."</p>";
+	$side_article .= "<p>". $key->author ."</p></a>";
+	$side_article .= "</section><hr/>";
+	
+	//main
+	//might be to much if there are many news
+	//TODO: Stupid idea, the page is reloaded everytime a article is clicked. Better call db everytime a article is clicked.
+	$listOfArticle[$key->id]['title']     = $key->title;
+	$listOfArticle[$key->id]['content']   = $key->content;
+	$listOfArticle[$key->id]['Author']	  = "";
+	$listOfArticle[$key->id]['date'] 	  = "";
+	
+	$latest = $key->id;//not a very good solution
+	
+	
 }
 
-function validateText()
+$side_article .= "</article>";
+
+if(isset($_GET['p']) && is_numeric($_GET['p']))
 {
-	//if there is no white space in the first 150chars. Then cast error or do asdasd-sadasd
+	$p = $_GET['p'];
+	try 
+	{
+		$singleArticle = "<article id='singeArticle'><h3 style=''>" . $listOfArticle[$p]['title'] ."</h3>";
+		$singleArticle .= "<p>".  $listOfArticle[$p]['content'] ."</p>";
+		$singleArticle .= "</article>";
+	}
+	catch (Exception $e) 
+	{
+		$singleArticle = "<article id='singeArticle'><h3> Ingen nyhet hittades</h3></article>";
+	}
+}
+else
+{
+	$singleArticle = "<article id='singeArticle'><h3 style=''>" . $listOfArticle[$latestArticle + 1]['title'] ."</h3>";
+	$singleArticle .= "<p>".  $listOfArticle[$latestArticle + 1]['content'] ."</p>";
+	$singleArticle .= "</article>";
 }
 ?>
 <style>
-h3
-{
-    margin:0px;
-    padding:0px;
-}
 
-h3
-{
-}
-.date_p
-{
-    font-size:12px;
-}
-article
-{
-    width:50%;
-    margin:1%;
-}
 
-article p
-{
-    width:70%;
-}
-article:hover
-{
 
-}
-article a
-{
-    text-decoration:none;
-    color:black;
-}
-
-section
-{
-    border:1px solid black;
-}
 </style>
-<h4>Nyheter</h4>
-
-<?php echo $article;?>
+<div id='asdasdasd' style='width:80%'>
+<?php echo $side_article;?>
+<?php echo isset($singleArticle) ?  $singleArticle :  "";?>
+</div>
