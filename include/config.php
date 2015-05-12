@@ -9,4 +9,6 @@ $GLOBAL['database']['password']		    = 'hallonsaft';
 $GLOBAL['database']['driver_option']	= array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES 'UTF8'");
 $GLOBAL['pageTitle'] = "OL-Academy";
 $GLOBAL['salt_char'] = "#@$";
+$GLOBAL['error'] = "";
+
 ?>
