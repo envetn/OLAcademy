@@ -8,10 +8,10 @@
 /*************************************/
 html
 {
-	margin:0;
+/* 	margin:0;
 	padding:0;
 	background-image: url("../img/bg.jpg");
-	padding-top:5%;
+	padding-top:5%; */
 }
 
 body
@@ -22,8 +22,8 @@ body
 	margin:auto;
 	
 	width:80%;
-	min-height:600px;
-	border:1px solid black; /*added to be able to see where the body are */
+/* 	min-height:600px;
+ */	border:1px solid black; /*added to be able to see where the body are */
 }
 
 

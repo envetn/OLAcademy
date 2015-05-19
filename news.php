@@ -59,6 +59,6 @@ else
 
 </style>
 <div id='asdasdasd' style='width:80%'>
-<?php echo $side_article;?>
-<?php echo isset($singleArticle) ?  $singleArticle :  "";?>
+<?php echo isset($side_article)  ?  $side_article  : "";?>
+<?php echo isset($singleArticle) ?  $singleArticle : "";?>
 </div>

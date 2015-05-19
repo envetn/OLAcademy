@@ -14,7 +14,7 @@ $db = new Database($GLOBAL['database']);
         <nav id='nav_header'>
             <a class='menu_a' href='index.php'>Startsida</a>
             <a class='menu_a' href='news.php'>Nyheter</a>
-            <a class='menu_a' href='guestbook.php'>GÃ¤stbook</a>
+            <a class='menu_a' href='guestbook.php'>Gässtbook</a>
             <a class='menu_a' href=''>Site4</a>
         </nav>
         <div id='div_login'>
