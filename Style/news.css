@@ -1,7 +1,15 @@
+#div_articles
+{
+	clear:both;
+	overflow:auto;
+	width:100%;
+}
+
+
 /************************/
 /****#side_article*******/
 /************************/
-#side_article
+ #side_article
 {
     width:25%;
 	padding-left:1%;
@@ -36,17 +44,18 @@
 {
     font-size:12px;
 }
-
+ 
 /************************/
 /****singeArticle*******/
 /************************/
-#singeArticle
+ #singeArticle
 {
 	border:1px solid black;
 	float:right;
 	width:60%;
 	margin-top:4%;
-}
+	margin-right:4%;
+} 
 #singeArticle p
 {
 	margin:2%;
