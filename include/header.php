@@ -6,7 +6,7 @@ $db = new Database($GLOBAL['database']);
 <!doctype html>  
 <html lang='sv'>  
     <meta charset="UTF-8">
-	<title> <?php echo $GLOBAL['pageTitle']; ?></title>
+	<title> <?php echo isset($pageTitle) ? $GLOBAL['pageTitle']. $pageTitle : $GLOBAL['pageTitle']; ?></title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
 <div style="width: 100%; overflow: hidden;">
 	<div id='div_header'>
