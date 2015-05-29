@@ -11,15 +11,20 @@
 /************************/
  #side_article
 {
-    width:25%;
+    width:30%;
 	padding-left:1%;
     float:left;
+    overflow:auto;
+   
 }
 #side_article p
 {
     width:90%;
 	margin:1%;
 	padding-left:1%;
+	font-size:15px;
+	font-family: Arial, Helvetica, sans-serif;
+	
 }
 #side_article:hover
 {
@@ -45,11 +50,20 @@
     font-size:12px;
 }
  
+.NewsContent_p
+{
+
+}
+.NewsBy_p
+{
+	font-size:15px;
+}
 /************************/
 /****singeArticle*******/
 /************************/
  #singeArticle
 {
+	overflow:auto;
 	border:1px solid black;
 	float:right;
 	width:60%;
@@ -59,9 +73,27 @@
 #singeArticle p
 {
 	margin:2%;
+	font-family: Arial, Helvetica, sans-serif;/*???*/
 	
 }
 #singeArticle h3
 {
 	text-align:center;
+}
+#form_addNew
+{
+	border:1px solid black;
+	float:right;
+	width:60%;
+	margin-top:4%;
+	margin-right:4%;
+	padding:2%;
+}
+#form_addNew input, textarea
+{
+	width:90%;
+}
+#article_remove:hover
+{
+	text-decoration: underline;
 }
