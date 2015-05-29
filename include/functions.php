@@ -3,15 +3,12 @@ function linux_server()
 {
     return in_array(strtolower(PHP_OS), array("linux", "superior operating system"));
 }
-
-
 // Insert post in guestbook
 function makePost($db, $name, $text)
 {
 	// Remove html tags
 	$name = strip_tags($name);
 	$text = strip_tags($text);
-
 	//Make clickable links
 	preg_match_all('/http\:\/\/[\w\d\-\~\^\.\/]{1,}/',$text,$results);
 	foreach($results[0] as $value)
@@ -46,22 +43,18 @@ function makePost($db, $name, $text)
 		}
 	}
 }
-
-
 //Present posts from table and prepare paging
-function presentPost($db, $offset, $limit) 
+function presentPost($db, $offset, $limit)
 {
 	$sql = "SELECT * FROM posts ORDER BY ID DESC LIMIT $offset, $limit"; //Prepare SQL code
 	$result = $db->queryAndFetch($sql); //Execute query
-
 	//Output data of each row
 	foreach($result as $row)
-	{		
+	{
 		$name = $row->name;
 		$text = $row->text;
 		$date = $row->date;
 		$text = nl2br($text); //Insert line breaks where newlines (\n) occur in the string:
-		
 		//Create html code for each row
 		$post = "<div class='post'>
 					<span class='name'>" . $name . " wrote:</span>
@@ -70,11 +63,13 @@ function presentPost($db, $offset, $limit)
 					<span class='text'>" . $text . "</span>
 				</div>";
 		echo $post;
-		
-	
 	}
 }
-
+/*
+ * Returns datetime 
+ * in SQL format
+ * 
+ */
 function datetime()
 {
 	return date('Y-m-d', time());
@@ -90,20 +85,27 @@ function validateText($text)
 	//if there is no white space in the first 150chars. Then cast error or do asdasd-sadasd
 }
 
-function exceptions_error_handler($severity, $message, $filename, $lineno) {
-	if (error_reporting() == 0) {
+function exceptions_error_handler($severity, $message, $filename, $lineno)
+{
+	if (error_reporting() == 0) 
+	{
 		return;
 	}
-	if (error_reporting() & $severity) {
+	if (error_reporting() & $severity) 
+	{
 		throw new ErrorException($message, 0, $severity, $filename, $lineno);
 	}
 }
 
+/*
+ * Returns a sidebar with latest news.
+ * Sorted by date added.
+ * Also add paging
+ *
+ */
 function getArticleSideBar($db)
 {
 	$privilege = getUserPriviledge($db);
-
-	
 	if(isset($_GET['p']) && is_numeric($_GET['p']))
 	{
 		$nid = $_GET['p'];
@@ -121,7 +123,6 @@ function getArticleSideBar($db)
 		$page = 0;
 	}
 	$increase = "news.php?page=".($page+5)."&p=".$nid;
-
 	if( ($page-5) > -1)
 	{
 		$decrease = "news.php?page=".($page-5)."&p=".$nid; //add check so 0 is the lowest, and that its impossible to go futher than existing article
@@ -130,22 +131,15 @@ function getArticleSideBar($db)
 	{
 		$decrease = "news.php?page=".($page)."&p=".$nid;
 	}
-	
-	
 	$sql = "SELECT * FROM news ORDER BY added DESC LIMIT $page , 5 ";
 	$params = array($page);
 	$res = $db->queryAndFetch($sql,$params);
-	
 	$side_article = "<article id='side_article'><h4>Nyheter</h4>";
 	//add paging
-	//var_dump(getExtensionOnUrl());
-	
-	
 	$side_article .= "<h4 style='#text-align: center;'>
 					<a href='".$decrease."'><-Prev</a>
 					 &nbsp&nbsp &nbsp&nbsp
 					<a href='".$increase."'>Next-></a></h4>";
-	
 	foreach ($res as $key)
 	{
 		$side_article .= "<section>";
@@ -159,13 +153,16 @@ function getArticleSideBar($db)
 		}
 		$side_article .= "</section><hr/>";
 	}
-
 	return $side_article .= "</article>";;
 }
-
+/*
+ * Get text after '?' in the url
+ * Good in case you want to know
+ * what GET varaibles are in the url
+ */
 function getExtensionOnUrl()
 {
-	try 
+	try
 	{
 		preg_match("/\?.*/", $_SERVER['HTTP_REFERER'], $result);
 		$extension = implode($result);
@@ -174,11 +171,16 @@ function getExtensionOnUrl()
 	{
 		$extension = $e;
 	}
-	
 	return $extension;
 }
-
-
+/*
+ * Return priviledge connected to
+ * the logged in user.
+ * Returns 
+ * 0 - normal user or not logged in
+ * 1 - Higher user
+ * 2 - Allmighty admin user
+ */
 function getUserPriviledge($db)
 {
 	if(isset($_SESSION['username']))
@@ -191,22 +193,25 @@ function getUserPriviledge($db)
 	}
 	return 0;
 }
+/*
+ * Return username
+ * based on sessionId
+ * 
+ */
 
+function getUserById($db)
+{
+	$sql = "SELECT name FROM users WHERE id=? LIMIT 1";
+	$params = array($_SESSION['uid']);
+	
+	$res = $db->queryAndFetch($sql,$params);
+	return $res[0]->name;
+}
 function displayErrorMessage($message)
 {
-	if(preg_match("/parse/", getcwd()))
-	{
-		return "<div class='youShallNotPassDiv'>
-		<img class='youShallNotPassPicture' src='../userImg/youShallNotPass.jpg'/>
-		<div class='youShallNotPassDivP'><p>The Wizard says: </p> <p style='color:red'>$message </p></div>
-		</div>";
-	}
-	else
-	{
-		return "<div class='youShallNotPassDiv'>
-		<img class='youShallNotPassPicture' src='userImg/youShallNotPass.jpg'/>
-		<div class='youShallNotPassDivP'><p>The Wizard says: </p> <p style='color:red'>$message </p></div>
-		</div>";
-	}
+	return "<div class='youShallNotPassDiv'>
+	<img class='youShallNotPassPicture' src='img/youShallNotPass.jpg'/>
+	<div class='youShallNotPassDivP'><p>The Wizard says: </p> <p style='color:red'>$message </p></div>
+	</div>";
 }
 ?>

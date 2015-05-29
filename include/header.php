@@ -8,7 +8,7 @@ $db = new Database($GLOBAL['database']);
     <meta charset="UTF-8">
 	<title> <?php echo isset($pageTitle) ? $GLOBAL['pageTitle']. $pageTitle : $GLOBAL['pageTitle']; ?></title>
 	<link rel="stylesheet" type="text/css" href="style/style.css">
-<div style="width: 100%; overflow: hidden;">
+<div style="width:70%; overflow: hidden; margin:auto;">
 	<div id='div_header'>
         <nav id='nav_header'>
             <a class='menu_a' href='index.php'>Startsida</a>
@@ -24,4 +24,4 @@ $db = new Database($GLOBAL['database']);
 
 <body>
 
-
+<div id='wrapper'>

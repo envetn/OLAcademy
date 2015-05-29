@@ -1,4 +1,4 @@
-ErrorDocument 404 /forum/Error/fileNotFound.php
+ErrorDocument 404 /Eclipse/Olacademy/Error/fileNotFound.php
 
 IndexIgnore *
 <IfModule mod_rewrite.c>
