@@ -70,11 +70,15 @@ function presentPost($db, $offset, $limit)
  * in SQL format
  * 
  */
-function datetime()
+function sqlDatetime()
 {
 	return date('Y-m-d', time());
 }
 
+function dateTime()
+{
+	return date("Y-m-d H:i:s");
+}
 function validateText($text)
 {
 	if(strlen($text) > 300)
@@ -193,19 +197,30 @@ function getUserPriviledge($db)
 	}
 	return 0;
 }
+
+function uploadImage($db)
+{
+	var_dump($_FILES);
+}
+
+
 /*
  * Return username
  * based on sessionId
  * 
  */
-
 function getUserById($db)
 {
-	$sql = "SELECT name FROM users WHERE id=? LIMIT 1";
-	$params = array($_SESSION['uid']);
+	if(isset($_SESSION['uid']))
+	{
+		$sql = "SELECT name FROM users WHERE id=? LIMIT 1";
+		$params = array($_SESSION['uid']);
+		
+		$res = $db->queryAndFetch($sql,$params);
+		return $res[0]->name;
+	}
+	return "";
 	
-	$res = $db->queryAndFetch($sql,$params);
-	return $res[0]->name;
 }
 function displayErrorMessage($message)
 {
