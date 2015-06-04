@@ -10,41 +10,38 @@ html
 {
  	margin:0;
 	padding:0;
-	background-image: url("../img/bg.jpg");
+	background-image:url("../img/bg.jpg");
 	padding-top:5%;
 }
 
 body
 {
-	overflow-y: scroll;
+	overflow-y:scroll;
 	background:white;
 	margin:1%;
 	margin:auto;
-	
 	width:70%;
 	min-height:800px;
 	border:1px solid black; /*added to be able to see where the body are */
 }
 
-
-#div_header
+#top
 {
-	
+
 }
 
 #nav_header
 {
+	height: 40px;
 	width:50%;
 	padding-left:10%;
-	float:left;
 	background:green;
+	display:inline-block;
 }
 .menu_a
 {
 	padding-left:1%;
 }
-
-
 
 #login_submit
 {
@@ -55,8 +52,32 @@ body
 {
 }
 
-#div_login
+#login
 {
 	float:right;
+	padding:5px;
 }
 
+#banner
+{
+	height:85px;
+	font-family:Calibri, Verdana, Sans Serif;
+}
+
+#bthLogo
+{
+	float:left;
+	padding:5px;
+}
+
+#title
+{
+	font-size:300%;
+	margin-top:0px;
+	margin-bottom:-10px;
+}
+
+#subtitle
+{
+	margin-top:0px;
+}

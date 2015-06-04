@@ -23,12 +23,11 @@ if(isset($_SESSION['uid']))
 }
 else
 {
-    $form = "<div id='div_login'><form id='form_login' method='post'>
-              <input type='text' name='username' placeholder='Användarnamn'>
-              <input type='password' name='passwd' placeholder='Lösenord'>
+    $form = "<form id='form_login' method='post'>
+              <input type='text' name='username' placeholder='Användarnamn' size='15'>
+              <input type='password' name='passwd' placeholder='Lösenord' size='15'>
               <input id='login_submit'type='submit' value='Login' name='login'>
-         </form>
-         </div>";
+         </form>";
         
 }
 echo $form;
