@@ -24,7 +24,7 @@ $db = new Database($GLOBAL['database']);
 	<div id="banner">
 		<img  id="bthLogo" src="img/bthLogo.png" alt="BTH logo">
 		<h1 id="title">OL-Academy</h1>
-		<h3 id="subtitle">Blekinge Tekniska Högskola</h2>
+		<h3 id="subtitle">Blekinge Tekniska Högskola</h3>
 	</div>
 
 

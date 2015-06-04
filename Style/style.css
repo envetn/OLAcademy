@@ -16,13 +16,23 @@ html
 
 body
 {
-	overflow-y:scroll;
 	background:white;
 	margin:1%;
 	margin:auto;
 	width:70%;
-	min-height:800px;
+	min-height:700px;
 	border:1px solid black; /*added to be able to see where the body are */
+}
+
+
+header
+{
+
+}
+
+main
+{
+	
 }
 
 #top
@@ -50,6 +60,7 @@ body
 
 #form_login
 {
+	
 }
 
 #login
@@ -62,6 +73,7 @@ body
 {
 	height:85px;
 	font-family:Calibri, Verdana, Sans Serif;
+	
 }
 
 #bthLogo
@@ -80,4 +92,26 @@ body
 #subtitle
 {
 	margin-top:0px;
+}
+
+/******ERROR*******/
+.youShallNotPassDiv
+{
+	
+	text-align:center;
+	padding:5px 0px 0px 0px;
+	display: block;
+	margin-left: auto;
+    margin-right: auto;
+	width:30%;	
+}
+
+.youShallNotPassDivP
+{
+
+}
+.youShallNotPassDivP p
+{
+	margin: 0;
+    padding: 0;
 }

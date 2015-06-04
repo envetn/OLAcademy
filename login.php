@@ -24,8 +24,8 @@ if(isset($_SESSION['uid']))
 else
 {
     $form = "<form id='form_login' method='post'>
-              <input type='text' name='username' placeholder='Användarnamn' size='15'>
-              <input type='password' name='passwd' placeholder='Lösenord' size='15'>
+              <input type='text' name='username' placeholder='Användarnamn' size='10'>
+              <input type='password' name='passwd' placeholder='Lösenord' size='10'>
               <input id='login_submit'type='submit' value='Login' name='login'>
          </form>";
         
