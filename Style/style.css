@@ -16,26 +16,29 @@ html
 
 body
 {
-	overflow-y: scroll;
+
+}
+
+#wrapper
+{
 	background:white;
 	margin:1%;
 	margin:auto;
 	
 	width:70%;
-	min-height:800px;
+	min-height:700px;
 	border:1px solid black; /*added to be able to see where the body are */
+	
 }
-
 
 #div_header
 {
-	
 }
 
 #nav_header
 {
-	width:50%;
-	padding-left:10%;
+	width:30%;
+	padding-left:30%;
 	float:left;
 	background:green;
 }
@@ -53,10 +56,33 @@ body
 
 #form_login
 {
+	
 }
 
 #div_login
 {
 	float:right;
+}
+
+/******ERROR*******/
+.youShallNotPassDiv
+{
+	
+	text-align:center;
+	padding:5px 0px 0px 0px;
+	display: block;
+	margin-left: auto;
+    margin-right: auto;
+	width:30%;	
+}
+
+.youShallNotPassDivP
+{
+
+}
+.youShallNotPassDivP p
+{
+	margin: 0;
+    padding: 0;
 }
 
