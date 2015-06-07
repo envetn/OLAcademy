@@ -18,7 +18,7 @@ $db = new Database($GLOBAL['database']);
 			<a class='menu_a' href=''>Site4</a>
 		</nav>
 		<span id='login'>
-			<?php include("login.php");?>
+			<?php echo showLoginLogout($db);?>
 		</span>
 	</div>
 	<div id="banner">

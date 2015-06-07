@@ -1,4 +1,4 @@
-<?php
+ <?php
 function linux_server()
 {
     return in_array(strtolower(PHP_OS), array("linux", "superior operating system"));
@@ -183,7 +183,7 @@ function getExtensionOnUrl()
  * Returns 
  * 0 - normal user or not logged in
  * 1 - Higher user
- * 2 - Allmighty admin user
+ * 2 - Almighty admin user
  */
 function getUserPriviledge($db)
 {
@@ -221,6 +221,70 @@ function getUserById($db)
 	}
 	return "";
 	
+}
+/*
+ * Get login/logout form.
+ * Return different forms depending
+ * on if the user is logged in 
+ * or not.
+ *
+ * If there exists a username
+ * and hashed passwd that matches the 
+ * input value, grant user access.
+ */
+function showLoginLogout($db)
+{
+	$error = "";
+	
+	if(isset($_POST['login']) && ( strlen($_POST['username']) > 1 && strlen($_POST['passwd']) > 2 ) )
+	{
+		$username = strip_tags($_POST['username']);
+		$password = md5($_POST['passwd'] . "#@$");//$GLOBAL['salt_char']);
+		$sql = "SELECT * FROM users WHERE name=? AND password=? LIMIT 1";
+
+		$params = array($username, $password);
+		$res = $db->queryAndFetch($sql, $params);
+		if($db->RowCount() == 1 && !( isset($_SESSION['uid']) && isset($_SESSION['username']) ) )  
+		{
+			$_SESSION['uid'] = $res[0]->id;
+			$_SESSION['username'] = $res[0]->name;
+			//after successful logon check if remember_me isset
+			if(isset($POST['login']))
+			{
+				$cookie_name = $_SESSION['username'] . " " . "olacademy";
+				$value = md5($_SESSION['username'] . "!+?");//$GLOBAL['salt_char_cookie']);
+				//set cookie
+				setcookie($cookie_name, $value, time() + (86400 * 14), + something, "/"); // valid for 14 days.
+				var_dump($_COOKIE);
+			}
+		}
+		else
+		{
+			$error .= "<p style='color:red;'>Fel lösenord eller användarnamn </p>";
+		}
+	}
+	//also check cookie if remember_me was set
+	if(isset($_SESSION['uid']))
+	{
+		//$form = "Användare: " . $_SESSION['username'] . "&nbsp;&nbsp;&nbsp;<input type='submit' value='Logga ut' onClick=\"window.location='logout.php'\"/>";
+		$form = "<form method='post'>Användare: " . $_SESSION['username'] . "&nbsp;&nbsp;&nbsp;<input type='submit' name='logout' value='Logga ut' /></form>";
+		if(isset($_POST['logout'])) 
+		{
+			session_destroy();
+			header("location:" .$_SERVER['PHP_SELF']."");
+		}
+	}
+	else
+	{
+		$form = "<form id='form_login' method='post'>
+				  <input type='text' name='username' placeholder='Användarnamn' size='10'/>
+				  <input type='password' name='passwd' placeholder='Lösenord' size='10'/>
+				  <input type='checkbox' name='remember_me' value='remember_me'/>
+				  <input id='login_submit'type='submit' value='Login' name='login'>
+			 </form>";
+			
+	}
+	return $error . $form;
 }
 function displayErrorMessage($message)
 {
