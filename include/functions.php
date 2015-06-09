@@ -222,40 +222,47 @@ function getUserById($db)
 	return "";
 	
 }
+
 /*
  * Get login/logout form.
  * Return different forms depending
- * on if the user is logged in 
+ * on if the user is logged in
  * or not.
  *
  * If there exists a username
- * and hashed passwd that matches the 
+ * and hashed passwd that matches the
  * input value, grant user access.
  */
 function showLoginLogout($db)
 {
 	$error = "";
-	
-	if(isset($_POST['login']) && ( strlen($_POST['username']) > 1 && strlen($_POST['passwd']) > 2 ) )
+	if(isset($_COOKIE['rememberme_olacademy']))
+	{
+		getUserByCookie($db);
+	}
+	else if(isset($_POST['login']) && !( isset($_SESSION['uid']) && isset($_SESSION['username']) ) )
 	{
 		$username = strip_tags($_POST['username']);
 		$password = md5($_POST['passwd'] . "#@$");//$GLOBAL['salt_char']);
-		$sql = "SELECT * FROM users WHERE name=? AND password=? LIMIT 1";
+		$sql = "SELECT id,name FROM users WHERE name=? AND password=? LIMIT 1";
 
 		$params = array($username, $password);
 		$res = $db->queryAndFetch($sql, $params);
-		if($db->RowCount() == 1 && !( isset($_SESSION['uid']) && isset($_SESSION['username']) ) )  
+
+		if($db->RowCount() == 1)
 		{
-			$_SESSION['uid'] = $res[0]->id;
-			$_SESSION['username'] = $res[0]->name;
-			//after successful logon check if remember_me isset
-			if(isset($POST['login']))
+			if(( strlen($_POST['username']) > 1 && strlen($_POST['passwd']) > 2 ))
 			{
-				$cookie_name = $_SESSION['username'] . " " . "olacademy";
-				$value = md5($_SESSION['username'] . "!+?");//$GLOBAL['salt_char_cookie']);
-				//set cookie
-				setcookie($cookie_name, $value, time() + (86400 * 14), + something, "/"); // valid for 14 days.
-				var_dump($_COOKIE);
+				$_SESSION['uid'] = $res[0]->id;
+				$_SESSION['username'] = $res[0]->name;
+
+				//after successful logon
+				//check if remember_me isset
+				if(isset($_POST['remember_me']))
+				{
+					$SECRET_KEY = "!+?";
+					setRememberMe($username,$SECRET_KEY,$db);
+				}
 			}
 		}
 		else
@@ -263,15 +270,24 @@ function showLoginLogout($db)
 			$error .= "<p style='color:red;'>Fel lösenord eller användarnamn </p>";
 		}
 	}
-	//also check cookie if remember_me was set
+	else
+	{
+		$error .=  "<p style='color:red;'>Det blev något fel. </p>";
+	}
+	
+	/*
+	 * If User is found using cookie $_SESSION['uid']
+	 * will be set, and condition below true.
+	 * Maybe delete token from db?
+	 */
 	if(isset($_SESSION['uid']))
 	{
-		//$form = "Användare: " . $_SESSION['username'] . "&nbsp;&nbsp;&nbsp;<input type='submit' value='Logga ut' onClick=\"window.location='logout.php'\"/>";
 		$form = "<form method='post'>Användare: " . $_SESSION['username'] . "&nbsp;&nbsp;&nbsp;<input type='submit' name='logout' value='Logga ut' /></form>";
-		if(isset($_POST['logout'])) 
+		if(isset($_POST['logout']))
 		{
 			session_destroy();
 			header("location:" .$_SERVER['PHP_SELF']."");
+			setcookie("rememberme_olacademy","" ,time() - (86400 * 31));
 		}
 	}
 	else
@@ -286,6 +302,45 @@ function showLoginLogout($db)
 	}
 	return $error . $form;
 }
+
+/*
+ * Set remember me cookie
+ * Everytime the function is called
+ * a new token is generated for the user
+ * and stored in db
+ */
+function setRememberMe($user,$key,$db)
+{
+	// generate a token for storing in cookie
+	$token = md5(uniqid($user, true));
+	$SECRET_KEY = "!+?";
+	$shaToken = hash_hmac('sha256', $token,$SECRET_KEY );
+	$oneMonth = time() + (86400 * 30);
+	setcookie('rememberme_olacademy', $token, $oneMonth);
+
+	$sql = "UPDATE users SET token=? WHERE id=? AND name=? LIMIT 1";
+	$params = array($shaToken,$_SESSION['uid'],$user);
+	$db->ExecuteQuery($sql, $params);
+
+}
+/*
+ * Gets the username and id by the cookies token.
+ * Use sha256 hash and try to find
+ * a match in db.
+ */
+function getUserByCookie($db)
+{
+	$shaToken = hash_hmac('sha256', $_COOKIE['rememberme_olacademy'],"!+?" );
+	$sql = 'SELECT id,name FROM users WHERE token=? LIMIT 1';
+	$params = array($shaToken);
+	$res = $db->queryAndFetch($sql,$params);
+	if($db->RowCount() == 1)
+	{
+		$_SESSION['uid'] = $res[0]->id;
+		$_SESSION['username'] = $res[0]->name;
+	}
+}
+
 function displayErrorMessage($message)
 {
 	return "<div class='youShallNotPassDiv'>
