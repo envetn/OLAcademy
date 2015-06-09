@@ -271,9 +271,7 @@ function showLoginLogout($db)
 		}
 	}
 	else
-	{
-		$error .=  "<p style='color:red;'>Det blev något fel. </p>";
-	}
+	{}
 	
 	/*
 	 * If User is found using cookie $_SESSION['uid']

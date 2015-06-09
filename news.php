@@ -70,6 +70,7 @@ else
 	$sql = "SELECT * from news ORDER BY id DESC LIMIT 1;";
 	$res = $db->queryAndFetch($sql);
 }
+
 if(isset($_POST['btn_addNew']))
 {
 	if($_POST['title'] != "" && $_POST['content'] != "")
