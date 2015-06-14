@@ -6,8 +6,4 @@
 <aside id="start_registration"><h1>Anmälan</h1></aside>
 
 
-
-
-
-
 <?php include("include/footer.php"); ?>

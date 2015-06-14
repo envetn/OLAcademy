@@ -3,7 +3,10 @@ function linux_server()
 {
     return in_array(strtolower(PHP_OS), array("linux", "superior operating system"));
 }
-// Insert post in guestbook
+/* 
+ * Insert post in guestbook
+ *
+ */
 function makePost($db, $name, $text)
 {
 	// Remove html tags
@@ -43,7 +46,10 @@ function makePost($db, $name, $text)
 		}
 	}
 }
-//Present posts from table and prepare paging
+/* 
+ * Present posts from table and prepare paging 
+ *
+ */
 function presentPost($db, $offset, $limit)
 {
 	$sql = "SELECT * FROM posts ORDER BY ID DESC LIMIT $offset, $limit"; //Prepare SQL code
@@ -65,6 +71,50 @@ function presentPost($db, $offset, $limit)
 		echo $post;
 	}
 }
+/* 
+ * Count all rows in a database table
+ *
+ */
+function countAllRows($db, $table, $syntax)
+{
+	$sql = "SELECT count(*) FROM $table";
+	$result = $db->ExecuteQuery($sql); //Execute query
+	return $db->RowCount($syntax);
+}
+/* 
+ * Paging
+ *
+ */
+function paging($limit, $offset, $nrOfRows, $numbers=5)
+{
+	$prev = $offset - $limit; //Previous page
+	$next = $offset + $limit; //Next page
+	$num_page = ceil($nrOfRows/$limit); //Total pages
+	$cur_page = $offset/$limit + 1; //Current page
+	
+	//Pages out of range
+	$j = $numbers >= $num_page || $cur_page <= ceil($numbers/2) ? 0 : $cur_page - ceil($numbers/2); 
+	if($cur_page > $num_page-ceil($numbers/2) && $num_page - $numbers > 0) $j = $num_page - $numbers;
+	
+	//Print links
+	if($nrOfRows > $limit)
+	{
+		if($j > 0) echo " <a href='$_SERVER[PHP_SELF]?offset=0'>första... </a> \n"; //Link to first page
+		if($offset > 0) echo " <a href='$_SERVER[PHP_SELF]?offset=$prev'>&lt;</a> \n";//Link to previous page
+		
+		//Pages within range
+		for($i = (0 + $j); $i < $num_page && $i < $numbers + $j; $i++)
+		{
+			$page_link = $i * $limit;
+			if($i*$limit == $offset) echo " <b>" . ($i+1) . "</b> \n"; 
+			else echo " <a href='$_SERVER[PHP_SELF]?offset=$page_link'>" . ($i+1) . "</a> \n";
+		}
+		if($nrOfRows > $offset + $limit) 
+			echo " <a href='$_SERVER[PHP_SELF]?offset=$next'>&gt;</a> \n";//Link to next page
+		if($num_page > $numbers && $cur_page <= $num_page-ceil($numbers/2)) 
+			echo " <a href='$_SERVER[PHP_SELF]?offset=".($num_page-1)*$limit."'> ...sista</a> \n";//Link to last page
+	}
+} 
 /*
  * Returns datetime 
  * in SQL format

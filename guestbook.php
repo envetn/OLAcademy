@@ -15,6 +15,10 @@ if (isset($_POST['submit']))
 	<label><input type="submit" name="submit" value="Submit"/></label><br>
 </form>
 
-<?php presentPost($db, $offset, $limit); ?>
+<?php 
+presentPost($db, $offset, $limit);
+$nrOfRows = countAllRows($db, "posts", false);
+paging($limit, $offset, $nrOfRows, $numbers=5);
+?>
 
 <?php include("include/footer.php"); ?>
