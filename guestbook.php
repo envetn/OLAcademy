@@ -1,6 +1,6 @@
 <?php
 include("include/header.php");
-$limit  = 15; //Posts per page in guestbook
+$limit  = 15; //Posts per page
 $offset = isset($_GET['offset']) ? $_GET['offset'] : 0; //Start index
 
 if (isset($_POST['submit']))
@@ -17,7 +17,7 @@ if (isset($_POST['submit']))
 
 <?php 
 presentPost($db, $offset, $limit);
-$nrOfRows = countAllRows($db, "posts", false);
+$nrOfRows = countAllRows($db, "posts");
 paging($limit, $offset, $nrOfRows, $numbers=5);
 ?>
 

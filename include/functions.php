@@ -75,11 +75,11 @@ function presentPost($db, $offset, $limit)
  * Count all rows in a database table
  *
  */
-function countAllRows($db, $table, $syntax)
+function countAllRows($db, $table)
 {
-	$sql = "SELECT count(*) FROM $table";
-	$result = $db->ExecuteQuery($sql); //Execute query
-	return $db->RowCount($syntax);
+	$sql = "SELECT count(*) as rows FROM $table";
+	$result = $db->queryAndFetch($sql); //Execute query
+	return $result[0]->rows;
 }
 /* 
  * Paging
@@ -157,7 +157,7 @@ function exceptions_error_handler($severity, $message, $filename, $lineno)
  * Also add paging
  *
  */
-function getArticleSideBar($db)
+function getArticleSideBar($db, $offset, $limit)
 {
 	$privilege = getUserPriviledge($db);
 	if(isset($_GET['p']) && is_numeric($_GET['p']))
@@ -168,11 +168,11 @@ function getArticleSideBar($db)
 	{
 		$nid = 1;
 	}
-	if(isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] >= 0)
+/* 	if(isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] >= 0) 
 	{
 		$page = $_GET['page'];
 	}
-	else
+	else														************UTKOMMENTERAT AV ADAM
 	{
 		$page = 0;
 	}
@@ -187,17 +187,15 @@ function getArticleSideBar($db)
 	}
 	$sql = "SELECT * FROM news ORDER BY added DESC LIMIT $page , 5 ";
 	$params = array($page);
-	$res = $db->queryAndFetch($sql,$params);
+	$res = $db->queryAndFetch($sql,$params); */
+	$sql = "SELECT * FROM news ORDER BY added DESC LIMIT $offset, $limit";
+	$res = $db->queryAndFetch($sql);
 	$side_article = "<article id='side_article'><h4>Nyheter</h4>";
-	//add paging
-	$side_article .= "<h4 style='#text-align: center;'>
-					<a href='".$decrease."'><-Prev</a>
-					 &nbsp&nbsp &nbsp&nbsp
-					<a href='".$increase."'>Next-></a></h4>";
 	foreach ($res as $key)
 	{
 		$side_article .= "<section>";
-		$side_article .= "<a href='news.php?page=".$page."&p=".$key->id."'<h3>". $key->title ."</h3>";
+		/* $side_article .= "<a href='news.php?page=".$page."&p=".$key->id."'<h3>". $key->title ."</h3>"; 		************UTKOMMENTERAT AV ADAM */
+		$side_article .= "<a href='news.php?offset=".$offset."&p=".$key->id."'<h3>". $key->title ."</h3>";
 		$side_article .= "<p class='date_p'>". $key->added . "</p>";
 		$side_article .= "<p class='NewsContent_p'>". validateText($key->content) ."</p>";
 		$side_article .= "<p class='NewsBy_p'><b>Av: </b>". $key->author ."</p></a>";
@@ -207,6 +205,13 @@ function getArticleSideBar($db)
 		}
 		$side_article .= "</section><hr/>";
 	}
+	//add paging
+	$nrOfRows = countAllRows($db, "news");
+	paging($limit, $offset, $nrOfRows, $numbers=5);
+/* 	$side_article .= "<h4 style='#text-align: center;'>			************UTKOMMENTERAT AV ADAM
+					<a href='".$decrease."'><-Prev</a>
+					 &nbsp&nbsp &nbsp&nbsp
+					<a href='".$increase."'>Next-></a></h4>"; */
 	return $side_article .= "</article>";;
 }
 /*

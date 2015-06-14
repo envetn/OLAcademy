@@ -1,4 +1,3 @@
-
 <?php
 /*If not uploading correctly
  * Check php.ini for file_uploads = On, post_max_size, and upload_max_file_size. Make sure you’re editing the correct php.ini – use phpinfo() to verify your settings. Make sure you don’t misspell the directives as 8MB instead of the expected 8M!
@@ -8,6 +7,8 @@
 $pageTitle = "- Nyheter";
 include("include/header.php");
 /*initialize variables */
+$limit  = 5; //Posts per page
+$offset = isset($_GET['offset']) ? $_GET['offset'] : 0; //Start index
 $priviledge = getUserPriviledge($db);
 $username = getUserById($db);
 $btn_addNew = ($priviledge == 1 || $priviledge == 2) ? "<form method='get'><input type='submit' value='Lägg till' name='p'/></form>" : "<p>Logga in för att lägga till nyheter.</p>";
@@ -113,7 +114,7 @@ catch (Exception $e)
 ?>
 <div id='div_articles'>
 <?php echo $btn_addNew; ?>
-<?php echo getArticleSideBar($db);?>
+<?php echo getArticleSideBar($db, $offset, $limit);?>
 <?php  echo isset($singleArticle) ?  $singleArticle : "";?>
 </div>
 

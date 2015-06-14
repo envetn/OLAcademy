@@ -123,10 +123,9 @@ class Database
      * True mode: Return rows affected of last INSERT, UPDATE, DELETE
      * False mode: Return rows affected of last SELECT
      */
-    public function RowCount ($syntax)
+    public function RowCount ()
     {
-		if ($syntax) return is_null($this->stmt) ? $this->stmt : $this->stmt->rowCount();
-        else return is_null($this->stmt) ? $this->stmt : $this->stmt->fetchColumn();
+		return is_null($this->stmt) ? $this->stmt : $this->stmt->rowCount();
     }
 
     public function getLastInsertedId ()
