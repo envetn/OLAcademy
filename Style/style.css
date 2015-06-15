@@ -24,7 +24,6 @@ body
 	border:1px solid black; /*added to be able to see where the body are */
 }
 
-
 header
 {
 
@@ -34,6 +33,13 @@ main
 {
 	
 }
+
+a
+{
+	text-decoration:none;
+}
+
+
 
 #top
 {

@@ -1,7 +1,7 @@
 <?php
 include("include/header.php");
 $limit  = 15; //Posts per page
-$offset = isset($_GET['offset']) ? $_GET['offset'] : 0; //Start index
+$offset = isset($_GET['offset']) && is_numeric($_GET['offset']) ? $_GET['offset'] : 0; //Start index
 
 if (isset($_POST['submit']))
 {
@@ -18,7 +18,7 @@ if (isset($_POST['submit']))
 <?php 
 presentPost($db, $offset, $limit);
 $nrOfRows = countAllRows($db, "posts");
-paging($limit, $offset, $nrOfRows, $numbers=5);
+echo paging($limit, $offset, $nrOfRows, $numbers=5);
 ?>
 
 <?php include("include/footer.php"); ?>

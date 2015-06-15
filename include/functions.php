@@ -13,12 +13,7 @@ function makePost($db, $name, $text)
 	$name = strip_tags($name);
 	$text = strip_tags($text);
 	//Make clickable links
-	preg_match_all('/http\:\/\/[\w\d\-\~\^\.\/]{1,}/',$text,$results);
-	foreach($results[0] as $value)
-	{
-		$link = '<a href="' . $value . '" target="_blank">' . $value . '</a>';
-		$text = preg_replace('/' . preg_quote($value,'/') . '/',$link,$text);
-	}
+	$text = makeLinks($text);
 	//Control message length
 	$max_text_length = 2000;
 	$max_name_length = 50;
@@ -91,6 +86,7 @@ function paging($limit, $offset, $nrOfRows, $numbers=5)
 	$next = $offset + $limit; //Next page
 	$num_page = ceil($nrOfRows/$limit); //Total pages
 	$cur_page = $offset/$limit + 1; //Current page
+	$paging = "";
 	
 	//Pages out of range
 	$j = $numbers >= $num_page || $cur_page <= ceil($numbers/2) ? 0 : $cur_page - ceil($numbers/2); 
@@ -99,21 +95,22 @@ function paging($limit, $offset, $nrOfRows, $numbers=5)
 	//Print links
 	if($nrOfRows > $limit)
 	{
-		if($j > 0) echo " <a href='$_SERVER[PHP_SELF]?offset=0'>första... </a> \n"; //Link to first page
-		if($offset > 0) echo " <a href='$_SERVER[PHP_SELF]?offset=$prev'>&lt;</a> \n";//Link to previous page
+		if($j > 0) $paging .= "<a href='$_SERVER[PHP_SELF]?offset=0'>1... </a> \n"; //Link to first page
+		if($offset > 0) $paging .= "<a href='$_SERVER[PHP_SELF]?offset=$prev'>&lt;</a> \n";//Link to previous page
 		
 		//Pages within range
 		for($i = (0 + $j); $i < $num_page && $i < $numbers + $j; $i++)
 		{
 			$page_link = $i * $limit;
-			if($i*$limit == $offset) echo " <b>" . ($i+1) . "</b> \n"; 
-			else echo " <a href='$_SERVER[PHP_SELF]?offset=$page_link'>" . ($i+1) . "</a> \n";
+			if($i*$limit == $offset) $paging .= " <b>" . ($i+1) . "</b> \n"; 
+			else $paging .= "<a href='$_SERVER[PHP_SELF]?offset=$page_link'>" . ($i+1) . "</a> \n";
 		}
 		if($nrOfRows > $offset + $limit) 
-			echo " <a href='$_SERVER[PHP_SELF]?offset=$next'>&gt;</a> \n";//Link to next page
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$next'>&gt;</a> \n";//Link to next page
 		if($num_page > $numbers && $cur_page <= $num_page-ceil($numbers/2)) 
-			echo " <a href='$_SERVER[PHP_SELF]?offset=".($num_page-1)*$limit."'> ...sista</a> \n";//Link to last page
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=".($num_page-1)*$limit."'> ...$num_page</a> \n";//Link to last page
 	}
+	return $paging;
 } 
 /*
  * Returns datetime 
@@ -168,33 +165,12 @@ function getArticleSideBar($db, $offset, $limit)
 	{
 		$nid = 1;
 	}
-/* 	if(isset($_GET['page']) && is_numeric($_GET['page']) && $_GET['page'] >= 0) 
-	{
-		$page = $_GET['page'];
-	}
-	else														************UTKOMMENTERAT AV ADAM
-	{
-		$page = 0;
-	}
-	$increase = "news.php?page=".($page+5)."&p=".$nid;
-	if( ($page-5) > -1)
-	{
-		$decrease = "news.php?page=".($page-5)."&p=".$nid; //add check so 0 is the lowest, and that its impossible to go futher than existing article
-	}
-	else
-	{
-		$decrease = "news.php?page=".($page)."&p=".$nid;
-	}
-	$sql = "SELECT * FROM news ORDER BY added DESC LIMIT $page , 5 ";
-	$params = array($page);
-	$res = $db->queryAndFetch($sql,$params); */
 	$sql = "SELECT * FROM news ORDER BY added DESC LIMIT $offset, $limit";
 	$res = $db->queryAndFetch($sql);
 	$side_article = "<article id='side_article'><h4>Nyheter</h4>";
 	foreach ($res as $key)
 	{
 		$side_article .= "<section>";
-		/* $side_article .= "<a href='news.php?page=".$page."&p=".$key->id."'<h3>". $key->title ."</h3>"; 		************UTKOMMENTERAT AV ADAM */
 		$side_article .= "<a href='news.php?offset=".$offset."&p=".$key->id."'<h3>". $key->title ."</h3>";
 		$side_article .= "<p class='date_p'>". $key->added . "</p>";
 		$side_article .= "<p class='NewsContent_p'>". validateText($key->content) ."</p>";
@@ -206,13 +182,10 @@ function getArticleSideBar($db, $offset, $limit)
 		$side_article .= "</section><hr/>";
 	}
 	//add paging
-	$nrOfRows = countAllRows($db, "news");
-	paging($limit, $offset, $nrOfRows, $numbers=5);
-/* 	$side_article .= "<h4 style='#text-align: center;'>			************UTKOMMENTERAT AV ADAM
-					<a href='".$decrease."'><-Prev</a>
-					 &nbsp&nbsp &nbsp&nbsp
-					<a href='".$increase."'>Next-></a></h4>"; */
-	return $side_article .= "</article>";;
+
+	$nrOfRows = countAllRows($db, "news"); 
+	$side_article .= paging($limit, $offset, $nrOfRows, $numbers=5);
+	return $side_article .= "</article>";
 }
 /*
  * Get text after '?' in the url
@@ -400,5 +373,21 @@ function displayErrorMessage($message)
 	<img class='youShallNotPassPicture' src='img/youShallNotPass.jpg'/>
 	<div class='youShallNotPassDivP'><p>The Wizard says: </p> <p style='color:red'>$message </p></div>
 	</div>";
+}
+
+/*
+ * Makes clickable links
+ * 
+ * 
+ */
+function makeLinks($text)
+{
+	preg_match_all('/http\:\/\/[\w\d\-\~\^\.\/]{1,}/',$text,$results);
+	foreach($results[0] as $value)
+	{
+		$link = '<a href="' . $value . '" target="_blank">' . $value . '</a>';
+		$text = preg_replace('/' . preg_quote($value,'/') . '/',$link,$text);
+	}
+	return $text;
 }
 ?>

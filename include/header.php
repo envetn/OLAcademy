@@ -15,7 +15,7 @@ $db = new Database($GLOBAL['database']);
 			<a class='menu_a' href='index.php'>Startsida</a>
 			<a class='menu_a' href='news.php'>Nyheter</a>
 			<a class='menu_a' href='guestbook.php'>Gästbook</a>
-			<a class='menu_a' href=''>Site4</a>
+			<a class='menu_a' href='calendar.php'>Kalender</a>
 		</nav>
 		<span id='login'>
 			<?php echo showLoginLogout($db);?>
