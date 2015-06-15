@@ -91,7 +91,6 @@ function paging($limit, $offset, $nrOfRows, $numbers=5)
 	//Pages out of range
 	$j = $numbers >= $num_page || $cur_page <= ceil($numbers/2) ? 0 : $cur_page - ceil($numbers/2); 
 	if($cur_page > $num_page-ceil($numbers/2) && $num_page - $numbers > 0) $j = $num_page - $numbers;
-	
 	//Print links
 	if($nrOfRows > $limit)
 	{
@@ -151,6 +150,8 @@ function exceptions_error_handler($severity, $message, $filename, $lineno)
 /*
  * Returns a sidebar with latest news.
  * Sorted by date added.
+ * Also style text according to markdown.
+ * ? Should we do that ?
  * Also add paging
  *
  */
@@ -168,24 +169,60 @@ function getArticleSideBar($db, $offset, $limit)
 	$sql = "SELECT * FROM news ORDER BY added DESC LIMIT $offset, $limit";
 	$res = $db->queryAndFetch($sql);
 	$side_article = "<article id='side_article'><h4>Nyheter</h4>";
+
 	foreach ($res as $key)
 	{
 		$side_article .= "<section>";
 		$side_article .= "<a href='news.php?offset=".$offset."&p=".$key->id."'<h3>". $key->title ."</h3>";
 		$side_article .= "<p class='date_p'>". $key->added . "</p>";
-		$side_article .= "<p class='NewsContent_p'>". validateText($key->content) ."</p>";
+		$side_article .= "<p class='NewsContent_p'>". 
+		  \Michelf\Markdown::defaultTransform(validateText($key->content)) ."</p>";
 		$side_article .= "<p class='NewsBy_p'><b>Av: </b>". $key->author ."</p></a>";
-		if($privilege == 1 || $privilege == 2)
-		{
-			$side_article .= "<a id='article_remove' href='news.php?r=".$key->id."'>&#8649;  Ta bort  &#8647; </a>";
-		}
+	    if($privilege == 1) //only show users article
+        {
+           if($_SESSION['username'] == $key->author)
+           {
+               $side_article .= "<a id='article_remove' href='news.php?r=".$key->id."'>&#8649;  Ta bort  &#8647; </a>";
+           }
+        }
+        else if($privilege == 2) // admin, show all
+        {
+            $side_article .= "<a id='article_remove' href='news.php?r=".$key->id."'>&#8649;  Ta bort  &#8647; </a>";
+        }
 		$side_article .= "</section><hr/>";
 	}
 	//add paging
-
-	$nrOfRows = countAllRows($db, "news"); 
+	$nrOfRows = countAllRows($db, "news");
 	$side_article .= paging($limit, $offset, $nrOfRows, $numbers=5);
+	
+	
 	return $side_article .= "</article>";
+}
+
+function presentArticleSideBar($db,$offset,$limit)
+{
+    $privilege = getUserPriviledge($db);
+    
+    $sql = "SELECT * FROM news ORDER BY added DESC LIMIT $offset, $limit";
+    $params = array($offset, $limit);
+    $res = $db->queryAndFetch($sql,$params);
+    
+    $side_article = "<article id='side_article'><h4>Nyheter</h4>";
+
+    foreach ($res as $key)
+    {
+        $content = \Michelf\Markdown::defaultTransform($key->content);
+        $side_article .= "<section>";
+        $side_article .= "<a href='news.php?offset=".$offset."&p=".$key->id."'<h3>". $key->title ."</h3>";
+        $side_article .= "<p class='date_p'>". $key->added . "</p>";
+        $side_article .= "<p class='NewsContent_p'>". validateText($content) ."</p>";
+        $side_article .= "<p class='NewsBy_p'><b>Av: </b>". $key->author ."</p></a>";
+        
+
+        $side_article .= "</section><hr/>";
+    }
+    return $side_article .= "</article>";;
+
 }
 /*
  * Get text after '?' in the url
@@ -215,13 +252,15 @@ function getExtensionOnUrl()
  */
 function getUserPriviledge($db)
 {
-	if(isset($_SESSION['username']))
+	if(isset($_SESSION['username']) && isset($_SESSION['uid']) )
 	{
-		$sql = "SELECT Privilege FROM users WHERE id=? LIMIT 1";
-		$params = array($_SESSION['uid']);
+		$sql = "SELECT Privilege FROM users WHERE id=? AND name=? LIMIT 1";
+		$params = array($_SESSION['uid'],$_SESSION['username']);
 		$res = $db->queryAndFetch($sql, $params);
-		//TODO : is this right?
-		return $res[0]->Privilege;
+		if($db->RowCount() == 1)
+		{
+		    return $res[0]->Privilege;
+		}
 	}
 	return 0;
 }
@@ -229,26 +268,6 @@ function getUserPriviledge($db)
 function uploadImage($db)
 {
 	var_dump($_FILES);
-}
-
-
-/*
- * Return username
- * based on sessionId
- * 
- */
-function getUserById($db)
-{
-	if(isset($_SESSION['uid']))
-	{
-		$sql = "SELECT name FROM users WHERE id=? LIMIT 1";
-		$params = array($_SESSION['uid']);
-		
-		$res = $db->queryAndFetch($sql,$params);
-		return $res[0]->name;
-	}
-	return "";
-	
 }
 
 /*
@@ -388,6 +407,7 @@ function makeLinks($text)
 		$link = '<a href="' . $value . '" target="_blank">' . $value . '</a>';
 		$text = preg_replace('/' . preg_quote($value,'/') . '/',$link,$text);
 	}
+	echo $text;
 	return $text;
 }
 ?>

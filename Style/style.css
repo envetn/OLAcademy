@@ -16,6 +16,7 @@ html
 
 body
 {
+	overflow-y:scroll;
 	background:white;
 	margin:1%;
 	margin:auto;
