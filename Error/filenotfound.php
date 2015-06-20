@@ -1,7 +1,7 @@
 <?php
 // include('../include/header.php');
 include("../include/config.php");
-include("../include/database.php");
+include("../include/src/Database/database.php");
 
 ?>
 <!doctype html>  

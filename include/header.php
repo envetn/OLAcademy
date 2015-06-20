@@ -1,6 +1,6 @@
 <?php
 include("include/config.php");
-include("include/database.php");
+include("include/src/Database/database.php");
 $db = new Database($GLOBAL['database']);
 ?>
 <!doctype html>  
