@@ -10,8 +10,8 @@ html
 {
  	margin:0;
 	padding:0;
-	background-image:url("../img/bg.jpg");
-	padding-top:5%;
+	background:#262F6A;
+
 }
 
 body
@@ -38,8 +38,6 @@ a
 {
 	text-decoration:none;
 }
-
-
 
 #top
 {

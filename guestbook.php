@@ -16,7 +16,7 @@ if (isset($_POST['submit']))
 </form>
 
 <?php 
-presentPost($db, $offset, $limit);
+echo presentPost($db, $offset, $limit);
 $nrOfRows = countAllRows($db, "posts");
 echo paging($limit, $offset, $nrOfRows, $numbers=5);
 ?>

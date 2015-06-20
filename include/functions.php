@@ -1,4 +1,31 @@
  <?php
+/* 
+ * INDEX FOR FUNCTIONS IN THIS FILE
+ * linux_server()
+ * makePost($db, $name, $text)
+ * presentPost($db, $offset, $limit)
+ * countAllRows($db, $table)
+ * paging($limit, $offset, $nrOfRows, $numbers=5)
+ * sqlDatetime()
+ * dateTime()
+ * validateText($text)
+ * exceptions_error_handler($severity, $message, $filename, $lineno)
+ * getArticleSideBar($db, $offset, $limit)
+ * getExtensionOnUrl()
+ * getUserPriviledge($db)
+ * uploadImage($db)
+ * getUserById($db)
+ * showLoginLogout($db)
+ * setRememberMe($user,$key,$db)
+ * getUserByCookie($db)
+ * displayErrorMessage($message)
+ * makeLinks($text)
+ * 
+ */
+ 
+ 
+ 
+ 
 function linux_server()
 {
     return in_array(strtolower(PHP_OS), array("linux", "superior operating system"));
@@ -35,7 +62,7 @@ function makePost($db, $name, $text)
 		else
 		{
 			$sql = "INSERT INTO posts (name, text, date) VALUES(?,?,?)"; //Prepare SQL code
-			$params = array($name, $text, date('Y-m-d H:i:s')); //Prepare query
+			$params = array($name, $text, dateTime()); //Prepare query
 			$db->ExecuteQuery($sql, $params, false); //Execute query
 			header('Location: ' . $_SERVER['PHP_SELF']); //Refresh page
 		}
@@ -49,6 +76,7 @@ function presentPost($db, $offset, $limit)
 {
 	$sql = "SELECT * FROM posts ORDER BY ID DESC LIMIT $offset, $limit"; //Prepare SQL code
 	$result = $db->queryAndFetch($sql); //Execute query
+	$post = "";
 	//Output data of each row
 	foreach($result as $row)
 	{
@@ -57,14 +85,14 @@ function presentPost($db, $offset, $limit)
 		$date = $row->date;
 		$text = nl2br($text); //Insert line breaks where newlines (\n) occur in the string:
 		//Create html code for each row
-		$post = "<div class='post'>
+		$post .= "<div class='post'>
 					<span class='name'>" . $name . " wrote:</span>
 					<span class='date'>" . $date . "</span>
 					<hr>
 					<span class='text'>" . $text . "</span>
 				</div>";
-		echo $post;
 	}
+	return $post;
 }
 /* 
  * Count all rows in a database table
