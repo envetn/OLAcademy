@@ -2,6 +2,7 @@
 include("include/config.php");
 include("include/src/Database/database.php");
 $db = new Database($GLOBAL['database']);
+$priviledge =  getUserPriviledge($db);
 ?>
 <!doctype html>  
 <html lang='sv'>  
@@ -16,6 +17,7 @@ $db = new Database($GLOBAL['database']);
 			<a class='menu_a' href='news.php'>Nyheter</a>
 			<a class='menu_a' href='guestbook.php'>Gästbook</a>
 			<a class='menu_a' href='calendar.php'>Kalender</a>
+			<?php echo $priviledge == 2 ? "<a class='menu_a' href='admin.php'> Admin </a>" : ""; ?>
 		</nav>
 		<span id='login'>
 			<?php echo showLoginLogout($db);?>
