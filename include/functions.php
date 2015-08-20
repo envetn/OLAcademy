@@ -140,6 +140,47 @@ function paging($limit, $offset, $nrOfRows, $numbers=5)
 	return $paging;
 } 
 /*
+ * Returns all events 
+ * within the current month
+ */
+function getCurrentMonthsEvents($db)
+{
+/*
+ *  WHERE EXISTS 
+        (
+            SELECT * FROM registerd as r 
+            WHERE events.id = r.eventId AND 
+        )
+ */
+    $sql ="
+        SELECT *
+        FROM events 
+        WHERE date BETWEEN ? AND ?
+        ";
+    $firstDay = (new DateTime('first day of this month'))->format('Y-m-d');
+    $lastDay  = (new DateTime('last day of this month'))->format('Y-m-d');
+     
+    $params = array($firstDay, $lastDay);
+    $result = $db->queryAndFetch($sql,$params);
+    return $result;
+}
+
+function getRegisteredEvents($db, $username)
+{
+    $sql ="
+        SELECT *
+        FROM events as e 
+        WHERE EXISTS 
+        (
+            SELECT * FROM registerd as r 
+            WHERE e.id = r.eventId AND r.name = ?
+        )
+        ";
+    $params = array($username);
+    $result = $db->queryAndFetch($sql ,$params);
+    return $result;
+}
+/*
  * Returns datetime 
  * in SQL format
  * 

@@ -2,6 +2,7 @@
 /* Import stylesheet*/
 /*************************************/
 @import url("news.css");
+@import url("calendar.css");
 
 /*************************************/
 /* Static style for whole page */
@@ -10,7 +11,6 @@ html
 {
  	margin:0;
 	padding:0;
-	background:#262F6A;
 
 }
 

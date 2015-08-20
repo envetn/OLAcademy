@@ -1,5 +1,13 @@
 <?php
 include("include/header.php");
+
+function getNrOfRegistered($db, $eventId)
+{
+    $sql = "SELECT COUNT(*) as count FROM registerd WHERE eventId=?";
+    $params = array($eventId);
+    $res = $db->queryAndFetch($sql, $params);
+    return $res[0]->count;
+}
 function draw_calendar($db, $month,$year)
 {
 	/* draw table */
@@ -28,25 +36,27 @@ function draw_calendar($db, $month,$year)
 	/* keep going with days.... */
 	for($list_day = 1; $list_day <= $days_in_month; $list_day++)
 	{
-		$calendar.= '<td class="calendar-day">';
+		$calendar.= ' <td class="calendar-day"><a href="register.php">';
 		/* add in the day number */
-		$calendar.= '<div class="day-number">'.$list_day.'</div>';
+		$calendar.= '<div class="day-number">'.$list_day;
 		
 		/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
 		$current_date = date('Y-m-d', mktime(0,0,0,$month,$list_day,$year));
-		$sql = "SELECT eventName FROM events WHERE date= '$current_date' ORDER BY startTime"; //Prepare SQL code
+		$sql = "SELECT eventName,id FROM events WHERE date= '$current_date' ORDER BY startTime"; //Prepare SQL code
 		$result = $db->queryAndFetch($sql); //Execute query
 		if (isset($result[0]->eventName))
 		{
 			foreach($result as $row)
 			{
-				$calendar.= "<p>" . $row->eventName . "</p>";
+			    echo $row->id;
+				$calendar.= "<p class='event_p' style=''>" . $row->eventName . "<br/>Anmälda: ".getNrOfRegistered($db, $row->id)."</p>";
 			}
 		}
+		$calendar .= '</div>';
 		
 		$calendar.= str_repeat('<p> </p>',2);
 			
-		$calendar.= '</td>';
+		$calendar.= '</td></a>';
 		if($running_day == 7)
 		{
 			$calendar.= '</tr>';
@@ -82,11 +92,8 @@ function draw_calendar($db, $month,$year)
 
 
 
-
-$month = 5;
-$year = 2015;
-
-
+$month = date('m', strtotime('0 month'));
+$year = date('Y', strtotime('0 year'));
 echo draw_calendar($db, $month,$year);
 
 

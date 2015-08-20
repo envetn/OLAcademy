@@ -42,6 +42,12 @@ hr
     margin-right: 1%;
     margin-top: 8%;
 }
+ol
+{
+    margin:0%;
+    padding:0%;
+    padding-left:9%;
+}
 </style>
 <?php
 /*
@@ -64,9 +70,17 @@ function calenderAdmin()
     return "Kalender!";
 }
 
-function newsAdmin()
+function newsAdmin($db)
 {
-    return "Nyheter!";
+    $sql = "SELECT * FROM news";
+    $res = $db->queryAndFetch($sql);
+    
+    $table = "";
+    foreach($res as $key)
+    {
+        
+    }
+    return $table;
 }
 
 function guestbookAdmim()
@@ -80,7 +94,7 @@ if($priviledge == 2)
     $menu = " <div id='wrapper'>
                 <h3> Admin page </h3><hr/>
                 <div id='adminHeader'>";
-    $admin = "<div id='adminDiv'> Du valde: ";
+    $admin = "<div id='adminDiv'>";
     if(isset($_GET['p']) && is_numeric($_GET['p']))
     {
         $p = $_GET['p'];
@@ -94,7 +108,7 @@ if($priviledge == 2)
                 
             case 2:
                 $menu .= "<h4>Nyhet admin</h4>";
-                $admin .= newsAdmin();
+                $admin .= newsAdmin($db);
                 break;
                 
             case 3: 
@@ -114,10 +128,13 @@ if($priviledge == 2)
     $menu .= "</div>";
     $menu .= "<div id='adminTable'>
                     <table>
-                    <li> <a href='admin.php?p=1'>Lägg till kalender sak</a></li>
-                    <li> <a href='admin.php?p=2'>Lägg till nyhet sak</a></li>
-                    <li> <a href='admin.php?p=3'>Lägg till gästboksak sak</a></li>
-                   </table>
+                    <li> <a href='admin.php?p=1'>Lägg till kalender sak</a></li>";
+                    if($p==1) $menu .= "<ol> Test </ol>"; 
+    $menu .=       "<li> <a href='admin.php?p=2'>Lägg till nyhet sak</a></li>";
+                    if($p==2) $menu .= "<ol> Test </ol>";
+    $menu .=       "<li> <a href='admin.php?p=3'>Lägg till gästboksak sak</a></li>";
+                    if($p==3) $menu .= "<ol> Test </ol>";
+    $menu .=        "</table>
                 </div>
                 </div>";
     
@@ -127,6 +144,7 @@ if($priviledge == 2)
 else
 {
     $menu = displayErrorMessage("YOU HAVE NO POWER HERE, GANDALF STORMCROW");
+    $admin = "";
 }
 echo $menu;
 echo $admin;
