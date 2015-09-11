@@ -96,7 +96,7 @@ if(isset($_POST['btn_addNew']))
 			//first strip tags, then add <a>
 			$content	 = strip_tags($_POST['content']);
 			$content     = makeLinks($content);
-			$date		 = dateTime();
+			$date		 = date("Y-m-d H:i:s");
 			$author 	 = $username;
 			if(isset($_FILES))
 			{

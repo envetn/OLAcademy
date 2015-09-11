@@ -8,7 +8,7 @@ $priviledge =  getUserPriviledge($db);
 <html lang='sv'>  
     <meta charset="UTF-8">
 	<title> <?php echo isset($pageTitle) ? $GLOBAL['pageTitle']. $pageTitle : $GLOBAL['pageTitle']; ?></title>
-	<link rel="stylesheet" type="text/css" href="style/style.css">
+	<link rel="stylesheet" type="text/css" href="Style/style.css">
 <header>
 
 	<div id="top">

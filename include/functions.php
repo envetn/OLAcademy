@@ -6,7 +6,7 @@
  * presentPost($db, $offset, $limit)
  * countAllRows($db, $table)
  * paging($limit, $offset, $nrOfRows, $numbers=5)
- * sqlDatetime()
+ * getCurrentMonthsEvents($db)
  * dateTime()
  * validateText($text)
  * exceptions_error_handler($severity, $message, $filename, $lineno)
@@ -59,7 +59,7 @@ function makePost($db, $name, $text)
 		else
 		{
 			$sql = "INSERT INTO posts (name, text, date) VALUES(?,?,?)"; //Prepare SQL code
-			$params = array($name, $text, dateTime()); //Prepare query
+			$params = array($name, $text, date("Y-m-d H:i:s")); //Prepare query
 			$db->ExecuteQuery($sql, $params, false); //Execute query
 			header('Location: ' . $_SERVER['PHP_SELF']); //Refresh page
 		}
@@ -164,19 +164,32 @@ function paging($limit, $offset, $nrOfRows, $numbers=5)
 	}
 	return $paging;
 } 
+
+function getEvents($db)
+{
+	$sql ="
+        SELECT *
+        FROM events 
+        WHERE date BETWEEN ? AND ?
+        ";
+        $params = array(date("Y-m-d"), date("Y-m-d", time()+(6 * 24 * 60 * 60)));
+	$result = $db->queryAndFetch($sql,$params);
+    return $result;
+}
+
+
 /*
  * Returns all events 
  * within the current month
  */
 function getCurrentMonthsEvents($db)
 {
-/*
- *  WHERE EXISTS 
-        (
-            SELECT * FROM registerd as r 
-            WHERE events.id = r.eventId AND 
-        )
- */
+ //  WHERE EXISTS 
+    //    (
+      //      SELECT * FROM registerd as r 
+        //    WHERE events.id = r.eventId AND 
+       // )
+ 
     $sql ="
         SELECT *
         FROM events 
@@ -210,15 +223,7 @@ function getRegisteredEvents($db, $username)
  * in SQL format
  * 
  */
-function sqlDatetime()
-{
-	return date('Y-m-d', time());
-}
 
-function dateTime()
-{
-	return date("Y-m-d H:i:s");
-}
 function validateText($text)
 {
 	if(strlen($text) > 300)
