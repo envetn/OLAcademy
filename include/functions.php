@@ -23,9 +23,6 @@
  * 
  */
  
- 
- 
- 
 function linux_server()
 {
     return in_array(strtolower(PHP_OS), array("linux", "superior operating system"));
@@ -93,6 +90,34 @@ function presentPost($db, $offset, $limit)
 				</div>";
 	}
 	return $post;
+}
+function presentNews($db, $offset, $limit)
+{
+    $sql = "SELECT * FROM news LIMIT $offset, $limit"; 
+    //why you no work with ??
+    $res = $db->queryAndFetch($sql);
+    $news = "";
+    foreach($res as $row)
+    {
+        $content = $row->content;
+        if(strlen($content) > 150)
+        {
+            $content =  substr($content,0, 150). "<a href='news.php?offset=0&p=$row->id'> ... Läs mer</a>";
+
+        }
+        else
+        {
+            $content .= "<a href='news.php?offset=0&p=$row->id'>&nbsp; Läs mer</a>"; 
+        }
+        $news .= "<div class='index_news'>
+                    <span>Title: ".$row->title."</span>
+                    <br/>
+                    <span> ".$content."</span>
+                    <hr/>
+                    <span>Av:  ".$row->author."</span>
+                  </div>";
+    }
+    return $news;
 }
 /* 
  * Count all rows in a database table

@@ -27,48 +27,14 @@ if(isset($_POST['register']))
 }
 ?>
 
-<article id="start_news"><h1>Nyheter</h1></article>
 
-<article id="start_calendar"><h1>Kalender</h1></article>
 
-<article id="start_gb"><h1>Gästbok</h1><?php echo presentPost($db, 0, 3); ?></article>
-
+<div id='start_wrapper'>
 <?php
-if($user != false)
-{
-    $res = getCurrentMonthsEvents($db);
-    $registredEvents = getRegisteredEvents($db,$username);
-
-    $registration =
-       "<article style='width:80%; overflow: hidden; /* '>
-        <aside id='start_registration' style='float:left; width:40%;'>
-        <h1>Anmälan</h1>
-        <p> Träningar denna månaden </p>
-        <form action =".$_SERVER["PHP_SELF"]." method='POST'>
-        <input type='hidden' name='id' value=".$user."/>
-        <select name='register'/> <option value='0'>choose wisely</option>";
-        foreach ($res as $key)
-        {
-            $registration .= "<option value='$key->id'>".$key->eventName." - " . $key->date ."</option>";
-        }
-    $registration .="
-        <input type='submit' name='submit' value='Anmäl'/>
-        </form>";
-        
-    $registration .= "</aside>";
-    $registration .= "<div style='float:right; width:40%;'><h1>Anmälda</h1><table>";
-        foreach($registredEvents as $events) 
-        {
-            $registration .= "<li>" . $events->eventName . " - " . $events->info . " - " . $events->startTime . " - " . substr($events->date,-5) . "</li>";
-        }
-    $registration .= "</table></div></article>";
-            
-    echo $registration;
-}
-
-
-
-
-
+echo '<article id="start_register"><h1>Anmälan</h1></article>';
+echo '<article id="start_gb" style="width:60%"><h1>Gästbok</h1>'. presentPost($db, 0, 3) .' </article>';
+echo '<article id="start_news" style="width:60%"><h1>Nyheter</h1>'. presentNews($db, 0, 3) .' ></article>';
 include("include/footer.php");
 ?>
+
+</div>

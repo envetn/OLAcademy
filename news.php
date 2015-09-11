@@ -8,8 +8,18 @@ $limit       = 5; //Posts per page
 $offset      = (isset($_GET['offset']) && is_numeric($_GET['offset'])) ? $_GET['offset'] : 0; //Start index
 $priviledge  = getUserPriviledge($db);
 $username    = isset($_SESSION['username']) ? $_SESSION['username']: "";
-$btn_addNew  = ($priviledge == 1 || $priviledge == 2) ? "<form method='get'><input type='submit' value='Lägg till' name='p'/></form>" : "<p>Logga in för att lägga till nyheter.</p>";
+$btn_addNew  = "";
 
+// Show add news button
+if($priviledge == 1 || $priviledge == 2)
+{
+    $btn_addNew = "<form method='get'><input type='submit' value='Lägg till' name='p'/></form>";
+}
+else if(isset($_SESSION['username']) && $priviledge == 0){}
+else
+{
+    $btn_addNew = "<p>Logga in för att lägga till nyheter.</p>";
+}
 function isAllowedToDelete($db, $id)
 {
     $sql = "SELECT * FROM news WHERE id=? AND author=?";
@@ -30,12 +40,6 @@ if (isset($_GET['p']) && $_GET['p'] == "Lägg till")
 		<input name='title' placeholder='Title' type='text'/><br/>
 		<textarea name='content' placeholder='Innehåll' type='text' cols='50' rows='5'></textarea><br/>
 		<label/>Av : $username</label><br/>
-		
-<!--		<input type='hidden' name='name' value='".datetime(). " - ".$username."'></input><br/>
-		<label for='file'>Filename:</label><br/>
-		<input type='file' name='fileToUpload' id='fileToUpload'><br> 
--->
-		
 		<input type='submit' name='btn_addNew' value='Lägg till'/>
 		</form>";
 	}

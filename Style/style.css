@@ -48,16 +48,57 @@ a
 #nav_header
 {
 	height: 40px;
-	width:50%;
+	width:60%;
+	padding-top:1%;
 	padding-left:10%;
-	background:green;
+	background:#808080;
 	display:inline-block;
+	border-bottom-right-radius: 20px;
+	border-top-right-radius: 20px;
 }
 .menu_a
 {
 	padding-left:1%;
+	font-size:1.4em;
+	padding:2%;
+	border:1px solid transparent;
+	color:#FFF;
 }
 
+.menu_a:hover
+{
+	border:1px solid black;
+	display:blocks;
+	background-color: #5F6975;
+	border-radius: 10px;
+}
+/*
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+li {
+    float: left;
+}
+
+a:link, a:visited {
+    display: block;
+    width: 120px;
+    font-weight: bold;
+    color: #FFFFFF;
+    background-color: #98bf21;
+    text-align: center;
+    padding: 4px;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+a:hover, a:active {
+    background-color: #7A991A;
+}*/
 #login_submit
 {
 
@@ -97,7 +138,30 @@ a
 {
 	margin-top:0px;
 }
+#start_wrapper
+{
+	width:100%;
+	border:1px solid black;
+}
+#start_news, #start_gb
+{
+	width:60%;
+	padding-left:1%;
+}
+#start_register
+{
+	width:38%;
+	float:right;
+	border:1px solid black;
+}
+.index_news
+{
+	margin-bottom:1%;
+	margin-left:1%;
 
+
+	/*font-family: "helvetica", Arial, sans-serif;*/
+}
 /******ERROR*******/
 .youShallNotPassDiv
 {

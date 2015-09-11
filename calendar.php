@@ -49,7 +49,7 @@ function draw_calendar($db, $month,$year)
 			foreach($result as $row)
 			{
 			    echo $row->id;
-				$calendar.= "<p class='event_p' style=''>" . $row->eventName . "<br/>Anmälda: ".getNrOfRegistered($db, $row->id)."</p>";
+				$calendar.= "<p class='event_p'>" . $row->eventName . "<br/>Anmälda: ".getNrOfRegistered($db, $row->id)."</p>";
 			}
 		}
 		$calendar .= '</div>';
