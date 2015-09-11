@@ -35,48 +35,7 @@ echo '<article id="start_register"><h1>Anmälan</h1>' . presentEvent($db) .' </a
 echo '<article id="start_gb" style="width:60%"><h1>Gästbok</h1>'. presentPost($db, 0, 3) .' </article>';
 echo '<article id="start_news" style="width:60%"><h1>Nyheter</h1>'. presentNews($db, 0, 3) .' ></article>';
 
-function presentEvent($db)
-{
-	$events = getEvents($db);
-	$text = "";
-	for ($i=0;$i<7;$i++)
-	{
-	
-		$weekDay = date("N", time()+($i * 24 * 60 * 60));
-		switch ($weekDay)
-		{
-		    case "1":
-			echo "<h4>Måndag</h4>";
-			break;
-		    case "2":
-			echo "<h4>Tisdag</h4>";
-			break;
-		    case "3":
-			echo "<h4>Onsdag</h4>";
-			break;
-		    case "4":
-			echo "<h4>Torsdag</h4>";
-			break;
-		    case "5":
-			echo "<h4>Fredag</h4>";
-			break;
-		    case "6":
-			echo "<h4>Lördag</h4>";
-			break;
-		    case "7":
-			echo "<h4>Söndag</h4>";
-			break;
-		    default:
-			echo "-<br>";
-		}
-	
-		foreach ($events as $key)
-		{
-			if ($key->date == date("Y-m-d", time()+($i * 24 * 60 * 60)))
-			echo $key->id. " ".$key->eventName." - " . $key->date . "<br>";
-		}	
-	}
-}
+
 include("include/footer.php");
 ?>
 

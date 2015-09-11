@@ -178,6 +178,50 @@ function getEvents($db)
 }
 
 
+function presentEvent($db)
+{
+	$events = getEvents($db);
+	$text = "";
+	for ($i=0;$i<7;$i++)
+	{
+		$weekDay = date("N", time()+($i * 24 * 60 * 60));
+		switch ($weekDay)
+		{
+		    case "1":
+			$text.= "<h4>Måndag</h4>";
+			break;
+		    case "2":
+			$text.= "<h4>Tisdag</h4>";
+			break;
+		    case "3":
+			$text.= "<h4>Onsdag</h4>";
+			break;
+		    case "4":
+			$text.= "<h4>Torsdag</h4>";
+			break;
+		    case "5":
+			$text.= "<h4>Fredag</h4>";
+			break;
+		    case "6":
+			$text.= "<h4>Lördag</h4>";
+			break;
+		    case "7":
+			$text.= "<h4>Söndag</h4>";
+			break;
+		    default:
+			$text .= "-<br>";
+		}
+	
+		foreach ($events as $key)
+		{
+			if ($key->date == date("Y-m-d", time()+($i * 24 * 60 * 60)))
+			$text .= $key->id. " ".$key->eventName." - " . $key->date . "<br>";
+		}
+	}
+	return $text;
+}
+
+
 /*
  * Returns all events 
  * within the current month
