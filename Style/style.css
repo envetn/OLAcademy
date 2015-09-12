@@ -17,22 +17,51 @@ html
 body
 {
 	overflow-y:scroll;
-	background:white;
+	background:url("../img/bg.JPG");
+
 	margin:1%;
 	margin:auto;
-	width:70%;
 	min-height:700px;
 	border:1px solid black; /*added to be able to see where the body are */
+    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+    /*color:#1e3948;*/
 }
+.b{
+    background:#FFFFFF;
+    border: 1px solid #d3e0e9;
+    margin-top: 10px;
+
+    border-top-right-radius: 4px;
+    border-top-left-radius: 4px;
+}
+
 
 header
 {
 
 }
 
-main
-{
-	
+main {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+
+}
+@media (min-width: 768px) {
+    main {
+        width: 750px;
+    }
+}
+@media (min-width: 992px) {
+    main {
+        width: 990px;
+    }
+}
+@media (min-width: 1260px) {
+    main {
+        width: 1230px;
+    }
 }
 
 a
@@ -44,6 +73,15 @@ a
 {
 
 }
+
+/*--know what tab that is in use-- */
+header#index a#index-,
+header#news a#news-,
+header#guestbook a#guestbook-,
+header#calender a#calender-{
+color:green;
+}
+
 
 #nav_header
 {
@@ -138,17 +176,17 @@ a:hover, a:active {
 {
 	margin-top:0px;
 }
-#start_wrapper
+.start_wrapper
 {
 	width:100%;
 	border:1px solid black;
 }
-#start_news, #start_gb
+.start_news, #start_gb
 {
 	width:60%;
 	padding-left:1%;
 }
-#start_register
+.start_register
 {
 	width:38%;
 	float:right;
@@ -182,4 +220,15 @@ a:hover, a:active {
 {
 	margin: 0;
     padding: 0;
+}
+
+
+
+/******Extra****/
+.clearLine {
+    border: 1px solid red;
+    clear: left;
+}
+.clearFix {
+    overflow: auto;
 }

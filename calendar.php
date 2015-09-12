@@ -1,4 +1,6 @@
 <?php
+$pageId ="guestbook";
+$pageTitle ="- kalender";
 include("include/header.php");
 
 function getNrOfRegistered($db, $eventId)

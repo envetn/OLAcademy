@@ -1,4 +1,6 @@
 <?php
+$pageId ="index";
+
 include("include/header.php"); 
 
 $user = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
@@ -29,11 +31,12 @@ $username    = isset($_SESSION['username']) ? $_SESSION['username']: "";
 
 
 
-<div id='start_wrapper'>
+<!--<div class='start_wrapper clearFix'>-->
+<div class='row clearFix' style="margin-top:50px;">
 <?php
-echo '<article id="start_register"><h1>Anmälan</h1>' . presentEvent($db) .' </article>';
-echo '<article id="start_gb" style="width:60%"><h1>Gästbok</h1>'. presentPost($db, 0, 3) .' </article>';
-echo '<article id="start_news" style="width:60%"><h1>Nyheter</h1>'. presentNews($db, 0, 3) .' ></article>';
+echo '<article class="col-sm-4 col-sm-push-8 b"><h1>Anmälan</h1>' . presentEvent($db) .' </article>';
+echo '<article class="col-sm-8 col-sm-pull-4 b" style="width:60%"><h1>Gästbok</h1>'. presentPost($db, 0, 3) .' </article>';
+echo '<article class="col-sm-8 b" style="width:60%"><h1>Nyheter</h1>'. presentNews($db, 0, 3) .' ></article>';
 
 
 include("include/footer.php");

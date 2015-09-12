@@ -1,5 +1,5 @@
 <?php
-
+$pageId ="news";
 $pageTitle = "- Nyheter";
 include("include/header.php");
 
