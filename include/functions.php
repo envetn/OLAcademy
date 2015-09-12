@@ -96,6 +96,8 @@ function presentPost($db, $offset, $limit)
 	}
 	return $post;
 }
+
+
 function presentNews($db, $offset, $limit)
 {
     $sql = "SELECT * FROM news LIMIT $offset, $limit"; 
@@ -221,12 +223,29 @@ function presentEvent($db)
 		foreach ($events as $key)
 		{
 			if ($key->date == date("Y-m-d", time()+($i * 24 * 60 * 60)))
-			$text .= $key->id. " ".$key->eventName." - " . $key->date . "<br>";
+			{
+				$text .= $key->id. " ".$key->eventName." - " . $key->date . "<br>";
+				$text .= 
+				"<form method='POST' action='index.php'>
+					<input type='hidden' name='user' value=" . $_SESSION["username"] . ">
+					<input type='hidden' name='eventID' value=" . $key->id . ">
+					<input type='submit' name='register' value='Anmäl'>
+				</form>";
+			}
 		}
 	}
 	return $text;
 }
 
+/*
+ * Returns registered users
+ * for an specific event
+ */
+function getRegistered($db, $eventID)
+{
+
+
+}
 
 /*
  * Returns all events 
@@ -236,7 +255,7 @@ function getCurrentMonthsEvents($db)
 {
  //  WHERE EXISTS 
     //    (
-      //      SELECT * FROM registerd as r 
+      //      SELECT * FROM registered as r 
         //    WHERE events.id = r.eventId AND 
        // )
  
@@ -260,7 +279,7 @@ function getRegisteredEvents($db, $username)
         FROM events as e 
         WHERE EXISTS 
         (
-            SELECT * FROM registerd as r 
+            SELECT * FROM registered as r 
             WHERE e.id = r.eventId AND r.name = ?
         )
         ";

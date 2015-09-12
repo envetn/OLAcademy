@@ -6,13 +6,13 @@ include("include/header.php");
 $user = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
 $username    = isset($_SESSION['username']) ? $_SESSION['username']: "";
 // Post functions
-/* if(isset($_POST['register']))
+if(isset($_POST['register']))
 {
 
-    $eventId = $_POST["register"];
+    $eventID = $_POST["eventID"];
     //check if already exists
-    $sql = "SELECT * FROM registerd WHERE name=? and eventId=?";
-    $params = array($username, $eventId);
+    $sql = "SELECT * FROM registered WHERE name=? and eventId=?";
+    $params = array($username, $eventID);
     $db->queryAndFetch($sql, $params);
     if($db->RowCount() >= 1)
     {
@@ -20,13 +20,13 @@ $username    = isset($_SESSION['username']) ? $_SESSION['username']: "";
     }
     else
     {
-        $sql = 'INSERT INTO registerd (name, date, other, eventId) VALUES(?,?,?,?)';
-        $params = array($username,date("Y-m-d"),"",$eventId);
+        $sql = 'INSERT INTO registered (name, date, other, eventId) VALUES(?,?,?,?)';
+        $params = array($username,date("Y-m-d"),"",$eventID);
         $db->ExecuteQuery($sql, $params);
     }
     
 
-} */
+}
 ?>
 
 
