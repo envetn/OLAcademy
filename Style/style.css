@@ -200,6 +200,24 @@ a:hover, a:active {
 
 	/*font-family: "helvetica", Arial, sans-serif;*/
 }
+
+/******User page *****/
+.form_addUser
+{
+	border:1px solid black;
+	padding:1%;
+	width:40%;
+	border-bottom-right-radius: 20px;
+	border-top-right-radius: 20px;	
+}
+
+.form_addUser label
+{
+	display: inline-block;
+	width:100px;
+	text-align: left;
+}
+.form_addUser, input{margin-bottom:1%; }
 /******ERROR*******/
 .youShallNotPassDiv
 {

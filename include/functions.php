@@ -23,6 +23,11 @@
  * 
  */
  
+ /*
+  * GLOBALS
+  */
+ $GLOBAL['salt_cookie']					= "!+?";
+ $GLOBAL['salt_char']                   = "#@$";
 function linux_server()
 {
     return in_array(strtolower(PHP_OS), array("linux", "superior operating system"));
@@ -113,8 +118,9 @@ function presentNews($db, $offset, $limit)
                     <span>Title: ".$row->title."</span>
                     <br/>
                     <span> ".$content."</span>
-                    <hr/>
+                    <br/>
                     <span>Av:  ".$row->author."</span>
+                     <hr/>       
                   </div>";
     }
     return $news;
@@ -423,7 +429,7 @@ function uploadImage($db)
  * and hashed passwd that matches the
  * input value, grant user access.
  */
-function showLoginLogout($db)
+function showLoginLogout($db, $salt_char)
 {
 	$error = "";
 	if(isset($_COOKIE['rememberme_olacademy']))
@@ -432,19 +438,18 @@ function showLoginLogout($db)
 	}
 	else if(isset($_POST['login']) && !( isset($_SESSION['uid']) && isset($_SESSION['username']) ) )
 	{
-		$username = strip_tags($_POST['username']);
-		$password = md5($_POST['passwd'] . "#@$");//$GLOBAL['salt_char']);
-		$sql = "SELECT id,name FROM users WHERE name=? AND password=? LIMIT 1";
-
-		$params = array($username, $password);
+		$email = strip_tags($_POST['email']);
+		$password = md5($_POST['passwd'] . $salt_char);
+		$sql = "SELECT id,name,email FROM users WHERE email=? AND password=? LIMIT 1";
+		$params = array($email, $password);
 		$res = $db->queryAndFetch($sql, $params);
-
 		if($db->RowCount() == 1)
 		{
-			if(( strlen($_POST['username']) > 1 && strlen($_POST['passwd']) > 2 ))
+			if(( strlen($_POST['email']) > 1 && strlen($_POST['passwd']) > 2 ))
 			{
 				$_SESSION['uid'] = $res[0]->id;
 				$_SESSION['username'] = $res[0]->name;
+				$_SESSION['email']= $res[0]->email;
 
 				//after successful logon
 				//check if remember_me isset
@@ -457,7 +462,7 @@ function showLoginLogout($db)
 		}
 		else
 		{
-			$error .= "<p style='color:red;'>Fel lösenord eller användarnamn </p>";
+			$error .= "<p style='color:red;'>Fel lösenord eller email </p>";
 		}
 	}
 	else
@@ -470,7 +475,7 @@ function showLoginLogout($db)
 	 */
 	if(isset($_SESSION['uid']))
 	{
-		$form = "<form method='post'>Användare: " . $_SESSION['username'] . "&nbsp;&nbsp;&nbsp;<input type='submit' name='logout' value='Logga ut' /></form>";
+		$form = "<form method='post'><a href='user.php'>Användare: " . $_SESSION['username'] . "</a>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn btn-primary' name='logout'>Logout</button></form>";
 		if(isset($_POST['logout']))
 		{
 			session_destroy();
@@ -480,12 +485,25 @@ function showLoginLogout($db)
 	}
 	else
 	{
-		$form = "<form id='form_login' method='post'>
-				  <input type='text' name='username' placeholder='Användarnamn' size='10'/>
+	    $form = '<form id="signin" class="navbar-form navbar-right" role="form" method="post">
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+						<input id="email" type="email" class="form-control" name="email" value="" placeholder="Användarnamn">
+					</div>
+
+					<div class="input-group">
+						<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+						<input id="password" type="password" class="form-control" name="passwd" value="" placeholder="Lösenord">
+					</div>
+
+					<button type="submit" class="btn btn-primary" name="login">Login</button>
+				</form>';
+		/*$form = "<form id='form_login' method='post'>
+				  <input type='text' name='email' placeholder='email' size='10'/>
 				  <input type='password' name='passwd' placeholder='Lösenord' size='10'/>
 				  <input type='checkbox' name='remember_me' value='remember_me'/>
 				  <input id='login_submit'type='submit' value='Login' name='login'>
-			 </form>";
+			 </form>";*/
 			
 	}
 	return $error . $form;

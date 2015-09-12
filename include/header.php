@@ -45,21 +45,7 @@ $priviledge =  getUserPriviledge($db);
 					<li><a id="calender-" href='calender.php'>Kalender</a></li>
 					<?php echo $priviledge == 2 ? "<li><a href='admin.php'>Admin</a>" : "";?>
 				</ul>
-
-				<form id="signin" class="navbar-form navbar-right" role="form">
-					<div class="input-group">
-						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-						<input id="email" type="email" class="form-control" name="email" value="" placeholder="Användarnamn">
-					</div>
-
-					<div class="input-group">
-						<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-						<input id="password" type="password" class="form-control" name="password" value="" placeholder="Lösenord">
-					</div>
-
-					<button type="submit" class="btn btn-primary">Login</button>
-				</form>
-
+                    <?php echo showLoginLogout($db, $GLOBAL['salt_char']);?>
 			</div>
 			</main>
 		</div>
@@ -77,7 +63,7 @@ $priviledge =  getUserPriviledge($db);
 		</nav>
 		-->
 		<span id='login'>
-			<?php echo showLoginLogout($db);?>
+			
 		</span>
 		<!--
 	</div>
