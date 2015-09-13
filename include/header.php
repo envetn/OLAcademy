@@ -51,28 +51,5 @@ $priviledge =  getUserPriviledge($db);
 		</div>
 	</nav>
 
-
-	<div id="top">
-		<!--
-		<nav id='nav_header'>
-			<a class='menu_a' href='index.php'>Startsida</a>
-			<a class='menu_a' href='news.php'>Nyheter</a>
-			<a class='menu_a' href='guestbook.php'>Gästbook</a>
-			<a class='menu_a' href='calendar.php'>Kalender</a>
-			<?php echo $priviledge == 2 ? "<a class='menu_a' href='admin.php'> Admin </a>" : ""; ?>
-		</nav>
-		-->
-		<span id='login'>
-			
-		</span>
-		<!--
-	</div>
-	<div id="banner">
-		<img  id="bthLogo" src="img/bthLogo.png" alt="BTH logo">
-		<h1 id="title">OL-Academy</h1>
-		<h3 id="subtitle">Blekinge Tekniska Högskola</h3>
-		-->
-	</div>
-
 </header>
 <main>

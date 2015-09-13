@@ -70,7 +70,7 @@ header#index a#index-,
 header#news a#news-,
 header#guestbook a#guestbook-,
 header#calendar a#calendar-{
-color:green;
+background-color:#e7e7e7;
 }
 
 
@@ -88,7 +88,15 @@ color:green;
 .navbarCustom
 {
 	border-radius:0;
+	font-size: 1.3em;
 }
+
+.navbar-brand
+{
+	padding: 0;
+}
+
+
 .menu_a
 {
 	padding-left:1%;
@@ -158,6 +166,7 @@ a:hover, a:active {
 {
 	float:left;
 	padding:5px;
+	width: 70%;
 }
 
 #title
@@ -248,3 +257,12 @@ footer {
     overflow: auto;
 }
 
+q{
+	background:#FFFFFF;
+	border: 1px solid #d3e0e9;
+	margin-top: 10px;
+	border-top-right-radius: 4px;
+	border-top-left-radius: 4px;
+	width:100%;
+
+}

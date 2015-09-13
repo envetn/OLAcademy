@@ -96,8 +96,11 @@ function draw_calendar($db, $month,$year)
 
 $month = date('m', strtotime('0 month'));
 $year = date('Y', strtotime('0 year'));
-echo draw_calendar($db, $month,$year);
-
+echo "<div class='row clearFix'>";
+	echo "<div class='b'>";
+		echo draw_calendar($db, $month,$year);
+	echo "</div>";
+echo "</div>";
 
 ?>
 

@@ -128,10 +128,16 @@ if(isset($_GET['r']) && is_numeric($_GET['r']))
 
 
 
-echo "<div id='div_articles'>";
-    echo $btn_addNew;
-    echo getArticleSideBar($db, $offset, $limit);
-    echo isset($singleArticle) ?  $singleArticle : "";
+#echo "<div id='div_articles'>";
+echo "<div class='row clearFix'>";
+    echo "<div class='col-sm-8 b'>";
+        echo isset($singleArticle) ?  $singleArticle : "";
+    echo "</div>";
+
+    echo "<div class='col-sm-4 b'>";
+        echo $btn_addNew;
+        echo getArticleSideBar($db, $offset, $limit);
+    echo "</div>";
 echo "</div>";
 $nrOfRows = countAllRows($db, "news", false);
 ?>

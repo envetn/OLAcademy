@@ -9,6 +9,7 @@
 /************************/
 /****#side_article*******/
 /************************/
+/*
  #side_article
 {
     width:30%;
@@ -17,6 +18,7 @@
     overflow:auto;
    
 }
+*/
 #side_article p
 {
     width:90%;
@@ -30,12 +32,14 @@
 {
 	
 }
+
 #side_article a
 {
     text-decoration:none;
     color:black;
     margin-left:1%;
 }
+
 #side_article section
 {
 }
@@ -63,12 +67,7 @@
 /************************/
  #singeArticle
 {
-	overflow:auto;
-	border:1px solid black;
-	float:right;
-	width:60%;
-	margin-top:4%;
-	margin-right:4%;
+	background:white;
 } 
 #singeArticle p
 {
