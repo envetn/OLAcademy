@@ -266,3 +266,7 @@ q{
 	width:100%;
 
 }
+.visible-xs-block
+{
+	display:block!important;
+}

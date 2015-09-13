@@ -36,7 +36,8 @@ if(isset($_POST['register']))
 <?php
 echo '<article class="col-sm-4 col-sm-push-8 b"><h1>Anmälan</h1>' . presentEvent($db) .' </article>';
 echo '<article class="col-sm-8 col-sm-pull-4 b" style="width:60%"><h1>Gästbok</h1>'. presentPost($db, 0, 3) .' </article>';
-echo '<article class="col-sm-8 b" style="width:60%"><h1>Nyheter</h1>'. presentNews($db, 0, 3) .' ></article>';
+echo '<div class="clearfix visible-xs-block"></div>';
+echo '<article class="col-sm-8 col-sm-offset-0 b" style="width:60%"><h1>Nyheter</h1>'. presentNews($db, 0, 3) .' ></article>';
 
 
 include("include/footer.php");
