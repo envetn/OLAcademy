@@ -244,6 +244,11 @@ a:hover, a:active {
     padding: 0;
 }
 
+.error
+{
+		color: red;
+}
+
 /***Footer****/
 footer {
 	bottom:0;

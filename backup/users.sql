@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.4
+-- version 4.1.14
 -- http://www.phpmyadmin.net
 --
--- Värd: localhost
--- Skapad: 09 jun 2015 kl 18:16
--- Serverversion: 5.6.12-log
--- PHP-version: 5.4.12
+-- Värd: 127.0.0.1
+-- Tid vid skapande: 13 sep 2015 kl 22:21
+-- Serverversion: 5.6.17
+-- PHP-version: 5.5.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -43,9 +43,11 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `password`, `email`, `Privilege`, `regDate`, `token`) VALUES
-(10, '111', 'e6e010710c72a7e3dfd02ab27b451f56', '123@123.com', 1, '2015-05-09', '813829941ab1d8bd521ac5de55a2d1fd89e80bb04714af1a89af03090757eddd'),
+(10, '111', 'e6e010710c72a7e3dfd02ab27b451f56', '123@123.com', 1, '2015-05-09', '3d97aef83ce05ef37e16ded33b9b24520f39294eb14085f3094e8aa95657d463'),
 (11, 'nisse', 'cd523f1e4ca6409ea8f028dc04172f2f', '123@123.com', 2, '2015-05-21', '3561fe9bcb5e1d48f3899589765b9586909687f57438f956be428b1fc6ca542b'),
-(13, '123', 'c05a25cb543f8425ce9f74bb650618b5', '', 0, '2015-05-21', 'cbd7bfb2120ea5953f0ecd0bf7b022551e8886b5f9cfd3c037497d63ea6978f3');
+(13, '123', 'c05a25cb543f8425ce9f74bb650618b5', '', 0, '2015-05-21', 'cbd7bfb2120ea5953f0ecd0bf7b022551e8886b5f9cfd3c037497d63ea6978f3'),
+(14, 'Adam', 'c05a25cb543f8425ce9f74bb650618b5', 'adamgeorgsson@gmail.com', 2, '2015-09-13', ''),
+(15, 'admin', '13591c006fe70ac237bbcc8e6fb467d7', 'admin@admin', 2, '2015-09-13', '');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

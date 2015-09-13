@@ -180,13 +180,13 @@ function getEvents($db)
         FROM events 
         WHERE date BETWEEN ? AND ?
         ";
-        $params = array(date("Y-m-d"), date("Y-m-d", time()+(6 * 24 * 60 * 60)));
+    $params = array(date("Y-m-d"), date("Y-m-d", time()+(6 * 24 * 60 * 60)));
 	$result = $db->queryAndFetch($sql,$params);
     return $result;
 }
 
 
-function presentEvent($db)
+function presentEvent($db, $username)
 {
 	$events = getEvents($db);
 	$text = "";
@@ -224,13 +224,19 @@ function presentEvent($db)
 		{
 			if ($key->date == date("Y-m-d", time()+($i * 24 * 60 * 60)))
 			{
-				$text .= $key->id. " ".$key->eventName." - " . $key->date . "<br>";
+				//$text .= "<p>". $key->id. " ".$key->eventName." - " . $key->date . "</p>";
 				$text .= 
 				"<form method='POST' action='index.php'>
-					<input type='hidden' name='user' value=" . $_SESSION["username"] . ">
+					<input type='hidden' name='user' value=" . $username . ">
 					<input type='hidden' name='eventID' value=" . $key->id . ">
 					<input type='submit' name='register' value='Anmäl'>
 				</form>";
+				$text .= '<p>Anmälda</p>';
+ 				$registeredUsers = getRegistered($db, $key->id);
+				foreach ($registeredUsers as $user)
+				{
+					$text .= $user->name . "<br>";
+				}
 			}
 		}
 	}
@@ -243,9 +249,15 @@ function presentEvent($db)
  */
 function getRegistered($db, $eventID)
 {
-
-
+	$sql ="
+		SELECT name
+        FROM registered 
+        WHERE eventID=$eventID
+        ";
+	$result = $db->queryAndFetch($sql);
+    return $result;
 }
+
 
 /*
  * Returns all events 
@@ -272,21 +284,7 @@ function getCurrentMonthsEvents($db)
     return $result;
 }
 
-function getRegisteredEvents($db, $username)
-{
-    $sql ="
-        SELECT *
-        FROM events as e 
-        WHERE EXISTS 
-        (
-            SELECT * FROM registered as r 
-            WHERE e.id = r.eventId AND r.name = ?
-        )
-        ";
-    $params = array($username);
-    $result = $db->queryAndFetch($sql ,$params);
-    return $result;
-}
+
 /*
  * Returns datetime 
  * in SQL format

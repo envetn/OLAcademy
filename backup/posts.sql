@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: 127.0.0.1
--- Tid vid skapande: 11 maj 2015 kl 16:33
+-- Tid vid skapande: 13 sep 2015 kl 22:19
 -- Serverversion: 5.6.17
 -- PHP-version: 5.5.12
 
@@ -26,13 +26,14 @@ SET time_zone = "+00:00";
 -- Tabellstruktur `posts`
 --
 
+DROP TABLE IF EXISTS `posts`;
 CREATE TABLE IF NOT EXISTS `posts` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `text` text COLLATE utf8_unicode_ci NOT NULL,
   `date` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=94 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=95 ;
 
 --
 -- Dumpning av Data i tabell `posts`
@@ -55,7 +56,8 @@ INSERT INTO `posts` (`id`, `name`, `text`, `date`) VALUES
 (89, 'wer', 'df', '2015-05-09 23:11:11'),
 (90, 'wer', 'df', '2015-05-09 23:13:44'),
 (91, 'Olof', 'Jag Ã¤r trÃ¶tt\r\n', '2015-05-10 00:46:23'),
-(92, 'test', 'test', '2015-05-11 15:45:00');
+(92, 'test', 'test', '2015-05-11 15:45:00'),
+(94, 'qwer', 'as', '2015-09-11 21:44:02');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
