@@ -21,7 +21,7 @@ $priviledge =  getUserPriviledge($db);
 <body>
 <header <?php if(isset($pageId)) echo "id='$pageId' ";?>>
 
-	<nav class="navbar navbar-default navbar-fixed-top">
+	<nav class="navbar navbar-default navbarCustom">
 		<div class="container-fluid">
 			<main>
 			<div class="navbar-header">
@@ -42,7 +42,7 @@ $priviledge =  getUserPriviledge($db);
 					<li><a id="index-" href="index.php">Startsida</a></li>
 					<li><a id="news-" href='news.php'>Nyheter</a></li>
 					<li><a id="guestbook-" href='guestbook.php'>Gästbok</a></li>
-					<li><a id="calender-" href='calender.php'>Kalender</a></li>
+					<li><a id="calendar-" href='calendar.php'>Kalender</a></li>
 					<?php echo $priviledge == 2 ? "<li><a href='admin.php'>Admin</a>" : "";?>
 				</ul>
                     <?php echo showLoginLogout($db, $GLOBAL['salt_char']);?>
