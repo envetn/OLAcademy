@@ -10,9 +10,9 @@ $priviledge =  getUserPriviledge($db);
     <meta name="viewport" content="width=device-width initial-scale=1", charset="UTF-8">
 	<title> <?php echo isset($pageTitle) ? $GLOBAL['pageTitle']. $pageTitle : $GLOBAL['pageTitle']; ?></title>
 
-	<script src="//code.jquery.com/jquery.min.js"></script>
-
-	<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
+	<!--<script src="//code.jquery.com/jquery.min.js"></script>-->
+	<script src="jquery/jquery.min.js"></script>
+	<script src="Style/bootstrap/js/bootstrap.min.js"></script>
 
 	<link rel="stylesheet" type="text/css" href="Style/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="Style/style.css">

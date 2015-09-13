@@ -32,7 +32,7 @@ if(isset($_POST['register']))
 
 
 <!--<div class='start_wrapper clearFix'>-->
-<div class='row clearFix' style="margin-top:50px;">
+<div class='row clearFix'>
 <?php
 echo '<article class="col-sm-4 col-sm-push-8 b"><h1>Anmälan</h1>' . presentEvent($db) .' </article>';
 echo '<article class="col-sm-8 col-sm-pull-4 b" style="width:60%"><h1>Gästbok</h1>'. presentPost($db, 0, 3) .' </article>';
