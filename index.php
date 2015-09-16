@@ -6,7 +6,6 @@ $username    = isset($_SESSION['username']) ? $_SESSION['username']: "";
 // Post functions
 if(isset($_POST['register']))
 {
-    echo $_POST['register'];
     $eventID = $_POST["eventID"];
     //check if already exists
     $sql = "SELECT * FROM registered WHERE name=? and eventId=?";
