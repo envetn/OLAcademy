@@ -492,7 +492,7 @@ function showLoginLogout($db, $salt_char)
 	 */
 	if(isset($_SESSION['uid']))
 	{
-		$form = "<form method='post'><a href='user.php'>Användare: " . $_SESSION['username'] . "</a>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn btn-primary' name='logout'>Logout</button></form>";
+		$form = "<form method='post' class='navbar-form navbar-right'><a href='user.php'>Användare: " . $_SESSION['username'] . "</a>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn btn-primary' name='logout'>Logout</button></form>";
 		if(isset($_POST['logout']))
 		{
 			session_destroy();
