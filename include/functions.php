@@ -473,7 +473,7 @@ function showLoginLogout($db, $salt_char)
 				if(isset($_POST['remember_me']))
 				{
 					$SECRET_KEY = "!+?";
-					setRememberMe($username,$SECRET_KEY,$db);
+					setRememberMe($res[0]->name,$SECRET_KEY,$db);
 				}
 			}
 		}
@@ -511,17 +511,12 @@ function showLoginLogout($db, $salt_char)
 					<div class="input-group">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
 						<input id="password" type="password" class="form-control" name="passwd" value="" placeholder="Lösenord">
+	                   
 					</div>
 
 					<button type="submit" class="btn btn-primary" name="login">Login</button>
+	                 <input type="checkbox" name="remember_me" value="remember_me" id="remember_me"/>
 				</form>';
-		/*$form = "<form id='form_login' method='post'>
-				  <input type='text' name='email' placeholder='email' size='10'/>
-				  <input type='password' name='passwd' placeholder='Lösenord' size='10'/>
-				  <input type='checkbox' name='remember_me' value='remember_me'/>
-				  <input id='login_submit'type='submit' value='Login' name='login'>
-			 </form>";*/
-			
 	}
 	return $error . $form;
 }

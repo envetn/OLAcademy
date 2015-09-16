@@ -40,7 +40,7 @@ if (isset($_GET['p']) && $_GET['p'] == "Lägg till")
 		<input name='title' placeholder='Title' type='text'/><br/>
 		<textarea name='content' placeholder='Innehåll' type='text' cols='50' rows='5'></textarea><br/>
 		<label/>Av : $username</label><br/>
-		<input type='submit' name='btn_addNew' value='Lägg till'/>
+		<input type='submit' name='btn_addNew' id='btn_addnew' value='Lägg till'/>
 		</form>";
 	}
 }

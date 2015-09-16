@@ -7,9 +7,8 @@
 .calendar-day
 {
 	border: 1px solid black;
-	min-width:10px;
-	min-height:10px;
-	max-height:100px;	
+	min-width:100px;
+	min-height:100px;	
 }
 
 .calendar-day :hover

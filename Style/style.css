@@ -222,6 +222,7 @@ a:hover, a:active {
 	text-align: left;
 }
 .form_addUser, input{margin-bottom:1%; }
+
 /******ERROR*******/
 .youShallNotPassDiv
 {
@@ -258,8 +259,10 @@ footer {
     border: 1px solid red;
     clear: left;
 }
-.clearFix {
+.clearFix 
+{
     overflow: auto;
+    background:#fbfbf0;
 }
 
 q{
