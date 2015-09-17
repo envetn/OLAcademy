@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: 127.0.0.1
--- Tid vid skapande: 13 sep 2015 kl 22:21
+-- Tid vid skapande: 17 sep 2015 kl 18:58
 -- Serverversion: 5.6.17
 -- PHP-version: 5.5.12
 
@@ -19,7 +19,7 @@ SET time_zone = "+00:00";
 --
 -- Databas: `olacademy`
 --
-CREATE DATABASE IF NOT EXISTS `olacademy` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+CREATE DATABASE IF NOT EXISTS `olacademy` DEFAULT CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 USE `olacademy`;
 
 -- --------------------------------------------------------
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS `events` (
   `eventName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `info` text COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=10 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=11 ;
 
 --
 -- Dumpning av Data i tabell `events`
@@ -44,7 +44,8 @@ CREATE TABLE IF NOT EXISTS `events` (
 
 INSERT INTO `events` (`id`, `date`, `startTime`, `eventName`, `info`) VALUES
 (7, '2015-09-16', '17:30:00', 'BacklÃ¶pning', 'Samling Bryggarberget'),
-(8, '2015-09-11', '19:00:00', 'Styrka', 'Samling Gymmet');
+(8, '2015-09-17', '19:00:00', 'Styrka', 'Samling Gymmet'),
+(10, '2015-09-17', '00:00:00', 'Test', 'test');
 
 -- --------------------------------------------------------
 
@@ -73,8 +74,6 @@ INSERT INTO `news` (`id`, `title`, `content`, `author`, `added`) VALUES
 (6, '123123', '123123121 312 3123 123 123 123 123 123 123 123 123 12 312 3123 123 123 12 3123 123 123 123 123 123 123 1', '23123123123123 123 123 1', '2015-05-20'),
 (7, 'sssssssssssssssssss ss  s', 'ssssss ss  s ssssss ss  s ssssss ss  s ssssss ss  s vssssss ss  s ssssss ss  s ssssss ss  s ssssss ss  s ssssss ss  s ssssss ss  s ssssss ss  s ssssss ss  s ssssss ss  s v vv ssssss ss  s', 'ssssss ss  s', '2015-05-06'),
 (8, 'asd', 'asdasd asdsa', 'asdasdasd', '2015-05-20'),
-(9, 'vbadsf', 'assass', '111', '2015-09-11'),
-(10, '234', 'sadf', '111', '2015-09-11'),
 (11, 'fu', 'fu', '111', '2015-09-11');
 
 -- --------------------------------------------------------
@@ -125,21 +124,14 @@ INSERT INTO `posts` (`id`, `name`, `text`, `date`) VALUES
 DROP TABLE IF EXISTS `registered`;
 CREATE TABLE IF NOT EXISTS `registered` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  `userID` int(11) NOT NULL,
+  `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `date` date NOT NULL,
-  `other` varchar(255) NOT NULL,
-  `eventID` varchar(255) NOT NULL,
+  `comment` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `bus` tinytext COLLATE utf8_unicode_ci NOT NULL,
+  `eventID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=118 ;
-
---
--- Dumpning av Data i tabell `registered`
---
-
-INSERT INTO `registered` (`id`, `name`, `date`, `other`, `eventID`) VALUES
-(114, '123', '2015-09-12', '', '9'),
-(116, 'Adam', '2015-09-13', '', '7'),
-(117, '111', '2015-09-13', '', '7');
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=149 ;
 
 -- --------------------------------------------------------
 
@@ -147,7 +139,6 @@ INSERT INTO `registered` (`id`, `name`, `date`, `other`, `eventID`) VALUES
 -- Tabellstruktur `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -166,7 +157,6 @@ CREATE TABLE IF NOT EXISTS `users` (
 INSERT INTO `users` (`id`, `name`, `password`, `email`, `Privilege`, `regDate`, `token`) VALUES
 (10, '111', 'e6e010710c72a7e3dfd02ab27b451f56', '123@123.com', 1, '2015-05-09', '3d97aef83ce05ef37e16ded33b9b24520f39294eb14085f3094e8aa95657d463'),
 (11, 'nisse', 'cd523f1e4ca6409ea8f028dc04172f2f', '123@123.com', 2, '2015-05-21', '3561fe9bcb5e1d48f3899589765b9586909687f57438f956be428b1fc6ca542b'),
-(13, '123', 'c05a25cb543f8425ce9f74bb650618b5', '', 0, '2015-05-21', 'cbd7bfb2120ea5953f0ecd0bf7b022551e8886b5f9cfd3c037497d63ea6978f3'),
 (14, 'Adam', 'c05a25cb543f8425ce9f74bb650618b5', 'adamgeorgsson@gmail.com', 2, '2015-09-13', ''),
 (15, 'admin', '13591c006fe70ac237bbcc8e6fb467d7', 'admin@admin', 2, '2015-09-13', '');
 

@@ -20,7 +20,7 @@ else
 {
     $btn_addNew = "<p>Logga in för att lägga till nyheter.</p>";
 }
-function isAllowedToDelete($db, $id)
+function isAllowedToDeleteNews($db, $id)
 {
     $sql = "SELECT * FROM news WHERE id=? AND author=?";
     $params = array($id,$_SESSION['username']);
@@ -116,7 +116,7 @@ if(isset($_GET['r']) && is_numeric($_GET['r']))
     // TODO : display popup before delete?
 
     $id = $_GET['r'];
-    if(isAllowedToDelete($db,$id))
+    if(isAllowedToDeleteNews($db,$id))
     {
         $sql = "DELETE FROM news WHERE id=?";
         $params = array($id);

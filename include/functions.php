@@ -189,59 +189,87 @@ function getEvents($db)
 function presentEvent($db, $username)
 {
 	$events = getEvents($db);
+	
+	
+	
 	$text = "";
 	for ($i=0;$i<7;$i++)
 	{
-		$weekDay = date("N", time()+($i * 24 * 60 * 60));
+		$registered = getNrOfRegistered($db, date("Y-m-d", time()+($i * 86400))); //7 db requests. Optimize?
+		$weekDay = date("N", time()+($i * 86400));
 		switch ($weekDay)
 		{
 		    case "1":
-			$text.= "<h4>Måndag</h4>";
+			$text.= "<h4><a href='?highlighted=$i' >Måndag</a> $registered<img src='img/runner.png'></h4> ";
 			break;
 		    case "2":
-			$text.= "<h4>Tisdag</h4>";
+			$text.= "<h4><a href='?highlighted=$i' >Tisdag</a> $registered<img src='img/runner.png'></h4>";
 			break;
 		    case "3":
-			$text.= "<h4>Onsdag</h4>";
+			$text.= "<h4><a href='?highlighted=$i' >Onsdag</a> $registered<img src='img/runner.png'></h4>";
 			break;
 		    case "4":
-			$text.= "<h4>Torsdag</h4>";
+			$text.= "<h4><a href='?highlighted=$i' >Torsdag</a> $registered<img src='img/runner.png'></h4>";
 			break;
 		    case "5":
-			$text.= "<h4>Fredag</h4>";
+			$text.= "<h4><a href='?highlighted=$i' >Fredag</a> $registered<img src='img/runner.png'></h4>";
 			break;
 		    case "6":
-			$text.= "<h4>Lördag</h4>";
+			$text.= "<h4><a href='?highlighted=$i' >Lördag</a> $registered<img src='img/runner.png'></h4>";
 			break;
 		    case "7":
-			$text.= "<h4>Söndag</h4>";
+			$text.= "<h4><a href='?highlighted=$i' >Söndag</a> $registered<img src='img/runner.png'></h4>";
 			break;
 		    default:
 			$text .= "-<br>";
 		}
-	
-		foreach ($events as $key)
+
+		if ($_SESSION['highlighted'] == $i)
 		{
-			if ($key->date == date("Y-m-d", time()+($i * 24 * 60 * 60)))
+			foreach ($events as $key)
 			{
-				//$text .= "<p>". $key->id. " ".$key->eventName." - " . $key->date . "</p>";
-				$text .= 
-				"<form method='POST' action='index.php'>
-					<input type='hidden' name='user' value=" . $username . ">
-					<input type='hidden' name='eventID' value=" . $key->id . ">
-					<input type='submit' name='register' value='Anmäl'>
-				</form>";
-				$text .= '<p>Anmälda</p>';
- 				$registeredUsers = getRegistered($db, $key->id);
-				foreach ($registeredUsers as $user)
+				if ($key->date == date("Y-m-d", time()+($i * 86400)))
 				{
-					$text .= $user->name . "<br>";
+					$text .= 
+					"<form method='POST' action='index.php'>
+						<input type='hidden' name='eventID' value=" . $key->id . ">
+						<input type='hidden' name='date' value=" . date("Y-m-d", time()+($i * 86400)) . ">
+						<strong><u>" .$key->eventName . "</u></strong><br>
+						" .$key->info. "<br>
+						<input type='submit' name='register' value='Anmäl' style='height:50px; width:150px'><br>
+						<label for='bus'>Plats i bussen</label>
+						<input type='checkbox' name='bus' value='Ja' checked><br>
+						<label for='comment'>Kommentar</label>
+						<input type='text' name='comment'>
+					</form>";
+					$text .= '<table style="width:100%"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
+					$registeredUsers = getRegistered($db, $key->id);
+					foreach ($registeredUsers as $user)
+					{
+						$text .= "<tr><td>" . $user->name . "</td><td>" . $user->bus . "</td><td>" . $user->comment . "</td><td>";
+						$userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
+						if ($user->userID == $userID)
+						{
+							$text .= "<a href='?r=$user->id' ><img src='img/cross.png' width=18px height=18px></a>";
+						}
+						$text .= "</td></tr>";
+					}
+					$text .= "</table><hr>";
 				}
 			}
 		}
 	}
 	return $text;
 }
+
+function getNrOfRegistered($db, $type)
+{
+    $sql = "SELECT COUNT(DISTINCT userID) as count FROM registered WHERE date=?";
+    $params = array($type);
+    $res = $db->queryAndFetch($sql, $params);
+    return $res[0]->count;
+}
+
 
 /*
  * Returns registered users
@@ -250,12 +278,25 @@ function presentEvent($db, $username)
 function getRegistered($db, $eventID)
 {
 	$sql ="
-		SELECT name
+		SELECT *
         FROM registered 
         WHERE eventID=$eventID
         ";
 	$result = $db->queryAndFetch($sql);
     return $result;
+}
+
+
+function isAllowedToDeleteReg($db, $id)
+{
+    $sql = "SELECT * FROM registered WHERE id=? AND userID=?";
+    $params = array($id,$_SESSION['uid']);
+    $res = $db->queryAndFetch($sql, $params);
+    if($db->RowCount() == 1)
+    {
+        return true;
+    }
+    return false;
 }
 
 

@@ -3,16 +3,19 @@ $pageId ="calendar";
 $pageTitle ="- kalender";
 include("include/header.php");
 
-function getNrOfRegistered($db, $eventId)
+
+//Merge this one with the one index page is using?
+function getNrOfRegisteredCal($db, $eventID)
 {
-    $sql = "SELECT COUNT(*) as count FROM registerd WHERE eventId=?";
-    $params = array($eventId);
+    $sql = "SELECT COUNT(*) as count FROM registered WHERE eventID=?";
+    $params = array($eventID);
     $res = $db->queryAndFetch($sql, $params);
     if($db->RowCount() > 0)
     {
         return $res[0]->count;
     }
 }
+
 function draw_calendar($db, $month,$year)
 {
 	/* draw table */
@@ -54,7 +57,7 @@ function draw_calendar($db, $month,$year)
 			foreach($result as $row)
 			{
 			    echo $row->id;
-				$calendar.= "<p class='event_p'>" . $row->eventName . "<br/>Anmälda: ".getNrOfRegistered($db, $row->id)."</p>";
+				$calendar.= "<p class='event_p'>" . $row->eventName . "<br/>Anmälda: ".getNrOfRegisteredCal($db, $row->id)."</p>";
 			}
 		}
 		$calendar .= '</div>';
