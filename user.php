@@ -10,7 +10,7 @@ include('include/header.php');
  * else
  *      Possible to create new user
  */
-$priviledge  = getUserPriviledge($db);
+$privilege  = getUserprivilege($db);
 $username    = isset($_SESSION['username']) ? $_SESSION['username']: "";
 function getUserInformation($db, $username)
 {

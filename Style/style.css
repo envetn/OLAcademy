@@ -232,13 +232,12 @@ a:hover, a:active {
 	display: block;
 	margin-left: auto;
     margin-right: auto;
+    background:white;
+    border-bottom-right-radius: 20px;
+	border-top-right-radius: 20px;	
 	width:30%;	
 }
 
-.youShallNotPassDivP
-{
-
-}
 .youShallNotPassDivP p
 {
 	margin: 0;

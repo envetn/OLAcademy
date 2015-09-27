@@ -6,11 +6,17 @@ include("include/header.php");
 $userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
 $username = isset($_SESSION['username']) ? $_SESSION['username']: "";
 if (isset($_GET['highlighted']))
-	$_SESSION['highlighted'] = $_GET['highlighted'];
+{
+    $_SESSION['highlighted'] = $_GET['highlighted'];
+}
 elseif (isset($_SESSION['highlighted']))
+{
 	$_SESSION['highlighted'] = $_SESSION['highlighted'];
+}
 else
-	$_SESSION['highlighted'] = 0;
+{
+    $_SESSION['highlighted'] = 0;
+}
 
 // Post functions
 if(isset($_POST['register']))

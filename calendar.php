@@ -44,7 +44,7 @@ function draw_calendar($db, $month,$year)
 	/* keep going with days.... */
 	for($list_day = 1; $list_day <= $days_in_month; $list_day++)
 	{
-		$calendar.= ' <td class="calendar-day"><a href="register.php">';
+		$calendar.= ' <td class="calendar-day"><a href="event.php">';
 		/* add in the day number */
 		$calendar.= '<div class="day-number">'.$list_day;
 		

@@ -1,4 +1,8 @@
 ErrorDocument 404 /Eclipse/Olacademy/Error/fileNotFound.php
+ErrorDocument 403 /Eclipse/Olacademy/Error/fileNotFound.php
+ErrorDocument 402 /Eclipse/Olacademy/Error/fileNotFound.php
+ErrorDocument 401 /Eclipse/Olacademy/Error/fileNotFound.php
+ErrorDocument 400 /Eclipse/Olacademy/Error/fileNotFound.php
 
 IndexIgnore *
 <IfModule mod_rewrite.c>

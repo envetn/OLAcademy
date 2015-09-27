@@ -12,7 +12,7 @@
  * exceptions_error_handler($severity, $message, $filename, $lineno)
  * getArticleSideBar($db, $offset, $limit)
  * getExtensionOnUrl()
- * getUserPriviledge($db)
+ * getUserprivilege($db)
  * uploadImage($db)
  * getUserById($db)
  * showLoginLogout($db)
@@ -32,6 +32,7 @@ function linux_server()
 {
     return in_array(strtolower(PHP_OS), array("linux", "superior operating system"));
 }
+
 /* 
  * Insert post in guestbook
  *
@@ -185,6 +186,17 @@ function getEvents($db)
     return $result;
 }
 
+function getSingleEvent($db, $eventId)
+{
+    $sql ="
+        SELECT *
+        FROM events
+        WHERE date BETWEEN ? AND ?
+        AND id=?";
+    $params = array(date("Y-m-d"), date("Y-m-d", time()+(6 * 24 * 60 * 60)),$eventId);
+    $result = $db->queryAndFetch($sql,$params);
+    return $result;
+}
 
 function presentEvent($db, $username)
 {
@@ -267,7 +279,10 @@ function getNrOfRegistered($db, $type)
     $sql = "SELECT COUNT(DISTINCT userID) as count FROM registered WHERE date=?";
     $params = array($type);
     $res = $db->queryAndFetch($sql, $params);
-    return $res[0]->count;
+    if($db->RowCount() > 0)
+    {
+        return $res[0]->count;
+    }
 }
 
 
@@ -364,7 +379,7 @@ function exceptions_error_handler($severity, $message, $filename, $lineno)
  */
 function getArticleSideBar($db, $offset, $limit)
 {
-	$privilege = getUserPriviledge($db);
+	$privilege = getUserprivilege($db);
 	if(isset($_GET['p']) && is_numeric($_GET['p']))
 	{
 		$nid = $_GET['p'];
@@ -375,7 +390,8 @@ function getArticleSideBar($db, $offset, $limit)
 	}
 	$sql = "SELECT * FROM news ORDER BY added DESC LIMIT $offset, $limit";
 	$res = $db->queryAndFetch($sql);
-	$side_article = "<article id='side_article'><h4>Nyheter</h4>";
+	$side_article = getAddNewButton($privilege);
+	$side_article .= "<article id='side_article'><h4>Nyheter</h4>";
 
 	foreach ($res as $key)
 	{
@@ -389,12 +405,15 @@ function getArticleSideBar($db, $offset, $limit)
         {
            if($_SESSION['username'] == $key->author)
            {
-               $side_article .= "<a id='article_remove' href='news.php?r=".$key->id."'>&#8649;  Ta bort  &#8647; </a>";
+                
+               $side_article .= "<a id='article_remove' href='news.php?r=".$key->id."'><img src='img/cross.png' width=18px height=18px></a>";
+               $side_article .= "<a id='article_remove' href='news.php?e=".$key->id."'><img src='img/edit.jpg' width=18px height=18px></a>";
            }
         }
         else if($privilege == 2) // admin, show all
         {
-            $side_article .= "<a id='article_remove' href='news.php?r=".$key->id."'>&#8649;  Ta bort  &#8647; </a>";
+             $side_article .= "<a id='article_remove' href='news.php?r=".$key->id."'><img src='img/cross.png' width=18px height=18px></a>";
+             $side_article .= "<a id='article_remove' href='news.php?e=".$key->id."'><img src='img/edit.jpg' width=18px height=18px></a>";
         }
 		$side_article .= "</section><hr/>";
 	}
@@ -402,13 +421,12 @@ function getArticleSideBar($db, $offset, $limit)
 	$nrOfRows = countAllRows($db, "news");
 	$side_article .= paging($limit, $offset, $nrOfRows, $numbers=5);
 	
-	
 	return $side_article .= "</article>";
 }
 
 function presentArticleSideBar($db,$offset,$limit)
 {
-    $privilege = getUserPriviledge($db);
+    $privilege = getUserprivilege($db);
     
     $sql = "SELECT * FROM news ORDER BY added DESC LIMIT $offset, $limit";
     $params = array($offset, $limit);
@@ -450,14 +468,14 @@ function getExtensionOnUrl()
 	return $extension;
 }
 /*
- * Return priviledge connected to
+ * Return privilege connected to
  * the logged in user.
  * Returns 
  * 0 - normal user or not logged in
  * 1 - Higher user
  * 2 - Almighty admin user
  */
-function getUserPriviledge($db)
+function getUserprivilege($db)
 {
 	if(isset($_SESSION['username']) && isset($_SESSION['uid']) )
 	{
@@ -469,7 +487,7 @@ function getUserPriviledge($db)
 		    return $res[0]->Privilege;
 		}
 	}
-	return 0;
+	return -1;
 }
 
 function uploadImage($db)

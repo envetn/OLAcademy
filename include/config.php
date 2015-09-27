@@ -1,8 +1,8 @@
 <?php
 session_start();
 /*GLOBAL VARIABLES*/
-require_once 'include/src/php-markdown-lib/Michelf/Markdown.php';
-include("functions.php");
+require_once INCLUDE_PATH .'/src/php-markdown-lib/Michelf/Markdown.php';
+include_once(INCLUDE_PATH . "/functions.php");
 set_error_handler('exceptions_error_handler');
 
 $GLOBAL['database']['dsn']              = 'mysql:host=localhost;dbname=olacademy;'; 

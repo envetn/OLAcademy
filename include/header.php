@@ -1,8 +1,9 @@
 <?php
-include("include/config.php");
-include("include/src/Database/database.php");
+define('INCLUDE_PATH', __DIR__ . '');
+include_once(INCLUDE_PATH . "/config.php");
+include_once(INCLUDE_PATH . "/src/Database/database.php");
 $db = new Database($GLOBAL['database']);
-$priviledge =  getUserPriviledge($db);
+$privilege =  getUserprivilege($db);
 ?>
 <!doctype html>  
 <html lang='sv'>
@@ -43,13 +44,12 @@ $priviledge =  getUserPriviledge($db);
 					<li><a id="news-" href='news.php'>Nyheter</a></li>
 					<li><a id="guestbook-" href='guestbook.php'>Gästbok</a></li>
 					<li><a id="calendar-" href='calendar.php'>Kalender</a></li>
-					<?php echo $priviledge == 2 ? "<li><a href='admin.php'>Admin</a>" : "";?>
+					<?php echo $privilege == 2 ? "<li><a href='admin.php'>Admin</a>" : "";?>
 				</ul>
                     <?php echo showLoginLogout($db, $GLOBAL['salt_char']);?>
 			</div>
 			</main>
 		</div>
 	</nav>
-
 </header>
 <main>
