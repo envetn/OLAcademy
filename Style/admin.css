@@ -1,0 +1,59 @@
+td
+{
+    border: 1px solid black;
+    margin-left:2%;
+}
+td span
+{
+     margin-left:2%;
+}
+#sidebar
+{
+	float:left;
+	width:15%;
+	margin-top:2%;
+	background:#fff;
+	padding:1%;
+  	border-bottom-right-radius: 20px;
+	border-top-right-radius: 20px;
+}
+#sidebar ul
+{
+	padding-left:1%;
+}
+#sidebar li
+{
+	margin:1%;
+	padding-left:1%;
+	font-size:20px;
+	list-style-type: none;
+	color:#4799D1;
+}
+#sidebar li:hover
+{
+	background:#3c88c9;
+	color:#000;
+	border-bottom-right-radius: 20px;
+	border-top-right-radius: 20px;
+}
+#content
+{
+	width:60%;
+	float:left;
+}
+#tableHead
+{
+	#text-align:center;
+	padding-left:1%;
+	color:#286090;
+}
+#infoHead
+{
+	text-align:center;
+	color:#286090;
+}
+#tableContent
+{
+	padding:2%;
+	margin:2%;
+}

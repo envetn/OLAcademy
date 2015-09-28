@@ -642,4 +642,20 @@ function makeLinks($text)
 	echo $text;
 	return $text;
 }
+
+function logError( $message)
+{
+	try 
+	{
+		// To be done
+		$file = "../error.log";
+		$logFile = fopen($file, "a+");
+		fwrite($logFile, "[ ". date('Y-m-d H:i:s') ." ] - ". $message);
+		fclose($logFile);
+	}
+	catch(Exception $e)
+	{
+		echo $e;
+	}
+}
 ?>

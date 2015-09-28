@@ -1,36 +1,10 @@
 <style>
-table
-{
-    margin-left:2%;
-}
-th
-{
-    text-align: center;
-}
-td
-{
-    border: 1px solid black;
-    margin-left:2%;
-}
-td span
-{
-     margin-left:2%;
-}
-.admin_news_remove
-{
-    text-align: center;
-}
-input
-{
-	margin:0px;
-	padding:0px;
-}
+
 </style>
 <?php
 $pageTitle = " - Admin";
 include("include/header.php");
 $privilege  = getUserprivilege($db);
-
 /*
  * Functions for the options
  */
@@ -39,7 +13,7 @@ function showTitleOfPosts($db)
     $sql = "SELECT title,id,author FROM news LIMIT 10";
 
     $res = $db->queryAndFetch($sql);
-    $news = "<h3>Nyheter</h3><table >
+    $news = "<h3 id='tableHead'>Nyheter</h3><table id='tableContent'>
     <tr>
         <th>Title</th><th>Av</th><th>Ta bort</th>
     <tr>";
@@ -74,7 +48,7 @@ function showTitleOfPosts($db)
 function showEvents($db)
 {
     $res = getEvents($db);
-    $htmlEvents = "<h3>Veckans träningar</h3><table>
+    $htmlEvents = "<h3 id='tableHead'>Veckans träningar</h3><table id='tableContent'>
     <tr>
         <th>Event</th><th>Info</th><th>När</th><th>Datum</th><th>Edit</th>
     <tr>";
@@ -101,14 +75,14 @@ function getUsers($db)
     $res = $db->queryAndFetch($sql);
 
     // Maybe not show all users?
-    $htmlUsers = "<h3>Användare</h3><form method='post'><table>
+    $htmlUsers = "<h3 id='tableHead'>Användare</h3><table id='tableContent'>
     <tr>
         <th>Namn</th><th>email</th><th>Rättighet</th><th>Registrerad</th><th>Edit</th>
     <tr>";
-
     foreach($res as $users)
     {
-		$htmlUsers .= "<tr>
+		$htmlUsers .= "<form method='post'><tr>
+                            <input type='hidden' name='userId' value='".$users->id."' />
                             <td><input type='text' name='username' value='".$users->name."' /></td>
                             <td>".$users->email."</td>
                             <td><input type='text' name='privilege' value='".$users->Privilege."' /></td>
@@ -117,31 +91,114 @@ function getUsers($db)
 								<input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='editUser_1' value='Click me'>
                                 <input type='image' src='img/edit.jpg'  border='0' width=18px height=18px alt='Submit'  name='editUser_2' value='Click me2'>
                             </td>
-                        </tr>";
+                        </tr></form>";
     }
-    return $htmlUsers . "</table></form>";
+    return $htmlUsers . "</table>";
 }
 
+function getTablesAndValidateGET($db, $htmlAdmin)
+{
+	if(isset($_GET['c']) && is_numeric(($_GET['c'])) )
+	{
+		$choice = strip_tags($_GET['c']);
+		switch($choice)
+		{
+			case 0:
+				$htmlAdmin = showTitleOfPosts($db);
+				break;
+			case 1:
+				$htmlAdmin = showEvents($db);
+				break;
+			case 2:
+				$htmlAdmin = getUsers($db);
+				break;
+			default :
+				$htmlAdmin = "<h4 id='infoHead'> Välj från menun till höger </h4>";
+				break;
+		}
+		return $htmlAdmin . "</div>";	
+	}
+}
+
+function tryToRemoveUser($db)
+{
+	if(isset($_POST['userId']) && is_numeric($_POST['userId']) ) 
+	{
+		try 
+		{
+			$sql = "DELETE FROM users WHERE id=? LIMIT 1";
+			$userId = $_POST['userId'];
+			$params = array($userId);
+			echo $userId;
+			$db->ExecuteQuery($sql,$params);
+			return true;
+		}
+		catch(Exception $e)
+		{
+			logError("< " . $_POST['userId'] . "  tryToRemoveUser > Error: " . $e . "\n");
+			return false;
+		}
+	}
+}
+
+function tryToEditUser($db)
+{
+	if(isset($_POST['userId']) && is_numeric($_POST['userId']) )
+	{
+		try
+		{
+			$sql = "UPDATE users SET name=?, Privilege=? WHERE id=? LIMIT 1";
+			$userId    = $_POST['userId'];
+			$name 	   = $_POST['username'];
+			$Privilege = $_POST['privilege'];
+			$params = array($name, $Privilege, $userId);
+			echo $userId;
+			$db->ExecuteQuery($sql,$params);
+			return true;
+		}
+		catch(Exception $e)
+		{
+			logError("< " . $_POST['userId'] . "  tryToEditUser > Error: " . $e . "\n");
+			return false;
+		}
+	}
+}
 
 if($privilege === "2")
 {
-    $htmlAdmin = "";
+	$sideBar = "<div id='sidebar'><ul>
+                <li><a href='".$_SERVER['PHP_SELF'] . "?c=0'>Nyheter</a></li>
+                <li><a href='".$_SERVER['PHP_SELF'] . "?c=1'>Träningar</a></li>
+                <li><a href='".$_SERVER['PHP_SELF'] . "?c=2'>Användare</a></li>
+               </ul></div>";
+    $htmlAdmin = "<div id='content'>";
     if(isset($_POST['editUser_1_x'])) // Where does x come from?
     {
-    	// Remove user
-        $htmlAdmin .= "<h4 style='text-align:center;'> User removed </h4>";
+        if(tryToRemoveUser($db))
+        {
+        	$htmlAdmin .= "<h4 id='infoHead'>Användare borttagen </h4>";
+        }
+        else
+        {
+        	$htmlAdmin .= "<h4 id='infoHead'> ... </h4>";
+        }
     }
     else if(isset($_POST['editUser_2_x']))
     {
-        // Update user
-        $htmlAdmin .= "<h4 style='text-align:center;'> User updated </h4>";
+        if(tryToEditUser($db))
+        {
+        	$htmlAdmin .= "<h4 id='infoHead'> User updated </h4>";
+        }
+        else
+        {
+        	$htmlAdmin .= "<h4 id='infoHead'> Not updated... </h4>";
+        }
     }
     
-    
-    $htmlAdmin .= showTitleOfPosts($db);
-    $htmlAdmin .= showEvents($db);
-    $htmlAdmin .= getUsers($db);
+    $htmlAdmin .= getTablesAndValidateGET($db, $htmlAdmin);
     echo "<div class='row clearFix'>";
+    echo "<div style='clear:both; overflow: hidden;'>";
+    echo $sideBar;
     echo $htmlAdmin;
     echo "</div>";
 }
