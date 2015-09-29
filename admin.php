@@ -8,12 +8,12 @@ $privilege  = getUserprivilege($db);
 /*
  * Functions for the options
  */
-function showTitleOfPosts($db)
+function getTableTitleOfPosts($db)
 {
     $sql = "SELECT title,id,author FROM news LIMIT 10";
 
     $res = $db->queryAndFetch($sql);
-    $news = "<h3 id='tableHead'>Nyheter</h3><table id='tableContent'>
+    $news = "<h3 id='tableHead'>Nyheter</h3><a href='news.php?new=Lägg+till'> < Lägg till > </a><table id='tableContent'>
     <tr>
         <th>Title</th><th>Av</th><th>Ta bort</th>
     <tr>";
@@ -45,18 +45,23 @@ function showTitleOfPosts($db)
     return $news;
 }
 
-function showEvents($db)
+function getTableEvents($db)
 {
     $res = getEvents($db);
-    $htmlEvents = "<h3 id='tableHead'>Veckans träningar</h3><table id='tableContent'>
+    $htmlEvents = "<h3 id='tableHead'>Veckans träningar</h3><a href='event.php?a=1'> < Lägg till > </a><table id='tableContent'>
     <tr>
         <th>Event</th><th>Info</th><th>När</th><th>Datum</th><th>Edit</th>
     <tr>";
     foreach($res as $event)
     {
+    	$info = $event->info;
+    	if(strlen($info) > 40)
+		{
+			$info =  substr($info,0, 40). "<a href='event.php?s=$event->id'> ... </a>";
+		}
         $htmlEvents .= "<tr>
                             <td>".$event->eventName."</td>
-                            <td>".$event->info."</td>
+                            <td>".$info."</td>
                             <td>".$event->startTime."</td>
                             <td>".$event->date."</td>
                             <td>
@@ -69,13 +74,12 @@ function showEvents($db)
     return $htmlEvents . "</table>";
 }
 
-function getUsers($db)
+function getTableUsers($db)
 {
     $sql = "SELECT id,name,email,Privilege,regDate FROM users";
     $res = $db->queryAndFetch($sql);
-
     // Maybe not show all users?
-    $htmlUsers = "<h3 id='tableHead'>Användare</h3><table id='tableContent'>
+    $htmlUsers = "<h3 id='tableHead'>Användare</h3><a href='createUser.php'> < Lägg till > </a><table id='tableContent'>
     <tr>
         <th>Namn</th><th>email</th><th>Rättighet</th><th>Registrerad</th><th>Edit</th>
     <tr>";
@@ -104,38 +108,37 @@ function getTablesAndValidateGET($db, $htmlAdmin)
 		switch($choice)
 		{
 			case 0:
-				$htmlAdmin = showTitleOfPosts($db);
+				$htmlAdmin = getTableTitleOfPosts($db);
 				break;
 			case 1:
-				$htmlAdmin = showEvents($db);
+				$htmlAdmin = getTableEvents($db);
 				break;
 			case 2:
-				$htmlAdmin = getUsers($db);
+				$htmlAdmin = getTableUsers($db);
 				break;
 			default :
 				$htmlAdmin = "<h4 id='infoHead'> Välj från menun till höger </h4>";
 				break;
 		}
-		return $htmlAdmin . "</div>";	
+		return $htmlAdmin . "</div>";
 	}
 }
 
 function tryToRemoveUser($db)
 {
-	if(isset($_POST['userId']) && is_numeric($_POST['userId']) ) 
+	if(isset($_POST['userId']) && is_numeric($_POST['userId']) )
 	{
-		try 
+		try
 		{
 			$sql = "DELETE FROM users WHERE id=? LIMIT 1";
 			$userId = $_POST['userId'];
 			$params = array($userId);
-			echo $userId;
 			$db->ExecuteQuery($sql,$params);
 			return true;
 		}
 		catch(Exception $e)
 		{
-			logError("< " . $_POST['userId'] . "  tryToRemoveUser > Error: " . $e . "\n");
+			logError("< " . $_SESSION['uid'] . "  tryToRemoveUser > Error: " . $e . "\n");
 			return false;
 		}
 	}
@@ -158,7 +161,7 @@ function tryToEditUser($db)
 		}
 		catch(Exception $e)
 		{
-			logError("< " . $_POST['userId'] . "  tryToEditUser > Error: " . $e . "\n");
+			logError("< " . $_SESSION['uid'] . "  tryToEditUser > Error: " . $e . "\n");
 			return false;
 		}
 	}
@@ -194,7 +197,7 @@ if($privilege === "2")
         	$htmlAdmin .= "<h4 id='infoHead'> Not updated... </h4>";
         }
     }
-    
+
     $htmlAdmin .= getTablesAndValidateGET($db, $htmlAdmin);
     echo "<div class='row clearFix'>";
     echo "<div style='clear:both; overflow: hidden;'>";

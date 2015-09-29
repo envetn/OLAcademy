@@ -1,5 +1,5 @@
  <?php
-/* 
+/*
  * INDEX FOR FUNCTIONS IN THIS FILE
  * linux_server()
  * makePost($db, $name, $text)
@@ -20,7 +20,7 @@
  * getUserByCookie($db)
  * displayErrorMessage($message)
  * makeLinks($text)
- * 
+ *
  */
  
  /*
@@ -101,7 +101,7 @@ function presentPost($db, $offset, $limit)
 
 function presentNews($db, $offset, $limit)
 {
-    $sql = "SELECT * FROM news LIMIT $offset, $limit"; 
+    $sql = "SELECT * FROM news LIMIT $offset, $limit";
     //why you no work with ??
     $res = $db->queryAndFetch($sql);
     $news = "";
@@ -111,11 +111,10 @@ function presentNews($db, $offset, $limit)
         if(strlen($content) > 150)
         {
             $content =  substr($content,0, 150). "<a href='news.php?offset=0&p=$row->id'> ... Läs mer</a>";
-
         }
         else
         {
-            $content .= "<a href='news.php?offset=0&p=$row->id'>&nbsp; Läs mer</a>"; 
+            $content .= "<a href='news.php?offset=0&p=$row->id'>&nbsp; Läs mer</a>";
         }
         $news .= "<div class='index_news'>
                     <span>Title: ".$row->title."</span>
@@ -123,12 +122,12 @@ function presentNews($db, $offset, $limit)
                     <span> ".$content."</span>
                     <br/>
                     <span>Av:  ".$row->author."</span>
-                     <hr/>       
+                     <hr/>
                   </div>";
     }
     return $news;
 }
-/* 
+/*
  * Count all rows in a database table
  *
  */
@@ -138,7 +137,7 @@ function countAllRows($db, $table)
 	$result = $db->queryAndFetch($sql); //Execute query
 	return $result[0]->rows;
 }
-/* 
+/*
  * Paging
  *
  */
@@ -151,7 +150,7 @@ function paging($limit, $offset, $nrOfRows, $numbers=5)
 	$paging = "";
 	
 	//Pages out of range
-	$j = $numbers >= $num_page || $cur_page <= ceil($numbers/2) ? 0 : $cur_page - ceil($numbers/2); 
+	$j = $numbers >= $num_page || $cur_page <= ceil($numbers/2) ? 0 : $cur_page - ceil($numbers/2);
 	if($cur_page > $num_page-ceil($numbers/2) && $num_page - $numbers > 0) $j = $num_page - $numbers;
 	//Print links
 	if($nrOfRows > $limit)
@@ -163,12 +162,12 @@ function paging($limit, $offset, $nrOfRows, $numbers=5)
 		for($i = (0 + $j); $i < $num_page && $i < $numbers + $j; $i++)
 		{
 			$page_link = $i * $limit;
-			if($i*$limit == $offset) $paging .= " <b>" . ($i+1) . "</b> \n"; 
+			if($i*$limit == $offset) $paging .= " <b>" . ($i+1) . "</b> \n";
 			else $paging .= "<a href='$_SERVER[PHP_SELF]?offset=$page_link'>" . ($i+1) . "</a> \n";
 		}
-		if($nrOfRows > $offset + $limit) 
+		if($nrOfRows > $offset + $limit)
 			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$next'>&gt;</a> \n";//Link to next page
-		if($num_page > $numbers && $cur_page <= $num_page-ceil($numbers/2)) 
+		if($num_page > $numbers && $cur_page <= $num_page-ceil($numbers/2))
 			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=".($num_page-1)*$limit."'> ...$num_page</a> \n";//Link to last page
 	}
 	return $paging;
@@ -178,7 +177,7 @@ function getEvents($db)
 {
 	$sql ="
         SELECT *
-        FROM events 
+        FROM events
         WHERE date BETWEEN ? AND ?
         ";
     $params = array(date("Y-m-d"), date("Y-m-d", time()+(6 * 24 * 60 * 60)));
@@ -242,7 +241,7 @@ function presentEvent($db, $username)
 			{
 				if ($key->date == date("Y-m-d", time()+($i * 86400)))
 				{
-					$text .= 
+					$text .=
 					"<form method='POST' action='index.php'>
 						<input type='hidden' name='eventID' value=" . $key->id . ">
 						<input type='hidden' name='date' value=" . date("Y-m-d", time()+($i * 86400)) . ">
@@ -294,7 +293,7 @@ function getRegistered($db, $eventID)
 {
 	$sql ="
 		SELECT *
-        FROM registered 
+        FROM registered
         WHERE eventID=$eventID
         ";
 	$result = $db->queryAndFetch($sql);
@@ -316,25 +315,24 @@ function isAllowedToDeleteReg($db, $id)
 
 
 /*
- * Returns all events 
+ * Returns all events
  * within the current month
  */
 function getCurrentMonthsEvents($db)
 {
- //  WHERE EXISTS 
+ //  WHERE EXISTS
     //    (
-      //      SELECT * FROM registered as r 
-        //    WHERE events.id = r.eventId AND 
+      //      SELECT * FROM registered as r
+        //    WHERE events.id = r.eventId AND
        // )
- 
-    $sql ="
+
+	$sql ="
         SELECT *
-        FROM events 
+        FROM events
         WHERE date BETWEEN ? AND ?
         ";
     $firstDay = (new DateTime('first day of this month'))->format('Y-m-d');
     $lastDay  = (new DateTime('last day of this month'))->format('Y-m-d');
-     
     $params = array($firstDay, $lastDay);
     $result = $db->queryAndFetch($sql,$params);
     return $result;
@@ -342,9 +340,9 @@ function getCurrentMonthsEvents($db)
 
 
 /*
- * Returns datetime 
+ * Returns datetime
  * in SQL format
- * 
+ *
  */
 
 function validateText($text)
@@ -359,11 +357,11 @@ function validateText($text)
 
 function exceptions_error_handler($severity, $message, $filename, $lineno)
 {
-	if (error_reporting() == 0) 
+	if (error_reporting() == 0)
 	{
 		return;
 	}
-	if (error_reporting() & $severity) 
+	if (error_reporting() & $severity)
 	{
 		throw new ErrorException($message, 0, $severity, $filename, $lineno);
 	}
@@ -398,7 +396,7 @@ function getArticleSideBar($db, $offset, $limit)
 		$side_article .= "<section>";
 		$side_article .= "<a href='news.php?offset=".$offset."&p=".$key->id."'<h3>". $key->title ."</h3>";
 		$side_article .= "<p class='date_p'>". $key->added . "</p>";
-		$side_article .= "<p class='NewsContent_p'>". 
+		$side_article .= "<p class='NewsContent_p'>".
 		  \Michelf\Markdown::defaultTransform(validateText($key->content)) ."</p>";
 		$side_article .= "<p class='NewsBy_p'><b>Av: </b>". $key->author ."</p></a>";
 	    if($privilege == 1) //only show users article
@@ -621,15 +619,15 @@ function getUserByCookie($db)
 function displayErrorMessage($message)
 {
 	return "<div class='youShallNotPassDiv'>
-	<img class='youShallNotPassPicture' src='img/youShallNotPass.jpg'/>
-	<div class='youShallNotPassDivP'><p>The Wizard says: </p> <p style='color:red'>$message </p></div>
+	<img class='youShallNotPassPicture' src='img/error.gif'/>
+	<div class='youShallNotPassDivP'><p>Det blev något fel: </p> <p style='color:red'>$message </p></div>
 	</div>";
 }
 
 /*
  * Makes clickable links
- * 
- * 
+ *
+ *
  */
 function makeLinks($text)
 {
@@ -643,19 +641,23 @@ function makeLinks($text)
 	return $text;
 }
 
-function logError( $message)
+/* Log caught exceptions
+ * In my opinion it is good to catch
+ * some exception and save them inside log file.
+ * In that case user will not be able to see
+ * if s/he generated an unexpected error.
+ */
+function logError($message)
 {
-	try 
+	try
 	{
-		// To be done
-		$file = "../error.log";
-		$logFile = fopen($file, "a+");
-		fwrite($logFile, "[ ". date('Y-m-d H:i:s') ." ] - ". $message);
+		$logFile = fopen("error.log", "a");
+		fwrite($logFile,  "\r [ ". date('Y-m-d H:i:s') ." ] - ". $message);
 		fclose($logFile);
 	}
 	catch(Exception $e)
 	{
-		echo $e;
+		// print error?
 	}
 }
 ?>

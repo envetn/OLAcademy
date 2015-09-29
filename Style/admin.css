@@ -1,7 +1,7 @@
 td
 {
     border: 1px solid black;
-    margin-left:2%;
+	width:20%;
 }
 td span
 {
@@ -35,6 +35,10 @@ td span
 	color:#000;
 	border-bottom-right-radius: 20px;
 	border-top-right-radius: 20px;
+}
+#sidebar a
+{
+	text-decoration:none;
 }
 #content
 {
