@@ -16,7 +16,7 @@ function getNrOfRegisteredCal($db, $eventID)
     }
 }
 
-function draw_calendar($db, $month,$year)
+function draw_calendar($db, $month,$year, $userLoggedIn)
 {
 	/* draw table */
 	$calendar = '<table class="calendar">';
@@ -45,8 +45,14 @@ function draw_calendar($db, $month,$year)
 	for($list_day = 1; $list_day <= $days_in_month; $list_day++)
 	{
 		$calendar.= ' <td class="calendar-day"><a href="event.php">';
+		
+		$addEvent_btn = "";
+		if($userLoggedIn)
+		{
+			$addEvent_btn = "<a class='eventAdd_btn' href='event.php?a=1&day=".$list_day."'><img src='img/add.png' width=18px height=18px></a>";
+		}
 		/* add in the day number */
-		$calendar.= '<div class="day-number">'.$list_day;
+		$calendar.= '<div class="day-number">'.$list_day . $addEvent_btn . "</p>";
 		
 		/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
 		$current_date = date('Y-m-d', mktime(0,0,0,$month,$list_day,$year));
@@ -56,8 +62,7 @@ function draw_calendar($db, $month,$year)
 		{
 			foreach($result as $row)
 			{
-			    echo $row->id;
-				$calendar.= "<p class='event_p'>" . $row->eventName . "<br/>Anmälda: ".getNrOfRegisteredCal($db, $row->id)."</p>";
+				$calendar.= "<a href=''><p class='event_p'>" . $row->eventName . "<br/>Anmälda: ".getNrOfRegisteredCal($db, $row->id)."</a>";
 			}
 		}
 		$calendar .= '</div>';
@@ -104,7 +109,7 @@ $month = date('m', strtotime('0 month'));
 $year = date('Y', strtotime('0 year'));
 echo "<div class='row clearFix'>";
 	echo "<div class='b'>";
-		echo draw_calendar($db, $month,$year);
+		echo draw_calendar($db, $month,$year, $user->isLoggedIn());
 	echo "</div>";
 echo "</div>";
 

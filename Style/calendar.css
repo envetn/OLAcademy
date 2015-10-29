@@ -2,13 +2,16 @@
 
 .day-number
 {
+	position: relative;
+	min-height:80px;
+	min-width:80px;
+
 }
 
 .calendar-day
 {
+	clear:both;
 	border: 1px solid black;
-	min-width:100px;
-	min-height:100px;	
 }
 
 .calendar-day :hover
@@ -20,4 +23,11 @@
 {
 	font-size:14px;
 	margin:0px; padding:0px;
+}
+.eventAdd_btn
+{
+	/*Align to bottom right corner*/
+	position: absolute;
+	bottom: 0;
+	right: 0;
 }

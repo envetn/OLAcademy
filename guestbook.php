@@ -1,6 +1,6 @@
 <?php
 $pageId ="guestbook";
-$pageTitle ="- Gästbok";
+$pageTitle ="- GÃ¤stbok";
 include("include/header.php");
 $limit  = 15; //Posts per page
 $offset = isset($_GET['offset']) && is_numeric($_GET['offset']) ? $_GET['offset'] : 0; //Start index

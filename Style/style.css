@@ -262,7 +262,9 @@ footer {
 .clearFix 
 {
     overflow: auto;
-    background:#fbfbf0;
+    background:#efefd2;
+   	border-bottom-right-radius: 20px;
+	border-top-right-radius: 20px;
 }
 
 q{

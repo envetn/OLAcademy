@@ -16,13 +16,11 @@
  * uploadImage($db)
  * getUserById($db)
  * showLoginLogout($db)
- * setRememberMe($user,$key,$db)
- * getUserByCookie($db)
  * displayErrorMessage($message)
  * makeLinks($text)
  *
  */
- 
+ include("src/User/User.php");
  /*
   * GLOBALS
   */
@@ -141,7 +139,7 @@ function countAllRows($db, $table)
  * Paging
  *
  */
-function paging($limit, $offset, $nrOfRows, $numbers=5)
+function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl)
 {
 	$prev = $offset - $limit; //Previous page
 	$next = $offset + $limit; //Next page
@@ -155,34 +153,62 @@ function paging($limit, $offset, $nrOfRows, $numbers=5)
 	//Print links
 	if($nrOfRows > $limit)
 	{
-		if($j > 0) $paging .= "<a href='$_SERVER[PHP_SELF]?offset=0'>1... </a> \n"; //Link to first page
-		if($offset > 0) $paging .= "<a href='$_SERVER[PHP_SELF]?offset=$prev'>&lt;</a> \n";//Link to previous page
+		if($j > 0) 
+		{
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=0$currentUrl'>1... </a> \n"; //Link to first page
+		}
+		if($offset > 0) 
+		{
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$prev'>&lt;</a> \n";//Link to previous page
+		}
 		
 		//Pages within range
 		for($i = (0 + $j); $i < $num_page && $i < $numbers + $j; $i++)
 		{
 			$page_link = $i * $limit;
-			if($i*$limit == $offset) $paging .= " <b>" . ($i+1) . "</b> \n";
-			else $paging .= "<a href='$_SERVER[PHP_SELF]?offset=$page_link'>" . ($i+1) . "</a> \n";
+			if($i*$limit == $offset) 
+			{
+				$paging .= " <b>" . ($i+1) . "</b> \n";
+			}
+			else 
+			{
+				$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$page_link$currentUrl'>" . ($i+1) . "</a> \n";
+			}
 		}
 		if($nrOfRows > $offset + $limit)
-			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$next'>&gt;</a> \n";//Link to next page
+		{
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$next$currentUrl'>&gt;</a> \n";//Link to next page
+		}
 		if($num_page > $numbers && $cur_page <= $num_page-ceil($numbers/2))
-			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=".($num_page-1)*$limit."'> ...$num_page</a> \n";//Link to last page
+		{
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=".($num_page-1)*$limit."$currentUrl'> ...$num_page</a> \n";//Link to last page
+		}
 	}
 	return $paging;
 } 
 
-function getEvents($db)
+function getWeeklyEvents($db)
 {
 	$sql ="
         SELECT *
         FROM events
         WHERE date BETWEEN ? AND ?
+		ORDER BY date
         ";
     $params = array(date("Y-m-d"), date("Y-m-d", time()+(6 * 24 * 60 * 60)));
 	$result = $db->queryAndFetch($sql,$params);
     return $result;
+}
+
+function getAllEvents($db)
+{
+	$sql ="
+        SELECT *
+        FROM events
+		ORDER BY date
+        ";
+	$result = $db->queryAndFetch($sql);
+	return $result;
 }
 
 function getSingleEvent($db, $eventId)
@@ -199,9 +225,7 @@ function getSingleEvent($db, $eventId)
 
 function presentEvent($db, $username)
 {
-	$events = getEvents($db);
-	
-	
+	$events = getWeeklyEvents($db);
 	
 	$text = "";
 	for ($i=0;$i<7;$i++)
@@ -297,7 +321,27 @@ function getRegistered($db, $eventID)
         WHERE eventID=$eventID
         ";
 	$result = $db->queryAndFetch($sql);
-    return $result;
+	return $result;
+    
+}
+
+/*
+ * Return number of registerd for this event
+ */
+function getNumberOfRegistered($db, $eventID)
+{
+	$sql ="
+	SELECT COUNT(*) AS registered
+	FROM registered
+	WHERE eventID=$eventID
+	";
+	$result = $db->queryAndFetch($sql);
+	if(isset($result[0]->registered))
+	{
+		return $result[0]->registered;
+	}
+	return 0;
+
 }
 
 
@@ -375,9 +419,9 @@ function exceptions_error_handler($severity, $message, $filename, $lineno)
  * Also add paging
  *
  */
-function getArticleSideBar($db, $offset, $limit)
+function getArticleSideBar($db,$user ,$offset, $limit)
 {
-	$privilege = getUserprivilege($db);
+	$privilege = $user->getUserPrivilege();
 	if(isset($_GET['p']) && is_numeric($_GET['p']))
 	{
 		$nid = $_GET['p'];
@@ -417,36 +461,36 @@ function getArticleSideBar($db, $offset, $limit)
 	}
 	//add paging
 	$nrOfRows = countAllRows($db, "news");
-	$side_article .= paging($limit, $offset, $nrOfRows, $numbers=5);
+	$side_article .= paging($limit, $offset, $nrOfRows, $numbers=5, "");
 	
 	return $side_article .= "</article>";
 }
 
-function presentArticleSideBar($db,$offset,$limit)
-{
-    $privilege = getUserprivilege($db);
+// function presentArticleSideBar($db,$offset,$limit)
+// {
+//     $privilege = getUserprivilege($db);
     
-    $sql = "SELECT * FROM news ORDER BY added DESC LIMIT $offset, $limit";
-    $params = array($offset, $limit);
-    $res = $db->queryAndFetch($sql,$params);
+//     $sql = "SELECT * FROM news ORDER BY added DESC LIMIT $offset, $limit";
+//     $params = array($offset, $limit);
+//     $res = $db->queryAndFetch($sql,$params);
     
-    $side_article = "<article id='side_article'><h4>Nyheter</h4>";
+//     $side_article = "<article id='side_article'><h4>Nyheter</h4>";
 
-    foreach ($res as $key)
-    {
-        $content = \Michelf\Markdown::defaultTransform($key->content);
-        $side_article .= "<section>";
-        $side_article .= "<a href='news.php?offset=".$offset."&p=".$key->id."'<h3>". $key->title ."</h3>";
-        $side_article .= "<p class='date_p'>". $key->added . "</p>";
-        $side_article .= "<p class='NewsContent_p'>". validateText($content) ."</p>";
-        $side_article .= "<p class='NewsBy_p'><b>Av: </b>". $key->author ."</p></a>";
+//     foreach ($res as $key)
+//     {
+//         $content = \Michelf\Markdown::defaultTransform($key->content);
+//         $side_article .= "<section>";
+//         $side_article .= "<a href='news.php?offset=".$offset."&p=".$key->id."'<h3>". $key->title ."</h3>";
+//         $side_article .= "<p class='date_p'>". $key->added . "</p>";
+//         $side_article .= "<p class='NewsContent_p'>". validateText($content) ."</p>";
+//         $side_article .= "<p class='NewsBy_p'><b>Av: </b>". $key->author ."</p></a>";
         
 
-        $side_article .= "</section><hr/>";
-    }
-    return $side_article .= "</article>";;
+//         $side_article .= "</section><hr/>";
+//     }
+//     return $side_article .= "</article>";;
 
-}
+// }
 /*
  * Get text after '?' in the url
  * Good in case you want to know
@@ -503,127 +547,90 @@ function uploadImage($db)
  * and hashed passwd that matches the
  * input value, grant user access.
  */
-function showLoginLogout($db, $salt_char)
+function showLoginLogout($user, $salt_char)
 {
 	$error = "";
 	if(isset($_COOKIE['rememberme_olacademy']))
 	{
-		getUserByCookie($db);
+		$user->getUserByCookie();
 	}
 	else if(isset($_POST['login']) && !( isset($_SESSION['uid']) && isset($_SESSION['username']) ) )
 	{
 		$email = strip_tags($_POST['email']);
 		$password = md5($_POST['passwd'] . $salt_char);
-		$sql = "SELECT id,name,email FROM users WHERE email=? AND password=? LIMIT 1";
-		$params = array($email, $password);
-		$res = $db->queryAndFetch($sql, $params);
-		if($db->RowCount() == 1)
-		{
-			if(( strlen($_POST['email']) > 1 && strlen($_POST['passwd']) > 2 ))
-			{
-				$_SESSION['uid'] = $res[0]->id;
-				$_SESSION['username'] = $res[0]->name;
-				$_SESSION['email']= $res[0]->email;
 
-				//after successful logon
-				//check if remember_me isset
-				if(isset($_POST['remember_me']))
-				{
-					$SECRET_KEY = "!+?";
-					setRememberMe($res[0]->name,$SECRET_KEY,$db);
-				}
-			}
+		if(!$user->login($email,$password))
+		{
+			$error .= "<p style='color:red;'>Fel lösenord eller email </p>";
 		}
 		else
 		{
-			$error .= "<p style='color:red;'>Fel lösenord eller email </p>";
+			header("location: ". $_SERVER['PHP_SELF']);
 		}
 	}
 	else
 	{}
 	
-	/*
-	 * If User is found using cookie $_SESSION['uid']
-	 * will be set, and condition below true.
-	 * Maybe delete token from db?
-	 */
 	if(isset($_SESSION['uid']))
 	{
 		$form = "<form method='post' class='navbar-form navbar-right'><a href='user.php'>Användare: " . $_SESSION['username'] . "</a>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn btn-primary' name='logout'>Logout</button></form>";
 		if(isset($_POST['logout']))
 		{
-			session_destroy();
-			header("location:" .$_SERVER['PHP_SELF']."");
-			setcookie("rememberme_olacademy","" ,time() - (86400 * 31));
+			$user->logout();
+			header("location: index.php");
 		}
 	}
 	else
 	{
-	    $form = '<form id="signin" class="navbar-form navbar-right" role="form" method="post">
-					<div class="input-group">
-						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-						<input id="email" type="email" class="form-control" name="email" value="" placeholder="Användarnamn">
-					</div>
-
-					<div class="input-group">
-						<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-						<input id="password" type="password" class="form-control" name="passwd" value="" placeholder="Lösenord">
-	                   
-					</div>
-
-					<button type="submit" class="btn btn-primary" name="login">Login</button>
-	                 <input type="checkbox" name="remember_me" value="remember_me" id="remember_me"/>
-				</form>';
+		$form = $user->getLoginForm();
 	}
+
 	return $error . $form;
-}
-
-/*
- * Set remember me cookie
- * Everytime the function is called
- * a new token is generated for the user
- * and stored in db
- */
-function setRememberMe($user,$key,$db)
-{
-	// generate a token for storing in cookie
-	$token = md5(uniqid($user, true));
-	$SECRET_KEY = "!+?";
-	$shaToken = hash_hmac('sha256', $token,$SECRET_KEY );
-	$oneMonth = time() + (86400 * 30);
-	setcookie('rememberme_olacademy', $token, $oneMonth);
-
-	$sql = "UPDATE users SET token=? WHERE id=? AND name=? LIMIT 1";
-	$params = array($shaToken,$_SESSION['uid'],$user);
-	$db->ExecuteQuery($sql, $params);
-
-}
-/*
- * Gets the username and id by the cookies token.
- * Use sha256 hash and try to find
- * a match in db.
- */
-function getUserByCookie($db)
-{
-	$shaToken = hash_hmac('sha256', $_COOKIE['rememberme_olacademy'],"!+?" );
-	$sql = 'SELECT id,name FROM users WHERE token=? LIMIT 1';
-	$params = array($shaToken);
-	$res = $db->queryAndFetch($sql,$params);
-	if($db->RowCount() == 1)
-	{
-		$_SESSION['uid'] = $res[0]->id;
-		$_SESSION['username'] = $res[0]->name;
-	}
 }
 
 function displayErrorMessage($message)
 {
 	return "<div class='youShallNotPassDiv'>
-	<img class='youShallNotPassPicture' src='img/error.gif'/>
+	<img class='youShallNotPassPicture' src='img/Error.gif'/>
 	<div class='youShallNotPassDivP'><p>Det blev något fel: </p> <p style='color:red'>$message </p></div>
 	</div>";
 }
 
+function updateEvents($db)
+{
+	$sql ="
+        SELECT id,date,reccurance
+        FROM events
+        WHERE date BETWEEN ? AND ?
+        ";
+	$currentDate = date('Y-m-d', strtotime(date("Y-m-d") .' -1 day'));
+	$prev_date = date('Y-m-d', strtotime($currentDate .' -30 day'));
+	
+	$params = array($prev_date, $currentDate);
+	$res = $db->queryAndFetch($sql,$params);
+	if($db->RowCount() > 0)
+	{
+		foreach($res as $event)
+		{
+			if($event->reccurance == true)
+			{
+				dump("i'm here");
+				// Set new date.
+				$eventDay = $event->date;
+				$newDate = date('Y-m-d', strtotime($eventDay .' + 7 day'));
+				$id = $event->id;
+				$sql = "UPDATE events SET date=? WHERE id=? LIMIT 1";
+				$updateParams = array($newDate, $id);
+				$db->ExecuteQuery($sql, $updateParams);
+
+				// Clear all registered from updated event
+				//duplicated in admin.php
+				$sql = "DELETE FROM registered WHERE eventID=?";
+				$db->ExecuteQuery($sql, array($id));
+			}
+		}
+	}
+}
 /*
  * Makes clickable links
  *
@@ -651,13 +658,24 @@ function logError($message)
 {
 	try
 	{
-		$logFile = fopen("error.log", "a");
+		$logFile = fopen("Error/error.log", "a");
 		fwrite($logFile,  "\r [ ". date('Y-m-d H:i:s') ." ] - ". $message);
 		fclose($logFile);
 	}
 	catch(Exception $e)
 	{
-		// print error?
+		var_dump($e . "<br/> " . $message);
 	}
+}
+function dump($value)
+{
+	echo "<div style='background:white'>";
+	print_r($value);
+	echo "</div>";
+}
+
+function getUrlPath()
+{
+	return $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
 }
 ?>

@@ -6,7 +6,7 @@ include("include/header.php");
 /*initialize variables */
 $limit       = 5; //Posts per page
 $offset      = (isset($_GET['offset']) && is_numeric($_GET['offset'])) ? $_GET['offset'] : 0; //Start index
-$privilege  = getUserprivilege($db);
+$privilege  = $user->getUserPrivilege();
 $username    = isset($_SESSION['username']) ? $_SESSION['username']: "";
 
 function getAddNewButton($privilege)
@@ -23,6 +23,7 @@ function getAddNewButton($privilege)
     }
     return $btn_addNew;
 }
+
 function isAllowedToDeleteNews($db, $id, $privilege)
 {
     if($privilege == 2)
@@ -91,7 +92,6 @@ if(isset($_POST['btn_addNew']))
 	{
 		if($privilege == 1 || $privilege == 2)
 		{
-		    
 			$title 	     = strip_tags($_POST['title']);
 			//first strip tags, then add <a>
 			$content	 = strip_tags($_POST['content']);
@@ -196,7 +196,7 @@ echo "<div class='row clearFix'>";
     echo isset($singleArticle) ?  $singleArticle : "";
     echo "</div>";
     echo "<div class='col-sm-4 b'>";
-    echo getArticleSideBar($db, $offset, $limit);
+    echo getArticleSideBar($db,$user, $offset, $limit);
     echo "</div>";
 echo "</div>";
 $nrOfRows = countAllRows($db, "news", false);

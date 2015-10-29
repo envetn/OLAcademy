@@ -42,8 +42,13 @@ td span
 }
 #content
 {
-	width:60%;
+	width:70%;
 	float:left;
+	margin-top:2%;
+	margin-left:5%;
+	background:white;
+	border-bottom-right-radius: 20px;
+	border-top-right-radius: 20px;	
 }
 #tableHead
 {
@@ -60,4 +65,10 @@ td span
 {
 	padding:2%;
 	margin:2%;
+	width:96%;
+}
+.paging_div
+{
+	text-align:center;
+	font-size:1.2em;
 }

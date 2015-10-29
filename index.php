@@ -5,6 +5,7 @@ $pageId ="index";
 include("include/header.php"); 
 $userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
 $username = isset($_SESSION['username']) ? $_SESSION['username']: "";
+updateEvents($db);
 if (isset($_GET['highlighted']))
 {
     $_SESSION['highlighted'] = $_GET['highlighted'];
@@ -60,8 +61,9 @@ if(isset($_GET['r']) && is_numeric($_GET['r']))
     header("Location: index.php");
 }
 
+
+
 ?>
-<!--<div class='start_wrapper clearFix'>-->
 <div class='row clearFix'>
 <?php
 echo '<article class="col-sm-4 col-sm-push-8 b">'. $GLOBAL['error'] .'<h1>Träningar</h1>' . presentEvent($db, $username) .' </article>';
