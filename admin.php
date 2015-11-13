@@ -150,7 +150,7 @@ function getTableEvents($db)
                             <td>".$info."</td>
                             <td>".$event->startTime."</td>
                             <td>".$event->date."</td>
-                           	<td>".$registered."</td>
+                           	<td><a href='admin.php?c=3&event=".$event->id."'>".$registered." - Visa</a></td>
                             <td>".$reccurance."</td>
                             <td>
                                 <input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeEvent_1' value='".$event->id."'/>
@@ -160,6 +160,29 @@ function getTableEvents($db)
                        </form>";
 	}
 	return $htmlEvents . "</table>";
+}
+
+function getTableRegisteredUsers($db)
+{
+	if(isset($_GET['event']) && is_numeric($_GET['event']))
+	{
+		
+		$eventId = $_GET['event'];
+		$event = getEventNameAndDateByid($db, $eventId);
+		$registeredUsers = getRegistered($db, $eventId);
+		$registeredUsersTable = "<h3 id='tableHead'>Anmälda till : $event->eventName - $event->date </h3></a>";
+		$registeredUsersTable .= '<table id="tableContent"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
+		
+		foreach ($registeredUsers as $user)
+		{
+			$registeredUsersTable .= "<tr><td>" . $user->name . "</td><td>" . $user->bus . "</td><td>" . $user->comment . "</td><td>";
+			$registeredUsersTable .= "<a href='?r=$user->id' ><img src='img/cross.png' width=18px height=18px></a>";
+			$registeredUsersTable .= "</td></tr>";
+		}
+		$registeredUsersTable .= "</table><hr>";
+		return $registeredUsersTable;
+	}
+	return "";
 }
 
 function getTableUsers($db)
@@ -205,6 +228,9 @@ function getTablesAndValidateGET($db, $htmlAdmin)
 			case 2:
 				$htmlAdmin = getTableUsers($db);
 				break;
+			case 3:
+				$htmlAdmin = getTableRegisteredUsers($db);
+				break;
 			default :
 				$htmlAdmin = "<h4 id='infoHead'> Välj från menun till höger </h4>";
 				break;
@@ -245,7 +271,7 @@ if($privilege === "2")
         }
         else
         {
-        	$htmlAdmin .= "<h4 id='infoHead'> Not updated... </h4>";
+        	$htmlAdmin .= "<h4 id='infoHead'> zNot updated... </h4>";
         }
     }
     else if(isset($_POST['removeEvent_1_x']))

@@ -235,29 +235,30 @@ function presentEvent($db, $username)
 		switch ($weekDay)
 		{
 		    case "1":
-			$text.= "<h4><a href='?highlighted=$i' >Måndag</a> $registered<img src='img/runner.png'></h4> ";
+			$text.= "<h4><a href='?highlighted=$i' >Måndag</a>";
 			break;
 		    case "2":
-			$text.= "<h4><a href='?highlighted=$i' >Tisdag</a> $registered<img src='img/runner.png'></h4>";
+			$text.= "<h4><a href='?highlighted=$i' >Tisdag</a>";
 			break;
 		    case "3":
-			$text.= "<h4><a href='?highlighted=$i' >Onsdag</a> $registered<img src='img/runner.png'></h4>";
+			$text.= "<h4><a href='?highlighted=$i' >Onsdag</a>";
 			break;
 		    case "4":
-			$text.= "<h4><a href='?highlighted=$i' >Torsdag</a> $registered<img src='img/runner.png'></h4>";
+			$text.= "<h4><a href='?highlighted=$i' >Torsdag</a> ";
 			break;
 		    case "5":
-			$text.= "<h4><a href='?highlighted=$i' >Fredag</a> $registered<img src='img/runner.png'></h4>";
+			$text.= "<h4><a href='?highlighted=$i' >Fredag</a>";
 			break;
 		    case "6":
-			$text.= "<h4><a href='?highlighted=$i' >Lördag</a> $registered<img src='img/runner.png'></h4>";
+			$text.= "<h4><a href='?highlighted=$i' >Lördag</a>";
 			break;
 		    case "7":
-			$text.= "<h4><a href='?highlighted=$i' >Söndag</a> $registered<img src='img/runner.png'></h4>";
+			$text.= "<h4><a href='?highlighted=$i' >Söndag</a>";
 			break;
 		    default:
 			$text .= "-<br>";
 		}
+		$text .= "<span style='margin-left:2%;'>$registered</span><img src='img/runner.png'></h4>";
 
 		if ($_SESSION['highlighted'] == $i)
 		{
@@ -265,38 +266,61 @@ function presentEvent($db, $username)
 			{
 				if ($key->date == date("Y-m-d", time()+($i * 86400)))
 				{
+					// Get registered users to event
+					$registeredUsersTable = '<table style="width:100%"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
+					$registeredUsers = getRegistered($db, $key->id);
+					$registered = false;
+
+					foreach ($registeredUsers as $user)
+					{
+						$registeredUsersTable .= "<tr><td>" . $user->name . "</td><td>" . $user->bus . "</td><td>" . $user->comment . "</td><td>";
+						$userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
+						if ($user->userID === $userID && !$registered)
+						{
+							$registeredUsersTable .= "<a href='?r=$user->id' ><img src='img/cross.png' width=18px height=18px></a>";
+							$registered = true;
+						}
+						$registeredUsersTable .= "</td></tr>";
+					}
+					$registeredUsersTable .= "</table><hr>";
+
 					$text .=
 					"<form method='POST' action='index.php'>
 						<input type='hidden' name='eventID' value=" . $key->id . ">
 						<input type='hidden' name='date' value=" . date("Y-m-d", time()+($i * 86400)) . ">
 						<strong><u>" .$key->eventName . "</u></strong><br>
 						" .$key->info. "<br>
-						<input type='submit' name='register' value='Anmäl' style='height:50px; width:150px'><br>
+						<br>";
+					if(!$registered)
+					{
+						$text .= 
+						"<button type='submit' class='btn btn-primary' name='register' value='Anmäl'>Anmäl</button>
 						<label for='bus'>Plats i bussen</label>
 						<input type='checkbox' name='bus' value='Ja' checked><br>
 						<label for='comment'>Kommentar</label>
-						<input type='text' name='comment'>
-					</form>";
-					$text .= '<table style="width:100%"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
-					$registeredUsers = getRegistered($db, $key->id);
-					foreach ($registeredUsers as $user)
-					{
-						$text .= "<tr><td>" . $user->name . "</td><td>" . $user->bus . "</td><td>" . $user->comment . "</td><td>";
-						$userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
-						if ($user->userID == $userID)
-						{
-							$text .= "<a href='?r=$user->id' ><img src='img/cross.png' width=18px height=18px></a>";
-						}
-						$text .= "</td></tr>";
+						<input type='text' name='comment'>";
 					}
-					$text .= "</table><hr>";
+
+					$text .="</form>";
+					$text .= $registeredUsersTable;
+
 				}
 			}
 		}
 	}
 	return $text;
 }
-
+function getEventNameAndDateByid($db, $id)
+{
+	$sql = "SELECT eventName,date FROM events WHERE id=? LIMIT 1";
+	$params = array($id);
+	$res = $db->queryAndFetch($sql,$params);
+	if($db->RowCount() == 1)
+	{
+		return $res[0];
+	}
+	return -1;
+}
 function getNrOfRegistered($db, $type)
 {
     $sql = "SELECT COUNT(DISTINCT userID) as count FROM registered WHERE date=?";
@@ -614,7 +638,6 @@ function updateEvents($db)
 		{
 			if($event->reccurance == true)
 			{
-				dump("i'm here");
 				// Set new date.
 				$eventDay = $event->date;
 				$newDate = date('Y-m-d', strtotime($eventDay .' + 7 day'));
