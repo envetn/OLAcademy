@@ -63,13 +63,15 @@ if(isset($_GET['r']) && is_numeric($_GET['r']))
 
 
 
-?>
-<div class='row clearFix'>
-<?php
-echo '<article class="col-sm-4 col-sm-push-8 b">'. $GLOBAL['error'] .'<h1>Träningar</h1>' . presentEvent($db, $username) .' </article>';
-echo '<article class="col-sm-8 col-sm-pull-4 b" style="width:60%"><h1>Gästbok</h1>'. presentPost($db, 0, 3) .' </article>';
+
+echo '<div class="row clearFix">';
+echo '<article class="col-sm-4 col-sm-push-8 elementBox">'. $GLOBAL['error'] .'<h1>Träningar</h1>' . presentEvent($db, $username) .' </article>';
+echo '<article class="col-sm-8 col-sm-pull-4 elementBox"><h1>Gästbok</h1>'. presentPost($db, 0, 3);
+echo '<h1>Nyheter</h1>'. presentNews($db, 0, 3) .' ></article>';
+echo '</div>';
+/* echo '<article class="col-sm-8 col-sm-pull-4 elementBox"><h1>Gästbok</h1>'. presentPost($db, 0, 3) .' </article>';
 echo '<div class="clearfix visible-xs-block"></div>';
-echo '<article class="col-sm-8 col-sm-offset-0 b" style="width:60%"><h1>Nyheter</h1>'. presentNews($db, 0, 3) .' ></article>';
+echo '<article class="col-sm-8 col-sm-offset-0 elementBox"><h1>Nyheter</h1>'. presentNews($db, 0, 3) .' ></article>'; */
 include("include/footer.php");
 ?>
-</div>
+

@@ -192,12 +192,13 @@ catch (Exception $e)
 
 
 echo "<div class='row clearFix'>";
-    echo "<div class='col-sm-8 b'>";
+    echo "<div class='col-sm-8 elementBox'>";
     echo isset($singleArticle) ?  $singleArticle : "";
     echo "</div>";
-    echo "<div class='col-sm-4 b'>";
-    echo getArticleSideBar($db,$user, $offset, $limit);
+    echo "<div class='col-sm-4 elementBox'>";
+    echo getArticleSideBar($db, $user, $offset, $limit);
     echo "</div>";
 echo "</div>";
 $nrOfRows = countAllRows($db, "news", false);
+include("include/footer.php");
 ?>

@@ -86,11 +86,12 @@ function presentPost($db, $offset, $limit)
 		$date = $row->date;
 		$text = nl2br($text); //Insert line breaks where newlines (\n) occur in the string:
 		//Create html code for each row
-		$post .= "<div class='post'>
-					<span class='name'>" . $name . " wrote:</span>
-					<span class='date'>" . $date . "</span>
-					<hr>
-					<span class='text'>" . $text . "</span>
+		$post .= "<div class='guestbookPost'>
+					<div class='guestbookHeader'>
+						<span class='guestbookName'>" . $name . "</span>
+						<span class='guestbookDate'>" . $date . "</span><hr>
+					</div>
+					<p class='guestbookText'>" . $text . "</p>
 				</div>";
 	}
 	return $post;
@@ -99,7 +100,7 @@ function presentPost($db, $offset, $limit)
 
 function presentNews($db, $offset, $limit)
 {
-    $sql = "SELECT * FROM news LIMIT $offset, $limit";
+    $sql = "SELECT * FROM news ORDER BY added DESC LIMIT $offset, $limit";
     //why you no work with ??
     $res = $db->queryAndFetch($sql);
     $news = "";

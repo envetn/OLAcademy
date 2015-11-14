@@ -1,0 +1,34 @@
+.guestbookPost
+{
+	border: 1px solid #AAA;
+	border-radius: 4px;
+	margin: 5px 0px;
+}
+
+.guestbookPost hr
+{
+	margin: 5px -7px 3px -7px;
+}
+
+.guestbookHeader
+{
+	padding: 7px 7px 0px 7px;
+	background-color: #dbf5fc;
+}
+
+.guestbookName
+{
+	font-weight: bold;
+}
+
+.guestbookDate
+{
+	font-size: smaller;
+	float: right;
+}
+
+.guestbookText
+{
+	font-weight: normal;
+	margin-left: 7px;
+}
