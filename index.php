@@ -1,11 +1,13 @@
 <?php
-$pageId ="index";
-
-
 include("include/header.php"); 
+
+$pageId ="index";
 $userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
 $username = isset($_SESSION['username']) ? $_SESSION['username']: "";
-updateEvents($db);
+$eventObject = new EventObject($db);
+$newsObject = new NewsObject($db);
+
+$eventObject->updateEvents();
 if (isset($_GET['highlighted']))
 {
     $_SESSION['highlighted'] = $_GET['highlighted'];
@@ -52,11 +54,9 @@ if(isset($_GET['r']) && is_numeric($_GET['r']))
     // TODO : display popup before delete?
 
     $id = $_GET['r'];
-    if(isAllowedToDeleteReg($db,$id))
+    if($eventObject->isAllowedToDeleteEntry($id))
     {
-        $sql = "DELETE FROM registered WHERE id=?";
-        $params = array($id);
-        $db->ExecuteQuery($sql, $params);
+    	$eventObject->removeSingleRegistered($id);
     }
     header("Location: index.php");
 }
@@ -65,9 +65,9 @@ if(isset($_GET['r']) && is_numeric($_GET['r']))
 
 
 echo '<div class="row clearFix">';
-echo '<article class="col-sm-4 col-sm-push-8 elementBox">'. $GLOBAL['error'] .'<h1>Träningar</h1>' . presentEvent($db, $username) .' </article>';
+echo '<article class="col-sm-4 col-sm-push-8 elementBox">'. $GLOBAL['error'] .'<h1>Träningar</h1>' . presentEvent($username, $eventObject) .' </article>';
 echo '<article class="col-sm-8 col-sm-pull-4 elementBox"><h1>Gästbok</h1>'. presentPost($db, 0, 3);
-echo '<h1>Nyheter</h1>'. presentNews($db, 0, 3) .' ></article>';
+echo '<h1>Nyheter</h1>'. presentNews($newsObject, 0, 3) .' ></article>';
 echo '</div>';
 /* echo '<article class="col-sm-8 col-sm-pull-4 elementBox"><h1>Gästbok</h1>'. presentPost($db, 0, 3) .' </article>';
 echo '<div class="clearfix visible-xs-block"></div>';

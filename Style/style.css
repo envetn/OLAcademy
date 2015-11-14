@@ -280,6 +280,7 @@ a:hover, a:active {
 {
     overflow: auto;
     background:#fff;
+	border-radius: 5px;
 }
 
 q{

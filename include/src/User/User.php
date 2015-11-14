@@ -40,7 +40,7 @@ class User
 		{
 			return $_SESSION['privilege'];
 		}
-		return 0;
+		return -1;
 	}
 
 	/*

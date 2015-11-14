@@ -1,12 +1,15 @@
 <?php
 $pageTitle = " - Admin";
 include("include/header.php");
+$eventObject = new EventObject($db);
+$newsObject = new NewsObject($db);
+
+$privilege  = $user->getUserprivilege();
 
 if(isset($_SESSION['Previous_page']))
 {
 	unset($_SESSION['Previous_page']);
 }
-$privilege  = getUserprivilege($db);
 
 function tryToEditUser($db)
 {
@@ -31,21 +34,14 @@ function tryToEditUser($db)
 	}
 }
 
-function tryToRemoveEvent($db)
+function tryToRemoveEvent($eventObject)
 {
 	if(isset($_POST['eventId']) && is_numeric($_POST['eventId']) )
 	{
 		try
 		{
-			$sql = "DELETE FROM events WHERE id=? LIMIT 1";
-			$eventId = $_POST['eventId'];
-			$params = array($eventId);
-			$db->ExecuteQuery($sql,$params);
-
-			// Clear all registered from updated event
-			$sql = "DELETE FROM registered WHERE eventID=?";
-			$db->ExecuteQuery($sql, array($eventId));
-			return true;
+			$id = $_POST['eventId'];
+			return $eventObject->removeSingleEntryById($id);
 		}
 		catch(Exception $e)
 		{
@@ -75,14 +71,13 @@ function tryToRemoveUser($db)
 	}
 }
 
-function getTableTitleOfPosts($db)
+function getTableTitleOfPosts($newsObject)
 {
 	$offset = isset($_GET['offset']) ? $_GET['offset'] : 0;
 	$limit = 20;
-	$sql = "SELECT * FROM news ORDER BY added DESC LIMIT $offset, $limit";
+	$res = $newsObject->getNewsWithOffset($offset, $limit);
 
-	$res = $db->queryAndFetch($sql);
-	$news = "<h3 id='tableHead'>Nyheter</h3><a href='news.php?new=Lägg+till'> < Lägg till > </a><table id='tableContent'>
+	$news = "<h3 id='tableHead'>Nyheter</h3><a href='news.php?action=Lägg+till'> < Lägg till > </a><table id='tableContent'>
     <tr>
         <th>Title</th><th>Av</th><th>Tillagd</th><th>Ta bort</th>
     <tr>";
@@ -112,21 +107,21 @@ function getTableTitleOfPosts($db)
                     </tr>";
 	}
 	$news .= "</table>";
-	$nrOfRows = countAllRows($db, "news");
+	$nrOfRows = $newsObject->countAllRows();
 	$news .= "<div class='paging_div'>" . paging($limit, $offset, $nrOfRows, 5, "&c=0") . "</div>";
 
 	return $news;
 }
 
-function getTableEvents($db)
+function getTableEvents($eventObject)
 {
 	if(isset($_GET['showAll']))
 	{
-		$res = getAllEvents($db);
+		$res = $eventObject->fetchAllEntries();
 	}
 	else
 	{
-		$res = getWeeklyEvents($db);
+		$res = $eventObject->getWeeklyEvents();
 	}
 
 
@@ -134,27 +129,27 @@ function getTableEvents($db)
     <tr>
         <th>Event</th><th>Info</th><th>När</th><th>Datum</th><th>Anmälda</th><th>Återkommande</th><th>Edit</th>
     </tr>";
-	foreach($res as $event)
+	foreach($res as $events)
 	{
-		$info = $event->info;
+		$info = $events->info;
 		if(strlen($info) > 40)
 		{
-			$info =  substr($info,0, 40). "<a href='event.php?s=$event->id'> ... </a>";
+			$info =  substr($info,0, 40). "<a href='event.php?s=$events->id'> ... </a>";
 		}
-		$registered = getNumberOfRegistered($db, $event->id);
-		$reccurance = $event->reccurance == '1' ? "Ja" : "Nej";
+		$registered = $eventObject->getNrOfRegisteredById($events->id);
+		$reccurance = $events->reccurance == '1' ? "Ja" : "Nej";
 		$htmlEvents .= "<form method='post'>
 							<tr>
-        					<input type='hidden' name='eventId' value='".$event->id."' />
-                            <td>".$event->eventName."</td>
+        					<input type='hidden' name='eventId' value='".$events->id."' />
+                            <td>".$events->eventName."</td>
                             <td>".$info."</td>
-                            <td>".$event->startTime."</td>
-                            <td>".$event->date."</td>
-                           	<td><a href='admin.php?c=3&event=".$event->id."'>".$registered." - Visa</a></td>
+                            <td>".$events->startTime."</td>
+                            <td>".$events->date."</td>
+                           	<td><a href='admin.php?c=3&event=".$events->id."'>".$registered." - Visa</a></td>
                             <td>".$reccurance."</td>
                             <td>
-                                <input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeEvent_1' value='".$event->id."'/>
-                                <a class='admin_news_remove' href='event.php?e=".$event->id."'><img src='img/edit.jpg' width=18px height=18px></a>
+                                <input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeEvent_1' value='".$events->id."'/>
+                                <a class='admin_news_remove' href='event.php?e=".$events->id."'><img src='img/edit.jpg' width=18px height=18px></a>
                             </td>
                         </tr>
                        </form>";
@@ -162,14 +157,16 @@ function getTableEvents($db)
 	return $htmlEvents . "</table>";
 }
 
-function getTableRegisteredUsers($db)
+function getTableRegisteredUsers($db, $eventObject)
 {
 	if(isset($_GET['event']) && is_numeric($_GET['event']))
 	{
 		
 		$eventId = $_GET['event'];
-		$event = getEventNameAndDateByid($db, $eventId);
-		$registeredUsers = getRegistered($db, $eventId);
+		$event = $eventObject->fetchSingleEntryById($eventId);
+
+		$registeredUsers = $eventObject->getRegisteredById($eventId);
+
 		$registeredUsersTable = "<h3 id='tableHead'>Anmälda till : $event->eventName - $event->date </h3></a>";
 		$registeredUsersTable .= '<table id="tableContent"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
 		
@@ -212,7 +209,7 @@ function getTableUsers($db)
 	return $htmlUsers . "</table>";
 }
 
-function getTablesAndValidateGET($db, $htmlAdmin)
+function getTablesAndValidateGET($newsObject, $htmlAdmin, $eventObject, $db) // need a better solution than this
 {
 	if(isset($_GET['c']) && is_numeric(($_GET['c'])) )
 	{
@@ -220,16 +217,16 @@ function getTablesAndValidateGET($db, $htmlAdmin)
 		switch($choice)
 		{
 			case 0:
-				$htmlAdmin = getTableTitleOfPosts($db);
+				$htmlAdmin = getTableTitleOfPosts($newsObject);
 				break;
 			case 1:
-				$htmlAdmin = getTableEvents($db);
+				$htmlAdmin = getTableEvents($eventObject);
 				break;
 			case 2:
 				$htmlAdmin = getTableUsers($db);
 				break;
 			case 3:
-				$htmlAdmin = getTableRegisteredUsers($db);
+				$htmlAdmin = getTableRegisteredUsers($db, $eventObject);
 				break;
 			default :
 				$htmlAdmin = "<h4 id='infoHead'> Välj från menun till höger </h4>";
@@ -276,7 +273,7 @@ if($privilege === "2")
     }
     else if(isset($_POST['removeEvent_1_x']))
     {
-    	if(tryToRemoveEvent($db))
+    	if(tryToRemoveEvent($eventObject))
     	{
     		$htmlAdmin .= "<h4 id='infoHead'> Träning borttagen</h4>";
     	}
@@ -286,7 +283,7 @@ if($privilege === "2")
     	}
     }
 
-    $htmlAdmin .= getTablesAndValidateGET($db, $htmlAdmin);
+    $htmlAdmin .= getTablesAndValidateGET($newsObject, $htmlAdmin, $eventObject, $db);
     echo "<div class='row clearFix'>";
     echo "<div style='clear:both; overflow: hidden;'>";
     echo $sideBar;

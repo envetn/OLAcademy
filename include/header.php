@@ -2,9 +2,12 @@
 define('INCLUDE_PATH', __DIR__ . '');
 include_once(INCLUDE_PATH . "/config.php");
 include_once(INCLUDE_PATH . "/src/Database/database.php");
+include_once(INCLUDE_PATH . "/src/Objects/EventObject.php");
+include_once(INCLUDE_PATH . "/src/Objects/NewsObject.php");
 $db = new Database($GLOBAL['database']);
 $user = new User($db);
-$privilege =  getUserprivilege($db);
+$privilege =  $user->getUserprivilege();
+
 ?>
 <!doctype html>  
 <html lang='sv'>
