@@ -189,7 +189,17 @@ function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl)
 	return $paging;
 } 
 
-
+/*
+ - * Count all rows in a database table
+ - *
+ - */
+function countAllRows($db, $table)
+{
+	$sql = "SELECT count(*) as rows FROM $table";
+	$result = $db->queryAndFetch($sql); //Execute query
+	return $result[0]->rows;
+}
+	
 function presentEvent($username, $eventObject)
 {
 	$events = $eventObject->getWeeklyEvents();
