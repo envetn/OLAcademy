@@ -4,10 +4,11 @@ $pageTitle ="- Gästbok";
 include("include/header.php");
 $limit  = 7; //Posts per page
 $offset = isset($_GET['offset']) && is_numeric($_GET['offset']) ? $_GET['offset'] : 0; //Start index
+$guestbookObject = new GuestbookObject($db);
 
 if (isset($_POST['submit']))
 {
-	makePost($db, $_POST['name'], $_POST['text']);
+	makePost($guestbookObject);
 }
 
 $postForm = 
@@ -20,11 +21,12 @@ $postForm =
 	</div>';
 
 
+echo isset($_SESSION['error']) ? $_SESSION['error'] : "";
 echo "<div class='row clearFix'>";
 	echo $postForm;
 	echo "<div class='col-sm-8 elementBox'>";
-		echo presentPost($db, $offset, $limit);
-		$nrOfRows = countAllRows($db, "posts");
+		echo presentPost($guestbookObject, $offset, $limit);
+		$nrOfRows = $guestbookObject->countAllRows();
 		echo paging($limit, $offset, $nrOfRows, $numbers=5, "");
 	echo "</div>";
 echo "</div>";

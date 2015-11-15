@@ -6,6 +6,7 @@ $userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
 $username = isset($_SESSION['username']) ? $_SESSION['username']: "";
 $eventObject = new EventObject($db);
 $newsObject = new NewsObject($db);
+$guestbookObject = new GuestbookObject($db);
 
 $eventObject->updateEvents();
 if (isset($_GET['highlighted']))
@@ -33,11 +34,11 @@ if(isset($_POST['register']))
 	
     if($db->RowCount() >= 1)
     {
-		$GLOBAL['error'] .= '<span class="error">Du är redan anmäld till denna träningen.</span>';
+		$_SESSION['error'] = '<pre class=red>Du är redan anmäld till denna träningen.</pre>';
     }
 	elseif(!$userID)
 	{
-		$GLOBAL['error'] .= '<span class="error">Du måste vara inloggad för att kunna anmäla dig.</span>';
+		$_SESSION['error'] = '<pre class=red>Du måste vara inloggad för att kunna anmäla dig.</pre>';
 	}
     else
     {
@@ -50,8 +51,6 @@ if(isset($_POST['register']))
 
 if(isset($_GET['r']) && is_numeric($_GET['r']))
 {
-    /*remove registration */
-    // TODO : display popup before delete?
 
     $id = $_GET['r'];
     if($eventObject->isAllowedToDeleteEntry($id))
@@ -62,16 +61,13 @@ if(isset($_GET['r']) && is_numeric($_GET['r']))
 }
 
 
-
-
+//'. /*$GLOBAL['error']*/ .'
+echo isset($_SESSION['error']) ? $_SESSION['error'] : "";
 echo '<div class="row clearFix">';
-echo '<article class="col-sm-4 col-sm-push-8 elementBox">'. $GLOBAL['error'] .'<h1>Träningar</h1>' . presentEvent($username, $eventObject) .' </article>';
-echo '<article class="col-sm-8 col-sm-pull-4 elementBox"><h1>Gästbok</h1>'. presentPost($db, 0, 3);
-echo '<h1>Nyheter</h1>'. presentNews($newsObject, 0, 3) .' ></article>';
+echo '<article class="col-sm-4 col-sm-push-8 elementBox"><h1>Träningar</h1>' . presentEvent($username, $eventObject) .' </article>';
+echo '<article class="col-sm-8 col-sm-pull-4 elementBox"><h1>Gästbok</h1>'. presentPost($guestbookObject, 0, 3);
+echo '<h1>Nyheter</h1>'. presentNews($newsObject, 0, 3) .' </article>';
 echo '</div>';
-/* echo '<article class="col-sm-8 col-sm-pull-4 elementBox"><h1>Gästbok</h1>'. presentPost($db, 0, 3) .' </article>';
-echo '<div class="clearfix visible-xs-block"></div>';
-echo '<article class="col-sm-8 col-sm-offset-0 elementBox"><h1>Nyheter</h1>'. presentNews($db, 0, 3) .' ></article>'; */
 include("include/footer.php");
 ?>
 

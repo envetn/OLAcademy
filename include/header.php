@@ -4,6 +4,7 @@ include_once(INCLUDE_PATH . "/config.php");
 include_once(INCLUDE_PATH . "/src/Database/database.php");
 include_once(INCLUDE_PATH . "/src/Objects/EventObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/NewsObject.php");
+include_once(INCLUDE_PATH . "/src/Objects/GuestbookObject.php");
 $db = new Database($GLOBAL['database']);
 $user = new User($db);
 $privilege =  $user->getUserprivilege();

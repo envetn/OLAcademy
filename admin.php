@@ -18,12 +18,13 @@ function tryToEditUser($db)
 	{
 		try
 		{
+			//is allowed ?
 			$sql = "UPDATE users SET name=?, Privilege=? WHERE id=? LIMIT 1";
 			$userId    = $_POST['userId'];
 			$name 	   = $_POST['username'];
 			$Privilege = $_POST['privilege'];
 			$params = array($name, $Privilege, $userId);
-			echo $userId;
+			
 			$db->ExecuteQuery($sql,$params);
 			return true;
 		}
@@ -167,18 +168,21 @@ function getTableRegisteredUsers($db, $eventObject)
 		$event = $eventObject->fetchSingleEntryById($eventId);
 
 		$registeredUsers = $eventObject->getRegisteredById($eventId);
-
-		$registeredUsersTable = "<h3 id='tableHead'>Anmälda till : $event->eventName - $event->date </h3></a>";
-		$registeredUsersTable .= '<table id="tableContent"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
-		
-		foreach ($registeredUsers as $user)
+		if($event != null)
 		{
-			$registeredUsersTable .= "<tr><td>" . $user->name . "</td><td>" . $user->bus . "</td><td>" . $user->comment . "</td><td>";
-			$registeredUsersTable .= "<a href='?r=$user->id' ><img src='img/cross.png' width=18px height=18px></a>";
-			$registeredUsersTable .= "</td></tr>";
+			$registeredUsersTable = "<h3 id='tableHead'>Anmälda till : $event->eventName - $event->date </h3></a>";
+			$registeredUsersTable .= '<table id="tableContent"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
+			
+			foreach ($registeredUsers as $user)
+			{
+				$registeredUsersTable .= "<tr><td>" . $user->name . "</td><td>" . $user->bus . "</td><td>" . $user->comment . "</td><td>";
+				$registeredUsersTable .= "<a href='?r=$user->id' ><img src='img/cross.png' width=18px height=18px></a>";
+				$registeredUsersTable .= "</td></tr>";
+			}
+			$registeredUsersTable .= "</table><hr>";
+			return $registeredUsersTable;
 		}
-		$registeredUsersTable .= "</table><hr>";
-		return $registeredUsersTable;
+		
 	}
 	return "";
 }
@@ -193,14 +197,14 @@ function getTableUsers($db)
     <tr>
         <th>Namn</th><th>email</th><th>Rättighet</th><th>Registrerad</th><th>Edit</th>
     <tr>";
-	foreach($res as $users)
+	foreach($res as $user)
 	{
 		$htmlUsers .= "<form method='post'><tr>
-                            <input type='hidden' name='userId' value='".$users->id."' />
-                            <td><input type='text' name='username' value='".$users->name."' /></td>
-                            <td>".$users->email."</td>
-                            <td><input type='text' name='privilege' value='".$users->Privilege."' /></td>
-                            <td>".$users->regDate."</td>
+                            <input type='hidden' name='userId' value='".$user->id."' />
+                            <td><!--<input type='text' name='username' value='".$user->name."' />--><a href='user.php?user=id'>".$user->name."</a></td>
+                            <td>".$user->email."</td>";
+        $htmlUsers .= generateSelect($user);                            
+        $htmlUsers .="<td>".$user->regDate."</td>
                             <td>
 								<input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeUser_1' value='Click me'>
                                 <input type='image' src='img/edit.jpg'  border='0' width=18px height=18px alt='Submit'  name='editUser_2' value='Click me2'>
@@ -208,6 +212,27 @@ function getTableUsers($db)
                         </tr></form>";
 	}
 	return $htmlUsers . "</table>";
+}
+
+function generateSelect($user)
+{
+	$html = "<td> <select class='dropdownPrivilege' name='privilege'>";
+	switch($user->Privilege)
+	{
+		case 2:
+			$html .= "<option value='2' selected='selected' > Admin </option> <option value='1'> Användare </option><option value='0' > Cockatrice </option>";
+			break;
+		
+		case 1: 
+			$html .= "<option value='2' > Admin </option> <option value='1' selected='selected' > Användare </option><option value='0' > Cockatrice </option>";
+			break;
+			
+		case 0:
+			$html .= "<option value='2' > Admin </option> <option value='1'> Användare </option><option value='0' selected='selected'  > Cockatrice </option>";
+			break;
+	}
+	$html .= " 	</select> </td>";
+	return $html;
 }
 
 function getTablesAndValidateGET($newsObject, $htmlAdmin, $eventObject, $db) // need a better solution than this

@@ -279,3 +279,8 @@ q{
 {
 	display:block!important;
 }
+
+tr td
+{
+	padding-left:7px;
+}

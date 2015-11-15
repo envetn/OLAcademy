@@ -72,3 +72,13 @@ td span
 	text-align:center;
 	font-size:1.2em;
 }
+.dropdownPrivilege
+{
+	width:99%;
+	
+	font-family: Cursive;
+    outline: none;
+    cursor: pointer;
+	-webkit-appearance: none;
+   -moz-appearance: none;
+}

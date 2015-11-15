@@ -1,31 +1,12 @@
  <?php
-/*
- * INDEX FOR FUNCTIONS IN THIS FILE
- * linux_server()
- * makePost($db, $name, $text)
- * presentPost($db, $offset, $limit)
- * countAllRows($db, $table)
- * paging($limit, $offset, $nrOfRows, $numbers=5)
- * getCurrentMonthsEvents($db)
- * dateTime()
- * validateText($text)
- * exceptions_error_handler($severity, $message, $filename, $lineno)
- * getArticleSideBar($db, $offset, $limit)
- * getExtensionOnUrl()
- * getUserprivilege($db)
- * uploadImage($db)
- * getUserById($db)
- * showLoginLogout($db)
- * displayErrorMessage($message)
- * makeLinks($text)
- *
- */
+
  include("src/User/User.php");
- /*
-  * GLOBALS
-  */
- $GLOBAL['salt_cookie']					= "!+?";
- $GLOBAL['salt_char']                   = "#@$";
+/*
+ *Global 
+*/
+$GLOBAL['salt_cookie']					= "!+?";
+$GLOBAL['salt_char']                    = "#@$";
+
 function linux_server()
 {
     return in_array(strtolower(PHP_OS), array("linux", "superior operating system"));
@@ -43,68 +24,63 @@ function exceptions_error_handler($severity, $message, $filename, $lineno)
 	}
 }
 
-
 /* 
  * Insert post in guestbook
  *
  */
-function makePost($db, $name, $text)
+function makePost($guestbookObject)
 {
-	// Remove html tags
-	$name = strip_tags($name);
-	$text = strip_tags($text);
-	//Make clickable links
-	$text = makeLinks($text);
-	//Control message length
-	$max_text_length = 2000;
-	$max_name_length = 50;
-	if (strlen($text) > $max_text_length)
+	
+	$name = strip_tags($_POST['name']);
+	$text = strip_tags($_POST['text']);
+	if(empty($name) or empty($text))
 	{
-		$GLOBALS['error'] = "<pre class=red>Text must not exceed " . $max_text_length . " characters.</pre>";
-	}
-	elseif (strlen($name) > $max_name_length)
-	{
-		$GLOBALS['error'] = "<pre class=red>Name must not exceed " . $max_name_length . " characters.</pre>";
+		$_SESSION['error'] = "<pre class=red>Fyll i alla fält.</pre>";
 	}
 	else
 	{
-		// Check if all fields are filled
-		if(empty($name) or empty($text))
+		$text = makeLinks($text);
+		
+		$max_text_length = 2000;
+		$max_name_length = 50;
+		if (strlen($text) > $max_text_length)
 		{
-			$GLOBALS['error'] = "<pre class=red>Fyll i alla fält.</pre>";
+			$_SESSION['error'] = "<pre class=red>Text must not exceed " . $max_text_length . " characters.</pre>";
+		}
+		elseif (strlen($name) > $max_name_length)
+		{
+			$_SESSION['error'] = "<pre class=red>Name must not exceed " . $max_name_length . " characters.</pre>";
 		}
 		else
 		{
-			$sql = "INSERT INTO posts (name, text, date) VALUES(?,?,?)"; //Prepare SQL code
-			$params = array($name, $text, date("Y-m-d H:i:s")); //Prepare query
-			$db->ExecuteQuery($sql, $params, false); //Execute query
-			header('Location: ' . $_SERVER['PHP_SELF']); //Refresh page
+			$params = array($name, $text);
+			$guestbookObject->addSingleEntry($params);
 		}
 	}
 }
+
 /* 
  * Present posts from table and prepare paging 
  *
  */
-function presentPost($db, $offset, $limit)
+function presentPost($guestbookObject, $offset, $limit)
 {
-	$sql = "SELECT * FROM posts ORDER BY ID DESC LIMIT $offset, $limit"; //Prepare SQL code
-	$result = $db->queryAndFetch($sql); //Execute query
+	$result = $guestbookObject-> getPostsWithOffset($offset, $limit);
 	$post = "";
-	//Output data of each row
+
 	foreach($result as $row)
 	{
 		$name = $row->name;
 		$text = $row->text;
 		$date = $row->date;
-		$text = nl2br($text); //Insert line breaks where newlines (\n) occur in the string:
-		//Create html code for each row
+		$text = nl2br($text); 
 		$post .= "<div class='guestbookPost'>
 					<div class='guestbookHeader'>
-						<span class='guestbookName'>" . $name . "</span>
+						<span class='guestbookName'>" . $name ." ".$row->id. "</span>
 						<span class='guestbookDate'>" . $date . "</span><hr>
 					</div>
 					<p class='guestbookText'>" . $text . "</p>
+					
 				</div>";
 	}
 	return $post;
@@ -143,16 +119,15 @@ function presentNews($newsObject, $offset, $limit)
  */
 function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl)
 {
-	$prev = $offset - $limit; //Previous page
-	$next = $offset + $limit; //Next page
-	$num_page = ceil($nrOfRows/$limit); //Total pages
-	$cur_page = $offset/$limit + 1; //Current page
+	$prev = $offset - $limit;
+	$next = $offset + $limit;
+	$num_page = ceil($nrOfRows/$limit);
+	$cur_page = $offset/$limit + 1;
 	$paging = "";
 	
-	//Pages out of range
 	$j = $numbers >= $num_page || $cur_page <= ceil($numbers/2) ? 0 : $cur_page - ceil($numbers/2);
 	if($cur_page > $num_page-ceil($numbers/2) && $num_page - $numbers > 0) $j = $num_page - $numbers;
-	//Print links
+
 	if($nrOfRows > $limit)
 	{
 		if($j > 0) 
@@ -189,17 +164,6 @@ function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl)
 	return $paging;
 } 
 
-/*
- - * Count all rows in a database table
- - *
- - */
-function countAllRows($db, $table)
-{
-	$sql = "SELECT count(*) as rows FROM $table";
-	$result = $db->queryAndFetch($sql); //Execute query
-	return $result[0]->rows;
-}
-	
 function presentEvent($username, $eventObject)
 {
 	$events = $eventObject->getWeeklyEvents();
@@ -315,11 +279,6 @@ function getExtensionOnUrl()
 		$extension = $e;
 	}
 	return $extension;
-}
-
-function uploadImage($db)
-{
-	var_dump($_FILES);
 }
 
 /*

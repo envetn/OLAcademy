@@ -4,7 +4,7 @@ $pageTitle = "- Nyheter";
 include ("include/header.php");
 
 /* initialize variables */
-$limit = 5; //Posts per page
+$limit = 4; //Posts per page
 $offset = (isset($_GET['offset']) && is_numeric($_GET['offset'])) ? $_GET['offset'] : 0; //Start index
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : "";
 $newsObject = new NewsObject($db);
@@ -90,43 +90,6 @@ function getEditForm($newsObject)
 	return $singleArticle;
 }
 
-function validateAction($newsObject)
-{
-	$singleArticle = "";
-	if (isset($_GET["action"]) && $newsObject->isAllowedToDeleteEntry(""))
-	{
-		$choice = $_GET["action"];
-		switch ($choice)
-		{
-			case "Lägg till" :
-				$singleArticle = getAddForm();
-				break;
-			
-			case "remove" :
-				removeNews($newsObject);
-				break;
-			
-			case "edit" :
-				$singleArticle = getEditForm($newsObject);
-				break;
-		}
-	}
-	return $singleArticle;
-}
-
-function validateSelectedPage($newsObject)
-{
-	if (isset($_GET['p']) && is_numeric($_GET['p']))
-	{
-		$id = $_GET['p'];
-	}
-	else
-	{
-		$id = - 1;
-	}
-	return $newsObject->fetchSingleEntryById($id);
-}
-
 function getArticleSideBar($newsObject, $offset, $limit)
 {
 	$res = $newsObject->getNewsWithOffset($offset, $limit);
@@ -168,6 +131,43 @@ function getArticleSideBar($newsObject, $offset, $limit)
 	$side_article .= paging($limit, $offset, $nrOfRows, $numbers = 5, "");
 	
 	return $side_article;
+}
+function validateSelectedPage($newsObject)
+{
+	if (isset($_GET['p']) && is_numeric($_GET['p']))
+	{
+		$id = $_GET['p'];
+	}
+	else
+	{
+		$id = - 1;
+	}
+	return $newsObject->fetchSingleEntryById($id);
+}
+
+function validateAction($newsObject)
+{
+	$singleArticle = "";
+	if (isset($_GET["action"]) && $newsObject->isAllowedToDeleteEntry(""))
+	{
+		
+		$choice = $_GET["action"];
+		switch ($choice)
+		{
+			case "Lägg till" :
+				$singleArticle = getAddForm();
+				break;
+					
+			case "remove" :
+				removeNews($newsObject);
+				break;
+					
+			case "edit" :
+				$singleArticle = getEditForm($newsObject);
+				break;
+		}
+	}
+	return $singleArticle;
 }
 
 try

@@ -27,7 +27,6 @@ class EventObject implements DatabaseObject
 	
 	public function countAllRows()
 	{
-		
 	}
 
 	function rowResult()
@@ -50,9 +49,9 @@ class EventObject implements DatabaseObject
 		$result = $this->database->queryAndFetch ( $sql, $params );
 		if ($this->rowResult () == 1)
 		{
-			return $result;
+			return $result[0];
 		}
-		return - 1;
+		return null;
 	}
 
 	public function removeSingleEntryById($id)

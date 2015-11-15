@@ -26,7 +26,7 @@ class NewsObject implements DatabaseObject
 	{
 		if($id === -1)
 		{
-			$sql = "SELECT * FROM news ORDER BY added LIMIT 1";
+			$sql = "SELECT * FROM news ORDER BY added DESC LIMIT 1";
 		}
 		else
 		{

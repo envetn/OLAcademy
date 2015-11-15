@@ -14,6 +14,6 @@ $GLOBAL['pageTitle'] = "OL-Academy";
 $GLOBAL['salt_char'] = "#@$";
 $GLOBAL['salt_cookie']					= "!+?";
 
-$GLOBAL['error'] = "";
+$_SESSION['error'] = "";
 
 ?>
