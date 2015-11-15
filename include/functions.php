@@ -70,14 +70,12 @@ function presentPost($guestbookObject, $offset, $limit)
 
 	foreach($result as $row)
 	{
-		$name = $row->name;
-		$text = $row->text;
-		$date = $row->date;
-		$text = nl2br($text); 
-		$post .= "<div class='guestbookPost'>
+		$text = nl2br($row->text); 
+		$post .= 
+				"<div class='guestbookPost'>
 					<div class='guestbookHeader'>
-						<span class='guestbookName'>" . $name ." ".$row->id. "</span>
-						<span class='guestbookDate'>" . $date . "</span><hr>
+						<span class='guestbookName'>" . $row->name ." ".$row->id. "</span>
+						<span class='guestbookDate'>" . $row->added . "</span>
 					</div>
 					<p class='guestbookText'>" . $text . "</p>
 					
@@ -94,27 +92,27 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
     foreach($res as $row)
     {
     	$content = \Michelf\Markdown::defaultTransform(validateText($row->content));
-        if(strlen($content) > 150)
+        if(strlen($content) > 200)
         {
-            $content =  substr($content,0, 150). "<a href='news.php?offset=0&p=$row->id'> ... Läs mer</a>";
+            $content =  substr($content,0, 200). "<a href='news.php?offset=0&p=$row->id'> ... Läs mer</a>";
         }
         else
         {
             $content .= "<a href='news.php?offset=0&p=$row->id'>&nbsp; Läs mer</a>";
         }
-        $news .= "<div class='sidebar'>
-        			<div class='sidebarHeader'>
-                    <span class='sidebarTitle'>Title: ".$row->title."</span><br/>
-                   	</div>
-                    <p class='guestbookText'>" . $content . "</p>
-                    <span class='guestbookDate'>Av:  ".$row->author."</span>";
-
-        if ($showEdit && $newsObject->isAllowedToDeleteEntry("")) // admin, show all
-        {
-        	$news .= "<a id='article_remove' href='news.php?action=remove&id=" . $row->id . "'><img src='img/cross.png' width=18px height=18px></a>";
-        	$news .= "<a id='article_remove' href='news.php?action=edit&id=" . $row->id . "'><img src='img/edit.jpg' width=18px height=18px></a>";
-        }                		
-        $news .="<hr/></div>";
+        $news .= 
+				"<div class='newsPost'>
+        			<div class='newsHeader'>
+						<span class='newsTitle'>".$row->title."</span>";
+		if ($showEdit && $newsObject->isAllowedToDeleteEntry("")) // admin, show all
+		{
+			$news .= "<a class='newsEdit' href='news.php?action=edit&id=" . $row->id . "'><img src='img/edit.png' width=18px height=18px></a>";
+			$news .= "<a class='newsEdit' href='news.php?action=remove&id=" . $row->id . "'><img src='img/cross.png' width=18px height=18px></a>";
+		}    			
+		$news .="<span class='newsAdded'>" . $row->added . " </span>
+                </div>
+                <p class='newsText'>" . $content . "</p>
+                </div>";
 
     }
     return $news;

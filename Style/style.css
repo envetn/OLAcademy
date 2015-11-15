@@ -26,11 +26,6 @@ body
     /*color:#1e3948;*/
 }
 
-header
-{
-	background-color: #f8f8f8;
-}
-
 main, .navbar, footer
 {
 	margin-right: auto;
@@ -39,17 +34,34 @@ main, .navbar, footer
     padding-right: 15px;
 }
 
+main, footer
+{
+	padding-bottom: 15px;
+	padding-top: 15px;
+}
+
+header
+{
+	background-color: #f8f8f8;
+}
+
+main
+{
+    overflow: auto;
+    background:#fff;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
+
+}
+
 footer 
 {
 	background-color: #0070B6;
 	color: #fff;
-	padding: 5px;
+
 }
 
-footer h3
-{
-	margin-top: 0px;
-}
+
 
 @media (min-width: 768px) {
     main, footer, .navbar
@@ -75,6 +87,10 @@ a
 	text-decoration:none;
 }
 
+h1,h2,h3
+{
+	margin-top:0px;
+}
 
 /*--know what tab that is in use-- */
 header#index a#index-,
@@ -257,13 +273,6 @@ a:hover, a:active {
 .clearLine {
     border: 1px solid red;
     clear: left;
-}
-.clearFix 
-{
-    overflow: auto;
-    background:#fff;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
 }
 
 q{

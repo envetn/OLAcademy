@@ -13,6 +13,7 @@ if (isset($_POST['submit']))
 
 $postForm = 
 	'<div class="col-sm-4 elementBox">
+		<h2>Gästbok</h2>
 		<form action='.$_SERVER['PHP_SELF'].' method="POST">
 			<label>Namn:<br><input type="text" name="name" size="30"/></label><br>
 			<label>Text:<br><textarea name="text" rows="8" cols="40"></textarea></label><br>

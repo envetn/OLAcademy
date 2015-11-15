@@ -5,15 +5,11 @@
 	margin: 5px 0px;
 }
 
-.guestbookPost hr
-{
-	margin: 5px -7px 3px -7px;
-}
-
 .guestbookHeader
 {
 	padding: 7px 7px 0px 7px;
 	background-color: #dbf5fc;
+	border-bottom: 1px solid #DDD;
 }
 
 .guestbookName
@@ -23,6 +19,7 @@
 
 .guestbookDate
 {
+	margin-right: 3px;
 	font-size: smaller;
 	float: right;
 }
@@ -30,5 +27,5 @@
 .guestbookText
 {
 	font-weight: normal;
-	margin-left: 7px;
+	margin: 7px;
 }
