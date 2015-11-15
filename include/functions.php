@@ -87,13 +87,13 @@ function presentPost($guestbookObject, $offset, $limit)
 }
 
 
-function presentNews($newsObject, $offset, $limit)
+function presentNews($newsObject, $offset, $limit, $showEdit)
 {
     $res = $newsObject->getNewsWithOffset($offset, $limit);
     $news = "";
     foreach($res as $row)
     {
-        $content = $row->content;
+    	$content = \Michelf\Markdown::defaultTransform(validateText($row->content));
         if(strlen($content) > 150)
         {
             $content =  substr($content,0, 150). "<a href='news.php?offset=0&p=$row->id'> ... Läs mer</a>";
@@ -102,14 +102,20 @@ function presentNews($newsObject, $offset, $limit)
         {
             $content .= "<a href='news.php?offset=0&p=$row->id'>&nbsp; Läs mer</a>";
         }
-        $news .= "<div class='index_news'>
-                    <span class='guestbookName'>Title: ".$row->title."</span>
-                    <br/>
-                    <span> ".$content."</span>
-                    <br/>
-                    <span class='guestbookDate'>Av:  ".$row->author."</span>
-                     <hr/>
-                  </div>";
+        $news .= "<div class='sidebar'>
+        			<div class='sidebarHeader'>
+                    <span class='sidebarTitle'>Title: ".$row->title."</span><br/>
+                   	</div>
+                    <p class='guestbookText'>" . $content . "</p>
+                    <span class='guestbookDate'>Av:  ".$row->author."</span>";
+
+        if ($showEdit && $newsObject->isAllowedToDeleteEntry("")) // admin, show all
+        {
+        	$news .= "<a id='article_remove' href='news.php?action=remove&id=" . $row->id . "'><img src='img/cross.png' width=18px height=18px></a>";
+        	$news .= "<a id='article_remove' href='news.php?action=edit&id=" . $row->id . "'><img src='img/edit.jpg' width=18px height=18px></a>";
+        }                		
+        $news .="<hr/></div>";
+
     }
     return $news;
 }

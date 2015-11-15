@@ -4,7 +4,7 @@ $pageTitle = "- Nyheter";
 include ("include/header.php");
 
 /* initialize variables */
-$limit = 4; //Posts per page
+$limit = 5; //Posts per page
 $offset = (isset($_GET['offset']) && is_numeric($_GET['offset'])) ? $_GET['offset'] : 0; //Start index
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : "";
 $newsObject = new NewsObject($db);
@@ -101,8 +101,8 @@ function getArticleSideBar($newsObject, $offset, $limit)
 	}
 
 	$side_article .= "<article id='side_article'><h4>Nyheter</h4>";
-
-	foreach ( $res as $key )
+	$side_article .= presentNews($newsObject, $offset, $limit, true);
+/*	foreach ( $res as $key )
 	{
 		$title = $key->title;
 		$added = $key->added;
@@ -125,7 +125,7 @@ function getArticleSideBar($newsObject, $offset, $limit)
 			$side_article .= "<a id='article_remove' href='news.php?action=edit&id=" . $key->id . "'><img src='img/edit.jpg' width=18px height=18px></a>";
 		}
 		$side_article .= "</div>";
-	}
+	}*/
 	$nrOfRows = $newsObject->countAllRows();
 	$side_article .= "</article>";
 	$side_article .= paging($limit, $offset, $nrOfRows, $numbers = 5, "");
