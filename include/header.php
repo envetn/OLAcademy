@@ -24,11 +24,8 @@ $privilege =  $user->getUserprivilege();
 </head>
 
 <body>
-<header <?php if(isset($pageId)) echo "id='$pageId' ";?>>
-
+<header <?php if(isset($pageId)) echo "id='$pageId'";?>>
 	<nav class="navbar navbar-default navbarCustom">
-		<div class="container-fluid">
-			<main>
 			<div class="navbar-header">
 				<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
 					<span class="sr-only">Toggle navigation</span>
@@ -36,7 +33,7 @@ $privilege =  $user->getUserprivilege();
 					<span class="icon-bar"></span>
 					<span class="icon-bar"></span>
 				</button>
-				<a class="navbar-brand" href="#">
+				<a class="navbar-brand" href="index.php">
 					<img  id="bthLogo" src="img/bthLogo.png" alt="BTH logo">
 				</a>
 			</div>
@@ -52,8 +49,6 @@ $privilege =  $user->getUserprivilege();
 				</ul>
                     <?php echo showLoginLogout($user, $GLOBAL['salt_char']);?>
 			</div>
-			</main>
-		</div>
 	</nav>
 </header>
 <main>

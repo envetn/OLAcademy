@@ -1,4 +1,5 @@
 <?php
+$pageId = "admin";
 $pageTitle = " - Admin";
 include("include/header.php");
 $eventObject = new EventObject($db);

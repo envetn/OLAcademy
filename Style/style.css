@@ -26,21 +26,17 @@ body
     /*color:#1e3948;*/
 }
 
-/* .elementBox
+header
 {
-    background:#FFFFFF;
-    border: 1px solid #d3e0e9;
-    border-top-right-radius: 4px;
-    border-top-left-radius: 4px;
-} */
+	background-color: #f8f8f8;
+}
 
-main 
+main, .navbar, footer
 {
 	margin-right: auto;
     margin-left: auto;
     padding-left: 15px;
     padding-right: 15px;
-
 }
 
 footer 
@@ -48,8 +44,6 @@ footer
 	background-color: #0070B6;
 	color: #fff;
 	padding: 5px;
-    margin-left: 16px;
-    margin-right: 16px;
 }
 
 footer h3
@@ -58,19 +52,19 @@ footer h3
 }
 
 @media (min-width: 768px) {
-    main
+    main, footer, .navbar
 	{
         width: 750px;
     }
 }
 @media (min-width: 992px) {
-    main 
+    main, footer, .navbar
 	{
         width: 990px;
     }
 }
 @media (min-width: 1260px) {
-    main
+    main, footer, .navbar
 	{
         width: 1230px;
     }
@@ -81,35 +75,23 @@ a
 	text-decoration:none;
 }
 
-#top
-{
-
-}
 
 /*--know what tab that is in use-- */
 header#index a#index-,
 header#news a#news-,
 header#guestbook a#guestbook-,
-header#calendar a#calendar-{
+header#calendar a#calendar-,
+header#admin a#admin-{
 background-color:#e7e7e7;
 }
 
-
-#nav_header
-{
-	height: 40px;
-	width:60%;
-	padding-top:1%;
-	padding-left:10%;
-	background:#808080;
-	display:inline-block;
-	border-bottom-right-radius: 20px;
-	border-top-right-radius: 20px;
-}
 .navbarCustom
 {
 	border-radius:0;
+	border: 0;
 	font-size: 1.3em;
+	padding-right: 15px;
+	padding-left: 15px;
 }
 
 .navbar-brand
@@ -187,7 +169,7 @@ a:hover, a:active {
 {
 	float:left;
 	padding:5px;
-	width: 63%;
+	width: 62%;
 }
 
 #title
@@ -267,7 +249,7 @@ a:hover, a:active {
 
 .error
 {
-		color: red;
+	color: red;
 }
 
 
@@ -280,7 +262,8 @@ a:hover, a:active {
 {
     overflow: auto;
     background:#fff;
-	border-radius: 5px;
+	border-top-left-radius: 5px;
+	border-top-right-radius: 5px;
 }
 
 q{
