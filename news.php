@@ -199,6 +199,5 @@ echo "<div class='col-sm-4 elementBox'>";
 echo getArticleSideBar($newsObject, $offset, $limit);
 echo "</div>";
 echo "</div>";
-$nrOfRows = countAllRows($db, "news");
 include ("include/footer.php");
 ?>

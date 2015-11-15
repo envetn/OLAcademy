@@ -9,35 +9,35 @@ class EventObject implements DatabaseObject
 	function __construct($db)
 	{
 		$this->database = $db;
-		$this->today = date ( "Y-m-d" );
-		$this->nextWeek = date ( "Y-m-d", time () + (6 * 24 * 60 * 60) );
+		$this->today = date("Y-m-d");
+		$this->nextWeek = date("Y-m-d", time() + (6 * 24 * 60 * 60));
 	}
 
 	public function isAllowedToDeleteEntry($id)
 	{
 		$sql = "SELECT * FROM registered WHERE id=? AND userID=?";
 		$params = array($id,$_SESSION['uid']);
-		$res = $this->database->queryAndFetch ( $sql, $params );
+		$res = $this->database->queryAndFetch($sql, $params);
 		if ($this->rowResult() == 1)
 		{
 			return true;
 		}
 		return false;
 	}
-	
+
 	public function countAllRows()
 	{
 	}
 
 	function rowResult()
 	{
-		return $this->database->RowCount ();
+		return $this->database->RowCount();
 	}
 
 	public function fetchAllEntries()
 	{
 		$sql = " SELECT * FROM events ORDER BY date";
-		$result = $this->database->queryAndFetch ( $sql );
+		$result = $this->database->queryAndFetch($sql);
 		return $result;
 	}
 
@@ -46,8 +46,8 @@ class EventObject implements DatabaseObject
 		$sql = "SELECT * FROM events WHERE id=? LIMIT 1";
 		
 		$params = array($id);
-		$result = $this->database->queryAndFetch ( $sql, $params );
-		if ($this->rowResult () == 1)
+		$result = $this->database->queryAndFetch($sql, $params);
+		if ($this->rowResult() == 1)
 		{
 			return $result[0];
 		}
@@ -57,33 +57,37 @@ class EventObject implements DatabaseObject
 	public function removeSingleEntryById($id)
 	{
 		$sql = "DELETE FROM events WHERE id=? LIMIT 1";
-		$this->database->ExecuteQuery ( $sql, array($id) );
+		$this->database->ExecuteQuery($sql, array($id));
 		
 		// Clear all registered from updated event
 		$sql = "DELETE FROM registered WHERE eventID=?";
-		$this->database->ExecuteQuery ( $sql, array($id) );
+		$this->database->ExecuteQuery($sql, array($id));
 		return true;
 	}
-	
+
 	public function removeSingleRegistered($id)
 	{
 		$sql = "DELETE FROM registered WHERE id=? LIMIT 1";
 		$params = array($id);
 		$this->database->ExecuteQuery($sql, $params);
-		
 	}
 
 	public function editSingleEntryById($id, $params)
 	{
-		$sql = "UPDATE events SET eventName=?, info=?, startTime=?, date=?, reccurance=? WHERE id=?";
-		$this->database->ExecuteQuery ( $sql, $params );
-		return true;
+		if ($id > 0)
+		{
+			$sql = "UPDATE events SET eventName=?, info=?, startTime=?, date=?, reccurance=?, bus=? WHERE id=?";
+			$params[] = $id;
+			$this->database->ExecuteQuery($sql, $params);
+			return true;
+		}
+		return false;
 	}
 
 	public function addSingleEntry($params)
 	{
-		$sql = "INSERT INTO events (info, date, startTime, eventName, reccurance) VALUES(?,?,?,?,?)";
-		$this->database->ExecuteQuery ( $sql, $params );
+		$sql = "INSERT INTO events (info, date, startTime, eventName, reccurance, bus) VALUES(?,?,?,?,?,?)";
+		$this->database->ExecuteQuery($sql, $params);
 		return true;
 	}
 
@@ -96,19 +100,19 @@ class EventObject implements DatabaseObject
 			ORDER BY date
 	        ";
 		$params = array($this->today,$this->nextWeek);
-		$result = $this->database->queryAndFetch ( $sql, $params );
+		$result = $this->database->queryAndFetch($sql, $params);
 		return $result;
 	}
 
 	function getCurrentMonthsEvents()
 	{
 		$sql = " SELECT * FROM events WHERE date BETWEEN ? AND ?";
-		$firstDay = (new DateTime ( 'first day of this month' ))->format ( 'Y-m-d' );
-		$lastDay = (new DateTime ( 'last day of this month' ))->format ( 'Y-m-d' );
+		$firstDay = (new DateTime('first day of this month'))->format('Y-m-d');
+		$lastDay = (new DateTime('last day of this month'))->format('Y-m-d');
 		$params = array($firstDay,$lastDay);
-		$result = $this->database->queryAndFetch ( $sql, $params );
+		$result = $this->database->queryAndFetch($sql, $params);
 		
-		if ($this->rowResult () > 0)
+		if ($this->rowResult() > 0)
 		{
 			return $result;
 		}
@@ -119,8 +123,8 @@ class EventObject implements DatabaseObject
 	{
 		$sql = "SELECT COUNT(DISTINCT userID) as count FROM registered WHERE date=?";
 		$params = array($date);
-		$result = $this->database->queryAndFetch ( $sql, $params );
-		if ($this->rowResult () > 0)
+		$result = $this->database->queryAndFetch($sql, $params);
+		if ($this->rowResult() > 0)
 		{
 			return $result[0]->count;
 		}
@@ -131,8 +135,8 @@ class EventObject implements DatabaseObject
 	{
 		$sql = "SELECT COUNT(*) AS count FROM registered WHERE eventID=?";
 		$params = array($id);
-		$result = $this->database->queryAndFetch ( $sql, $params );
-		if ($this->rowResult () > 0)
+		$result = $this->database->queryAndFetch($sql, $params);
+		if ($this->rowResult() > 0)
 		{
 			return $result[0]->count;
 		}
@@ -143,7 +147,7 @@ class EventObject implements DatabaseObject
 	{
 		$sql = "SELECT * FROM registered WHERE eventID=?";
 		$params = array($id);
-		$result = $this->database->queryAndFetch ( $sql, $params );
+		$result = $this->database->queryAndFetch($sql, $params);
 		return $result;
 	}
 
@@ -154,12 +158,12 @@ class EventObject implements DatabaseObject
         FROM events
         WHERE date BETWEEN ? AND ?
         ";
-		$currentDate = date ( 'Y-m-d', strtotime ( $this->today . ' -1 day' ) );
-		$prev_date = date ( 'Y-m-d', strtotime ( $currentDate . ' -30 day' ) );
+		$currentDate = date('Y-m-d', strtotime($this->today . ' -1 day'));
+		$prev_date = date('Y-m-d', strtotime($currentDate . ' -30 day'));
 		
 		$params = array($prev_date,$currentDate);
-		$res = $this->database->queryAndFetch ( $sql, $params );
-		if ($this->rowResult () > 0)
+		$res = $this->database->queryAndFetch($sql, $params);
+		if ($this->rowResult() > 0)
 		{
 			foreach ( $res as $event )
 			{
@@ -167,16 +171,16 @@ class EventObject implements DatabaseObject
 				{
 					// Set new date.
 					$eventDay = $event->date;
-					$newDate = date ( 'Y-m-d', strtotime ( $eventDay . ' + 7 day' ) );
+					$newDate = date('Y-m-d', strtotime($eventDay . ' + 7 day'));
 					$id = $event->id;
 					$sql = "UPDATE events SET date=? WHERE id=? LIMIT 1";
 					$updateParams = array($newDate,$id);
-					$this->database->ExecuteQuery ( $sql, $updateParams );
+					$this->database->ExecuteQuery($sql, $updateParams);
 					
 					// Clear all registered from updated event
 					//duplicated in admin.php
 					$sql = "DELETE FROM registered WHERE eventID=?";
-					$this->database->ExecuteQuery ( $sql, array($id) );
+					$this->database->ExecuteQuery($sql, array($id));
 				}
 			}
 		}

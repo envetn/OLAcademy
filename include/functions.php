@@ -241,11 +241,12 @@ function presentEvent($username, $eventObject)
 					if(!$registered)
 					{
 						$text .= 
-						"<button type='submit' class='btn btn-primary' name='register' value='Anmäl'>Anmäl</button>
-						<label for='bus'>Plats i bussen</label>
-						<input type='checkbox' name='bus' value='Ja' checked><br>
-						<label for='comment'>Kommentar</label>
-						<input type='text' name='comment'>";
+							"<button type='submit' class='btn btn-primary' name='register' value='Anmäl'>Anmäl</button>
+							<label for='bus'>Plats i bussen</label>";
+						$text .= $key->bus == 1 ? "<input type='checkbox' name='bus' value='Ja' checked><br>" : "";
+						$text .="<label for='comment'>Kommentar</label>
+							<input type='text' name='comment'>";
+						
 					}
 
 					$text .="</form>";

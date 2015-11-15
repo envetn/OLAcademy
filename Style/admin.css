@@ -7,6 +7,10 @@ td span
 {
      margin-left:2%;
 }
+th
+{
+	padding-right:7px;
+}
 #sidebar
 {
 	float:left;

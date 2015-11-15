@@ -37,17 +37,20 @@ function getEventAndValidateGET($eventObject)
 		$eventId = $_GET['e'];
 		$res = $eventObject->fetchSingleEntryById($eventId);
 		
-		if ($res > - 1)
+		if ($res != null)
 		{
 			// could use a function for this..
-			$checked = $res[0]->reccurance == '1' ? "checked" : "";
+			$reccurance = $res->reccurance == '1' ? "checked" : "";
+			$bus = $res->bus == '1' ? "checked" : "";
+			
 			$singleEvent .= "<form id='form_addNew' method='post' enctype='multipart/form-data'>
-    		<input name='id' value='" . $res[0]->id . "' 				type='hidden'/>
-    		<input name='eventName' value='" . $res[0]->eventName . "'  type='text'/><br/>
-    		<input name='info' value='" . $res[0]->info . "' 			type='text'/><br/>
-    		<input name='startTime' value='" . $res[0]->startTime . "'  type='time'/><br/>
-    		<input name='date' value='" . $res[0]->date . "' 	    	type='datetime-local'/><br/>
-    		<label> Återkommande varje vecka: <input id='checkbox' type='checkbox' name='reccurance' value='reccurance' " . $checked . "/></label>
+    		<input name='id' value='" . $res->id . "' 				type='hidden'/>
+    		<input name='eventName' value='" . $res->eventName . "'  type='text'/><br/>
+    		<input name='info' value='" . $res->info . "' 			type='text'/><br/>
+    		<input name='startTime' value='" . $res->startTime . "'  type='time'/><br/>
+    		<input name='date' value='" . $res->date . "' 	    	type='datetime-local'/><br/>
+			Buss: <input class='checkbox' type='checkbox' name='bus' value='bus' " . $bus . "/><br>
+    		Återkommande varje vecka: <input class='checkbox' type='checkbox' name='reccurance' value='reccurance' " . $reccurance . "/><br>
     		<input class='btn btn-primary' type='submit' name='btn_edit' id='btn_edit' value='Spara'/>
     		</form>";
 		}
@@ -62,6 +65,7 @@ function getEventAndValidateGET($eventObject)
     		<input name='info' value='' 	 placeholder='Information'		type='text'/><br/>
     		<input name='startTime' value='' placeholder='" . $time . "'  type='time'/><br/>
     		<input name='date' value='" . $date . "' 	    	type='datetime-local'/><br/>
+    		<label> Buss: <input class='checkbox' type='checkbox' name='bus' value='bus' />
 			<label>Återkommande varje vecka: <input type='checkbox' name='reccurance' value='reccurance'></label>
     		<input class='btn btn-primary' type='submit' name='btn_add' id='btn_edit' value='Spara'/>
     		</form>";
@@ -75,8 +79,6 @@ function tryToEditEvent($eventObject)
 	{
 		$params = validateEventParams();
 		$id = is_numeric($_POST['id']) ? strip_tags($_POST['id']) : - 1;
-		$params[] = $id;
-		
 		return $eventObject->editSingleEntryById($id, $params);
 	}
 	catch ( Exception $e )
@@ -107,8 +109,9 @@ function validateEventParams()
 	$startTime = strip_tags($_POST['startTime']);
 	$date = strip_tags($_POST['date']);
 	$reccurance = isset($_POST['reccurance']) ? 1 : 0;
+	$bus = isset($_POST['bus']) ? 1 : 0;
 	
-	return array($info,$date,$startTime,$eventName,$reccurance);
+	return array($eventName,$info,$startTime,$date,$reccurance,$bus);
 }
 
 if ($privilege === "2") // Shall someone else be able to add??

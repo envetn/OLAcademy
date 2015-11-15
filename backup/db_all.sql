@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 15, 2015 at 04:23 PM
+-- Generation Time: Nov 15, 2015 at 06:02 PM
 -- Server version: 5.5.46-0ubuntu0.14.04.2
 -- PHP Version: 5.5.9-1ubuntu4.14
 
@@ -34,6 +34,7 @@ CREATE TABLE IF NOT EXISTS `events` (
   `eventName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `info` text COLLATE utf8_unicode_ci NOT NULL,
   `reccurance` tinyint(1) NOT NULL,
+  `bus` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=37 ;
 
@@ -41,15 +42,15 @@ CREATE TABLE IF NOT EXISTS `events` (
 -- Dumping data for table `events`
 --
 
-INSERT INTO `events` (`id`, `date`, `startTime`, `eventName`, `info`, `reccurance`) VALUES
-(22, '2015-11-21', '18:00:00', '123', '2015-11-14', 1),
-(26, '2015-11-16', '19:00:00', 'Distans', 'Mellan 10km och 20km', 1),
-(28, '2015-11-16', '18:30:00', 'Styrka', 'Samling efter intervallerna i hallen', 1),
-(30, '2015-11-16', '20:00:00', '30/15', '2015-11-15', 1),
-(33, '2015-11-18', '18:00:00', 'Grillning', 'Tag med eget att grilla, finns grill', 1),
-(34, '2015-11-17', '05:20:16', 'Ã…terkommande', 'Ã…terkommande', 1),
-(35, '2015-11-20', '17:00:00', 'Fredags trÃ¤ning', 'TrÃ¤ning pÃ¥ en fredag', 1),
-(36, '2015-11-20', '19:00:00', 'Bio', 'Tag med eget snacks', 1);
+INSERT INTO `events` (`id`, `date`, `startTime`, `eventName`, `info`, `reccurance`, `bus`) VALUES
+(22, '2015-11-21', '18:00:00', '123', '2015-11-14', 1, 0),
+(26, '0000-00-00', '19:00:00', 'Mellan 10km och 20km', '2015-11-16', 0, 0),
+(28, '0000-00-00', '18:30:00', 'Samling efter intervallerna i hallen', '2015-11-16', 1, 0),
+(30, '2015-11-30', '20:00:00', 'Intervaller', 'Info', 1, 1),
+(33, '2015-11-18', '18:00:00', 'Grillning', 'Tag med eget att grilla, finns grill', 1, 0),
+(34, '2015-11-17', '05:20:16', 'Ã…terkommande', 'Detta Ã¤r en Ã¥terkommande trÃ¤ning', 1, 1),
+(35, '2015-11-20', '17:00:00', 'Fredags trÃ¤ning', 'TrÃ¤ning pÃ¥ en fredag', 1, 0),
+(36, '2015-11-20', '19:00:00', 'Bio', 'Tag med eget snacks', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -198,7 +199,7 @@ CREATE TABLE IF NOT EXISTS `registered` (
   `bus` tinytext COLLATE utf8_unicode_ci NOT NULL,
   `eventID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=14 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=18 ;
 
 --
 -- Dumping data for table `registered`
@@ -210,7 +211,8 @@ INSERT INTO `registered` (`id`, `userID`, `name`, `date`, `comment`, `bus`, `eve
 (7, 19, 'lofie', '2015-11-18', '', 'Ja', '33'),
 (8, 19, 'lofie', '2015-11-20', '', 'Ja', '35'),
 (9, 19, 'lofie', '2015-11-20', '', 'Ja', '36'),
-(13, 19, 'lofie', '2015-11-16', '', 'Ja', '26');
+(13, 19, 'lofie', '2015-11-16', '', 'Ja', '26'),
+(14, 19, 'lofie', '2015-11-21', '', 'Nej', '22');
 
 -- --------------------------------------------------------
 
