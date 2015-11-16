@@ -79,7 +79,7 @@ function getTableTitleOfPosts($newsObject)
 	$limit = 20;
 	$res = $newsObject->fetchEntryWithOffset($offset, $limit);
 	
-	$news = "<h3 id='tableHead'>Nyheter</h3><a href='news.php?action=Lägg+till'> < Lägg till > </a><table id='tableContent'>
+	$news = "<h3 id='tableHead'>Nyheter</h3><a href='news.php?action=Lägg+till'> < Lägg till > </a><table class='tableContent'>
     <tr>
         <th>Title</th><th>Av</th><th>Tillagd</th><th>Ta bort</th>
     <tr>";
@@ -126,7 +126,7 @@ function getTableEvents($eventObject)
 		$res = $eventObject->getWeeklyEvents();
 	}
 	
-	$htmlEvents = "<h3 id='tableHead'>Veckans träningar</h3><a href='event.php?a=1'> < Lägg till > </a><a href='" . getUrlPath() . "&showAll=true'> < Visa alla > </a><table id='tableContent'>
+	$htmlEvents = "<h3 id='tableHead'>Veckans träningar</h3><a href='event.php?a=1'> < Lägg till > </a><a href='" . getUrlPath() . "&showAll=true'> < Visa alla > </a><table class='tableContent'>
     <tr>
         <th>Event</th><th>Info</th><th>När</th><th>Datum</th><th>Anmälda</th><th>Återkommande</th><th>Buss</th><th>Edit</th>
     </tr>";
@@ -172,7 +172,7 @@ function getTableRegisteredUsers($db, $eventObject)
 		if ($event != null)
 		{
 			$registeredUsersTable = "<h3 id='tableHead'>Anmälda till : $event->eventName - $event->eventDate </h3></a>";
-			$registeredUsersTable .= '<table id="tableContent"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
+			$registeredUsersTable .= '<table class="tableContent"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
 			
 			foreach ( $registeredUsers as $user )
 			{
@@ -186,14 +186,41 @@ function getTableRegisteredUsers($db, $eventObject)
 	}
 	return "";
 }
+function searchForUser($search, $db)
+{
+	$sql = "SELECT id,name,email,Privilege,regDate FROM users WHERE name=?";
+	$params = array($search);
+	$res = $db->queryAndFetch($sql, $params);
+	$result = "<table class='tableContent'><tr><th>Namn</th><th>email</th><th>Rättighet</th><th>Registrerad</th><th>Edit</th><tr>";
+	foreach ( $res as $user )
+	{
+		$result .= "<form method='post'><tr>
+                            <input type='hidden' name='userId' value='" . $user->id . "' />
+                            <td><a href='user.php?user=id'>" . $user->name . "</a></td>
+                            <td>" . $user->email . "</td>";
+		$result .= generateSelect($user);
+		$result .= "<td>" . $user->regDate . "</td>
+                            <td>
+								<input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeUser_1' value='Click me'>
+                                <input type='image' src='img/edit.jpg'  border='0' width=18px height=18px alt='Submit'  name='editUser_2' value='Click me2'>
+                            </td>
+                        </tr></form>";
+	}
+	return $result . "</table>";
+}
 
 function getTableUsers($db)
 {
-	$sql = "SELECT id,name,email,Privilege,regDate FROM users";
+	$sql = "SELECT id,name,email,Privilege,regDate FROM users ORDER BY privilege LIMIT 10";
 	$res = $db->queryAndFetch($sql);
 	
+	$htmlUsers = "<h3 id='tableHead'>Användare</h3><a href='createUser.php'> < Lägg till > </a> <form method='get'><input type='hidden' name='c' value='2'/><input type='text' name='search' placeholder='Sök användare'/><button class='btn btn-primary'>Sök </button></form>";
+	if (isset($_GET['search']))
+	{
+		$htmlUsers .= searchForUser($_GET['search'], $db);
+	}
 	// Maybe not show all users?
-	$htmlUsers = "<h3 id='tableHead'>Användare</h3><a href='createUser.php'> < Lägg till > </a><table id='tableContent'>
+	$htmlUsers .= "<table class='tableContent'>
     <tr>
         <th>Namn</th><th>email</th><th>Rättighet</th><th>Registrerad</th><th>Edit</th>
     <tr>";
@@ -201,7 +228,7 @@ function getTableUsers($db)
 	{
 		$htmlUsers .= "<form method='post'><tr>
                             <input type='hidden' name='userId' value='" . $user->id . "' />
-                            <td><!--<input type='text' name='username' value='" . $user->name . "' />--><a href='user.php?user=id'>" . $user->name . "</a></td>
+                            <td><a href='user.php?user=id'>" . $user->name . "</a></td>
                             <td>" . $user->email . "</td>";
 		$htmlUsers .= generateSelect($user);
 		$htmlUsers .= "<td>" . $user->regDate . "</td>
