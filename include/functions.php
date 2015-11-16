@@ -24,40 +24,6 @@ function exceptions_error_handler($severity, $message, $filename, $lineno)
 	}
 }
 
-/* 
- * Insert post in guestbook
- *
- */
-function makePost($guestbookObject)
-{
-	
-	$name = strip_tags($_POST['name']);
-	$text = strip_tags($_POST['text']);
-	if(empty($name) or empty($text))
-	{
-		$_SESSION['error'] = "<pre class=red>Fyll i alla fält.</pre>";
-	}
-	else
-	{
-		$text = makeLinks($text);
-		
-		$max_text_length = 2000;
-		$max_name_length = 50;
-		if (strlen($text) > $max_text_length)
-		{
-			$_SESSION['error'] = "<pre class=red>Text must not exceed " . $max_text_length . " characters.</pre>";
-		}
-		elseif (strlen($name) > $max_name_length)
-		{
-			$_SESSION['error'] = "<pre class=red>Name must not exceed " . $max_name_length . " characters.</pre>";
-		}
-		else
-		{
-			$params = array($name, $text);
-			$guestbookObject->addSingleEntry($params);
-		}
-	}
-}
 
 /* 
  * Present posts from table and prepare paging 
@@ -65,7 +31,7 @@ function makePost($guestbookObject)
  */
 function presentPost($guestbookObject, $offset, $limit)
 {
-	$result = $guestbookObject-> getPostsWithOffset($offset, $limit);
+	$result = $guestbookObject->getPostsWithOffset($offset, $limit);
 	$post = "";
 
 	foreach($result as $row)
@@ -74,11 +40,10 @@ function presentPost($guestbookObject, $offset, $limit)
 		$post .= 
 				"<div class='guestbookPost'>
 					<div class='guestbookHeader'>
-						<span class='guestbookName'>" . $row->name ." ".$row->id. "</span>
+						<span class='guestbookName'>" . $row->name . "</span>
 						<span class='guestbookDate'>" . $row->added . "</span>
 					</div>
 					<p class='guestbookText'>" . $text . "</p>
-					
 				</div>";
 	}
 	return $post;
@@ -92,9 +57,9 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
     foreach($res as $row)
     {
     	$content = \Michelf\Markdown::defaultTransform(validateText($row->content));
-        if(strlen($content) > 200)
+        if(strlen($content) > 2000)
         {
-            $content =  substr($content,0, 200). "<a href='news.php?offset=0&p=$row->id'> ... Läs mer</a>";
+            $content =  substr($content,0, 2000). "<a href='news.php?offset=0&p=$row->id'> ... Läs mer</a>";
         }
         else
         {
@@ -345,20 +310,11 @@ function displayErrorMessage($message)
 	</div>";
 }
 
-/*
- * Makes clickable links
- *
- *
- */
+
+//Makes clickable links
 function makeLinks($text)
 {
-	preg_match_all('/http\:\/\/[\w\d\-\~\^\.\/]{1,}/',$text,$results);
-	foreach($results[0] as $value)
-	{
-		$link = '<a href="' . $value . '" target="_blank">' . $value . '</a>';
-		$text = preg_replace('/' . preg_quote($value,'/') . '/',$link,$text);
-	}
-	echo $text;
+	$text = preg_replace('!(((f|ht)tp(s)?://)[-a-zA-Zа-яА-Я()0-9@:%_+.~#?&;//=]+)!i', '<a href="$1" target="_blank">$1</a>', $text);
 	return $text;
 }
 

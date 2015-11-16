@@ -1,6 +1,5 @@
 <?php
 session_start();
-ini_set('date.timezone', 'UTC');
 /*GLOBAL VARIABLES*/
 require_once INCLUDE_PATH .'/src/php-markdown-lib/Michelf/Markdown.php';
 include_once(INCLUDE_PATH . "/functions.php");

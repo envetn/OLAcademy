@@ -34,7 +34,7 @@ class GuestbookObject implements DatabaseObject
 
 	public function addSingleEntry($params)
 	{
-		$sql = "INSERT INTO posts (name, text, date) VALUES(?,?,?)";
+		$sql = "INSERT INTO posts (name, text, added) VALUES(?,?,?)";
 		$params[] = $this->today;
 		$this->database->ExecuteQuery($sql, $params);
 	}
