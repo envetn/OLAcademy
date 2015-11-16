@@ -2,7 +2,6 @@
 <?php
 $pageTitle = " - Träningar";
 include ("include/header.php");
-$eventObject = new EventObject($db);
 $user->getUserprivilege();
 
 if (! isset($_SESSION['Previous_page']))
@@ -36,7 +35,6 @@ function getEventAndValidateGET($eventObject)
 	{
 		$eventId = $_GET['e'];
 		$res = $eventObject->fetchSingleEntryById($eventId);
-		
 		if ($res != null)
 		{
 			// could use a function for this..
@@ -48,7 +46,7 @@ function getEventAndValidateGET($eventObject)
     		<input name='eventName' value='" . $res->eventName . "'  type='text'/><br/>
     		<input name='info' value='" . $res->info . "' 			type='text'/><br/>
     		<input name='startTime' value='" . $res->startTime . "'  type='time'/><br/>
-    		<input name='date' value='" . $res->date . "' 	    	type='datetime-local'/><br/>
+    		<input name='date' value='" . $res->eventDate . "' 	    	type='datetime-local'/><br/>
 			Buss: <input class='checkbox' type='checkbox' name='bus' value='bus' " . $bus . "/><br>
     		Återkommande varje vecka: <input class='checkbox' type='checkbox' name='reccurance' value='reccurance' " . $reccurance . "/><br>
     		<input class='btn btn-primary' type='submit' name='btn_edit' id='btn_edit' value='Spara'/>
@@ -116,6 +114,7 @@ function validateEventParams()
 
 if ($privilege === "2") // Shall someone else be able to add??
 {
+	$eventObject = new EventObject($db);
 	$singleEvent = "";
 	if (isset($_POST['btn_edit']))
 	{

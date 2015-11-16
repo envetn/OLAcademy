@@ -4,6 +4,7 @@ include("include/header.php");
 $pageId ="index";
 $userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
 $username = isset($_SESSION['username']) ? $_SESSION['username']: "";
+
 $eventObject = new EventObject($db);
 $newsObject = new NewsObject($db);
 $guestbookObject = new GuestbookObject($db);

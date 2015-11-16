@@ -92,7 +92,7 @@ function getEditForm($newsObject)
 
 function getArticleSideBar($newsObject, $offset, $limit)
 {
-	$res = $newsObject->getNewsWithOffset($offset, $limit);
+	$res = $newsObject->fetchEntryWithOffset($offset, $limit);
 	
 	$side_article = "";
 	if ($newsObject->isAllowedToDeleteEntry("")) // only admin
@@ -102,30 +102,6 @@ function getArticleSideBar($newsObject, $offset, $limit)
 
 	$side_article .= "<article id='side_article'><h4>Nyheter</h4>";
 	$side_article .= presentNews($newsObject, $offset, $limit, true);
-/*	foreach ( $res as $key )
-	{
-		$title = $key->title;
-		$added = $key->added;
-		$content = \Michelf\Markdown::defaultTransform(validateText($key->content));
-		$author = $key->author;
-		
-		$side_article .= "<a href='news.php?offset=" . $offset . "&p=" . $key->id . "'" . $key->title . ">";
-		$side_article .= "<div class='sidebar'>";
-		$side_article .= "<div class='sidebarHeader'>";
-		$side_article .= "<span class='sidebarTitle'>" . $title . "</span>";
-		$side_article .= "<span class='sidebarDate'>" . $added . "</span><hr>";
-		$side_article .= "</div>";
-		
-		$side_article .= "<p class='guestbookText'>" . $content . "</p>";
-		$side_article .= "<p class='NewsBy_p'><b>Av: </b>" . $author . "</p></a>";
-		
-		if ($newsObject->isAllowedToDeleteEntry("")) // admin, show all
-		{
-			$side_article .= "<a id='article_remove' href='news.php?action=remove&id=" . $key->id . "'><img src='img/cross.png' width=18px height=18px></a>";
-			$side_article .= "<a id='article_remove' href='news.php?action=edit&id=" . $key->id . "'><img src='img/edit.jpg' width=18px height=18px></a>";
-		}
-		$side_article .= "</div>";
-	}*/
 	$nrOfRows = $newsObject->countAllRows();
 	$side_article .= "</article>";
 	$side_article .= paging($limit, $offset, $nrOfRows, $numbers = 5, "");
@@ -157,7 +133,7 @@ function validateAction($newsObject)
 			case "Lägg till" :
 				$singleArticle = getAddForm();
 				break;
-					
+
 			case "remove" :
 				removeNews($newsObject);
 				break;
@@ -178,11 +154,11 @@ try
 	{
 		$res = validateSelectedPage($newsObject);
 		
-		$content = \Michelf\Markdown::defaultTransform($res[0]->content);
+		$content = \Michelf\Markdown::defaultTransform($res->content);
 		
-		$singleArticle = "<article id='singeArticle'><h3 style=''>" . $res[0]->title . "</h3><hr style='width:80%;'/>";
+		$singleArticle = "<article id='singeArticle'><h3 style=''>" . $res->title . "</h3><hr style='width:80%;'/>";
 		$singleArticle .= "<p>" . $content . "</p>";
-		$singleArticle .= "<p>By: " . $res[0]->author . "</p>";
+		$singleArticle .= "<p>By: " . $res->author . "</p>";
 		$singleArticle .= "</article>";
 	}
 }

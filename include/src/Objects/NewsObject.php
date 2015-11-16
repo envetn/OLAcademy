@@ -1,52 +1,9 @@
-<?php
-class NewsObject implements DatabaseObject
+ <?php
+class NewsObject extends DataObject
 {
-	private $database;
-
 	function __construct($db)
 	{
-		$this->database = $db;
-	}
-
-	public function fetchAllEntries()
-	{
-		$sql = "SELECT * FROM news ORDER BY added";
-		$res = $this->database->queryAndFetch ( $sql );
-		return $res;
-	}
-
-	public function getNewsWithOffset($offset, $limit)
-	{
-		$sql = "SELECT * FROM news ORDER BY added DESC LIMIT $offset, $limit";
-		$res = $this->database->queryAndFetch ( $sql );
-		return $res;
-	}
-
-	public function fetchSingleEntryById($id)
-	{
-		if($id === -1)
-		{
-			$sql = "SELECT * FROM news ORDER BY added DESC LIMIT 1";
-		}
-		else
-		{
-			$sql = "SELECT * FROM news WHERE id=? LIMIT 1";
-		}
-		
-		$params = array($id);
-		$res = $this->database->queryAndFetch ( $sql, $params );
-		if($this->database->RowCount() == 1)
-		{
-			return $res;	
-		}
-		return null;
-	}
-
-	public function removeSingleEntryById($id)
-	{
-		$sql = "DELETE FROM news WHERE id=?";
-		$params = array($id);
-		$this->database->ExecuteQuery ( $sql, $params );
+		parent::__construct($db,"news");
 	}
 
 	public function editSingleEntryById($id, $params)
@@ -70,12 +27,6 @@ class NewsObject implements DatabaseObject
 		return false;
 	}
 
-	public function countAllRows()
-	{
-		$sql = "SELECT count(*) as rows FROM news";
-		$result = $this->database->queryAndFetch($sql);
-		return $result[0]->rows;
-	}
 }
 
 ?>

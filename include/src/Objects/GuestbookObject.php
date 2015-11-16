@@ -1,30 +1,12 @@
 <?php
-class GuestbookObject implements DatabaseObject
+class GuestbookObject extends DataObject
 {
-	private $database;
 	private $today;
 
 	public function __construct($db)
 	{
-		$this->database = $db;
+		parent::__construct($db, "posts");
 		$this->today = date("Y-m-d H:i:s");
-	}
-
-	public function fetchAllEntries()
-	{
-		// TO be implemented
-	}
-
-	public function fetchSingleEntryById($id)
-	{
-		//TO be implemented
-	}
-
-	public function removeSingleEntryById($id)
-	{
-		$sql = "DELETE FROM posts WHERE id=?";
-		$params = array($id);
-		$this->database->ExecuteQuery($sql, $params);
 	}
 
 	public function editSingleEntryById($id, $params)
@@ -46,19 +28,5 @@ class GuestbookObject implements DatabaseObject
 			return true;
 		}
 		return false;
-	}
-
-	public function countAllRows()
-	{
-		$sql = "SELECT count(*) as rows FROM posts";
-		$result = $this->database->queryAndFetch($sql);
-		return $result[0]->rows;
-	}
-
-	public function getPostsWithOffset($offset, $limit)
-	{
-		$sql = "SELECT * FROM posts ORDER BY ID DESC LIMIT $offset, $limit";
-		$res = $this->database->queryAndFetch($sql);
-		return $res;
 	}
 }

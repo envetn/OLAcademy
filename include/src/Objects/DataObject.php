@@ -1,18 +1,82 @@
 <?php
-interface DatabaseObject
+class DataObject
 {
 
-	public function fetchAllEntries();
+	protected $database;
+	private $table;
 
-	public function fetchSingleEntryById($id);
+	public function __construct($db, $table)
+	{
+		$this->database = $db;
+		$this->table = $table;
+	}
 
-	public function removeSingleEntryById($id);
+	public function fetchAllEntries($orderBy = "")
+	{
+		$sql = " SELECT * FROM ". $this->table;
+		if($orderBy != "")
+		{
+			$sql .= " ORDER BY " .$orderBy;
+		}
+		$result = $this->database->queryAndFetch($sql);
+		return $result;
+	}
 
-	public function editSingleEntryById($id, $params);
+	public function fetchSingleEntryById($id)
+	{
+		$sql = "SELECT * FROM ". $this->table;
+		
+		if($id === -1)
+		{
+			$sql .= " ORDER BY added DESC LIMIT 1";
+		}
+		else
+		{
+			$sql .= " WHERE id=? LIMIT 1";
+		}
 
-	public function addSingleEntry($params);
+		$params = array($id);
+		$result = $this->database->queryAndFetch($sql, $params);
+		if ($this->database->RowCount() == 1)
+		{
+			return $result[0];
+		}
+		return null;
+	}
 
-	public function isAllowedToDeleteEntry($id);
+	public function fetchEntryWithOffset($offset, $limit)
+	{
+		$sql = "SELECT * FROM ". $this->table . " ORDER BY added DESC LIMIT $offset, $limit";
+		$res = $this->database->queryAndFetch ( $sql );
+		return $res;
+	}
+
+	public function removeSingleEntryById($id)
+	{
+		$sql = "DELETE FROM ". $this->table . " WHERE id=? LIMIT 1";
+		$this->database->ExecuteQuery($sql, array($id));
+		return true;
+	}
 	
-	public function countAllRows();
+	public function countAllRows()
+	{
+		$sql = "SELECT count(*) as rows FROM ". $this->table;
+		$result = $this->database->queryAndFetch($sql);
+		return $result[0]->rows;
+	}
+	
+	// 	public function editSingleEntryById($id, $params)
+	// 	{
+	
+	// 	}
+	
+	// 	public function addSingleEntry($params)
+	// 	{
+	
+	// 	}
+	
+	// 	public function isAllowedToDeleteEntry($id)
+	// 	{
+	
+	// 	}
 }

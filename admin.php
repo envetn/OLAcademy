@@ -77,7 +77,7 @@ function getTableTitleOfPosts($newsObject)
 {
 	$offset = isset($_GET['offset']) ? $_GET['offset'] : 0;
 	$limit = 20;
-	$res = $newsObject->getNewsWithOffset($offset, $limit);
+	$res = $newsObject->fetchEntryWithOffset($offset, $limit);
 	
 	$news = "<h3 id='tableHead'>Nyheter</h3><a href='news.php?action=Lägg+till'> < Lägg till > </a><table id='tableContent'>
     <tr>
@@ -119,7 +119,7 @@ function getTableEvents($eventObject)
 {
 	if (isset($_GET['showAll']))
 	{
-		$res = $eventObject->fetchAllEntries();
+		$res = $eventObject->fetchAllEntries("eventDate");
 	}
 	else
 	{
@@ -146,7 +146,7 @@ function getTableEvents($eventObject)
                             <td>" . $events->eventName . "</td>
                             <td>" . $info . "</td>
                             <td>" . $events->startTime . "</td>
-                            <td>" . $events->date . "</td>
+                            <td>" . $events->eventDate . "</td>
                            	<td><a href='admin.php?c=3&event=" . $events->id . "'>" . $registered . " - Visa</a></td>
                             <td>" . $reccurance . "</td>
                             <td>" . $bus . "</td>
@@ -171,7 +171,7 @@ function getTableRegisteredUsers($db, $eventObject)
 		$registeredUsers = $eventObject->getRegisteredById($eventId);
 		if ($event != null)
 		{
-			$registeredUsersTable = "<h3 id='tableHead'>Anmälda till : $event->eventName - $event->date </h3></a>";
+			$registeredUsersTable = "<h3 id='tableHead'>Anmälda till : $event->eventName - $event->eventDate </h3></a>";
 			$registeredUsersTable .= '<table id="tableContent"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
 			
 			foreach ( $registeredUsers as $user )

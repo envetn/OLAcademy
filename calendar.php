@@ -56,7 +56,7 @@ function draw_calendar($db, $month,$year, $userLoggedIn)
 		
 		/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
 		$current_date = date('Y-m-d', mktime(0,0,0,$month,$list_day,$year));
-		$sql = "SELECT eventName,id FROM events WHERE date= '$current_date' ORDER BY startTime"; //Prepare SQL code
+		$sql = "SELECT eventName,id FROM events WHERE eventDate= '$current_date' ORDER BY startTime"; //Prepare SQL code
 		$result = $db->queryAndFetch($sql); //Execute query
 		if (isset($result[0]->eventName))
 		{

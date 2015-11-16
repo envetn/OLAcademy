@@ -31,7 +31,7 @@ function exceptions_error_handler($severity, $message, $filename, $lineno)
  */
 function presentPost($guestbookObject, $offset, $limit)
 {
-	$result = $guestbookObject->getPostsWithOffset($offset, $limit);
+	$result = $guestbookObject-> fetchEntryWithOffset($offset, $limit);
 	$post = "";
 
 	foreach($result as $row)
@@ -52,7 +52,7 @@ function presentPost($guestbookObject, $offset, $limit)
 
 function presentNews($newsObject, $offset, $limit, $showEdit)
 {
-    $res = $newsObject->getNewsWithOffset($offset, $limit);
+    $res = $newsObject->fetchEntryWithOffset($offset, $limit);
     $news = "";
     foreach($res as $row)
     {
@@ -174,23 +174,33 @@ function presentEvent($username, $eventObject)
 		{
 			foreach ($events as $key)
 			{
-				if ($key->date == date("Y-m-d", time()+($i * 86400)))
+				if ($key->eventDate == date("Y-m-d", time()+($i * 86400)))
 				{
 					// Get registered users to event
-					$registeredUsersTable = '<table style="width:100%"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
+					$registeredUsersTable = '<table style="width:100%"><th>Anmälda</th><th>Kommentar</th>';
+					if($key->bus == 1)
+					{
+						$registeredUsersTable .= "<th>Bussplats</th>";
+					}
 					$registeredUsers = $eventObject->getRegisteredById($key->id);
 					$registered = false;
 
 					foreach ($registeredUsers as $user)
 					{
-						$registeredUsersTable .= "<tr><td>" . $user->name . "</td><td>" . $user->bus . "</td><td>" . $user->comment . "</td><td>";
+						$registeredUsersTable .= "<tr><td>" . $user->name . "</td><td>" . $user->comment . "</td>";
+						
+						if($key->bus == 1)
+						{
+							$registeredUsersTable .= "<td>" . $user->bus . "</td>";
+						}
+
 						$userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
 						if ($user->userID === $userID && !$registered)
 						{
-							$registeredUsersTable .= "<a href='?r=$user->id' ><img src='img/cross.png' width=18px height=18px></a>";
+							$registeredUsersTable .= "<td><a href='?r=$user->id' ><img src='img/cross.png' width=18px height=18px></a></td>";
 							$registered = true;
 						}
-						$registeredUsersTable .= "</td></tr>";
+						$registeredUsersTable .= "</tr>";
 					}
 					$registeredUsersTable .= "</table><hr>";
 
@@ -203,13 +213,14 @@ function presentEvent($username, $eventObject)
 						<br>";
 					if(!$registered)
 					{
-						$text .= 
-							"<button type='submit' class='btn btn-primary' name='register' value='Anmäl'>Anmäl</button>
-							<label for='bus'>Plats i bussen</label>";
-						$text .= $key->bus == 1 ? "<input type='checkbox' name='bus' value='Ja' checked><br>" : "";
-						$text .="<label for='comment'>Kommentar</label>
-							<input type='text' name='comment'>";
-						
+						$text .=
+						"<button type='submit' class='btn btn-primary' name='register' value='Anmäl'>Anmäl</button><br/>
+						<label for='comment'>Kommentar</label>
+						<input type='text' name='comment'>";
+						if($key->bus == 1 )
+						{
+							$text .= "<br/><label for='bus'>Plats i bussen</label><input type='checkbox' name='bus' value='Ja' checked><br>";
+						}
 					}
 
 					$text .="</form>";

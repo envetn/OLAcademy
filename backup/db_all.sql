@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.1.14
+-- version 4.0.10deb1
 -- http://www.phpmyadmin.net
 --
--- Värd: 127.0.0.1
--- Tid vid skapande: 15 nov 2015 kl 22:29
--- Serverversion: 5.6.17
--- PHP-version: 5.5.12
+-- Host: localhost
+-- Generation Time: Nov 16, 2015 at 08:52 PM
+-- Server version: 5.5.46-0ubuntu0.14.04.2
+-- PHP Version: 5.5.9-1ubuntu4.14
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -17,32 +17,32 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Databas: `olacademy`
+-- Database: `olacademy`
 --
 
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `events`
+-- Table structure for table `events`
 --
 
 DROP TABLE IF EXISTS `events`;
 CREATE TABLE IF NOT EXISTS `events` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `date` date NOT NULL,
+  `eventDate` date NOT NULL,
   `startTime` time NOT NULL,
   `eventName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `info` text COLLATE utf8_unicode_ci NOT NULL,
   `reccurance` tinyint(1) NOT NULL,
   `bus` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=37 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=39 ;
 
 --
--- Dumpning av Data i tabell `events`
+-- Dumping data for table `events`
 --
 
-INSERT INTO `events` (`id`, `date`, `startTime`, `eventName`, `info`, `reccurance`, `bus`) VALUES
+INSERT INTO `events` (`id`, `eventDate`, `startTime`, `eventName`, `info`, `reccurance`, `bus`) VALUES
 (22, '2015-11-21', '18:00:00', '123', '2015-11-14', 1, 0),
 (26, '2015-11-16', '19:00:00', 'Mellan 10km och 20km', '2015-11-16', 0, 0),
 (28, '2015-11-17', '18:30:00', 'Samling efter intervallerna i hallen', '2015-11-16', 1, 0),
@@ -50,12 +50,13 @@ INSERT INTO `events` (`id`, `date`, `startTime`, `eventName`, `info`, `reccuranc
 (33, '2015-11-18', '18:00:00', 'Grillning', 'Tag med eget att grilla, finns grill', 1, 0),
 (34, '2015-11-17', '05:20:16', 'Ã…terkommande', 'Detta Ã¤r en Ã¥terkommande trÃ¤ning', 1, 1),
 (35, '2015-11-20', '17:00:00', 'Fredags trÃ¤ning', 'TrÃ¤ning pÃ¥ en fredag', 1, 0),
-(36, '2015-11-20', '19:00:00', 'Bio', 'Tag med eget snacks', 1, 0);
+(36, '2015-11-20', '19:00:00', 'Bio', 'Tag med eget snacks', 1, 0),
+(38, '2015-11-16', '11:00:20', '123123123', '123', 0, 1);
 
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `news`
+-- Table structure for table `news`
 --
 
 DROP TABLE IF EXISTS `news`;
@@ -66,10 +67,10 @@ CREATE TABLE IF NOT EXISTS `news` (
   `author` varchar(100) CHARACTER SET latin1 NOT NULL,
   `added` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=71 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=72 ;
 
 --
--- Dumpning av Data i tabell `news`
+-- Dumping data for table `news`
 --
 
 INSERT INTO `news` (`id`, `title`, `content`, `author`, `added`) VALUES
@@ -136,12 +137,13 @@ INSERT INTO `news` (`id`, `title`, `content`, `author`, `added`) VALUES
 (67, 'test 3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae.\r\n\r\nSed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'lofie', '2015-11-14 00:00:00'),
 (68, 'test 5', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae.\r\n\r\nSed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'lofie', '2015-11-14 00:00:00'),
 (69, 'test 5', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae.\r\n\r\nSed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'lofie', '2015-11-14 00:00:00'),
-(70, 'test', 'test', 'adam', '2015-11-15 21:25:58');
+(70, 'test', 'test', 'adam', '2015-11-15 21:25:58'),
+(71, '123', '123', 'lofie', '2015-11-16 19:11:32');
 
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `posts`
+-- Table structure for table `posts`
 --
 
 DROP TABLE IF EXISTS `posts`;
@@ -151,10 +153,10 @@ CREATE TABLE IF NOT EXISTS `posts` (
   `text` text COLLATE utf8_unicode_ci NOT NULL,
   `added` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=102 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=103 ;
 
 --
--- Dumpning av Data i tabell `posts`
+-- Dumping data for table `posts`
 --
 
 INSERT INTO `posts` (`id`, `name`, `text`, `added`) VALUES
@@ -182,12 +184,13 @@ INSERT INTO `posts` (`id`, `name`, `text`, `added`) VALUES
 (98, 'asd', 'asd', '2015-11-15 14:02:05'),
 (99, 'asd', 'asd', '2015-11-15 14:03:58'),
 (100, 'asd', 'asd', '2015-11-15 14:05:36'),
-(101, 'asd', 'asd', '2015-11-15 14:06:09');
+(101, 'asd', 'asd', '2015-11-15 14:06:09'),
+(102, 'kuuuuuuuuuuuu', 'dasdasdkkkkkkkkkkkkkkkkkkkkkkk\r\n', '2015-11-16 19:29:57');
 
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `registered`
+-- Table structure for table `registered`
 --
 
 DROP TABLE IF EXISTS `registered`;
@@ -200,14 +203,13 @@ CREATE TABLE IF NOT EXISTS `registered` (
   `bus` tinytext COLLATE utf8_unicode_ci NOT NULL,
   `eventID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=20 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=22 ;
 
 --
--- Dumpning av Data i tabell `registered`
+-- Dumping data for table `registered`
 --
 
 INSERT INTO `registered` (`id`, `userID`, `name`, `date`, `comment`, `bus`, `eventID`) VALUES
-(4, 19, 'lofie', '2015-11-16', '', 'Ja', '28'),
 (5, 19, 'lofie', '2015-11-16', '', 'Ja', '30'),
 (7, 19, 'lofie', '2015-11-18', '', 'Ja', '33'),
 (8, 19, 'lofie', '2015-11-20', '', 'Ja', '35'),
@@ -215,12 +217,14 @@ INSERT INTO `registered` (`id`, `userID`, `name`, `date`, `comment`, `bus`, `eve
 (13, 19, 'lofie', '2015-11-16', '', 'Ja', '26'),
 (14, 19, 'lofie', '2015-11-21', '', 'Nej', '22'),
 (18, 21, 'adam', '2015-11-17', 'hej', 'Ja', '34'),
-(19, 21, 'adam', '2015-11-17', '', 'Nej', '28');
+(19, 21, 'adam', '2015-11-17', '', 'Nej', '28'),
+(20, 19, 'lofie', '2015-11-17', '', 'Nej', '28'),
+(21, 19, 'lofie', '2015-11-17', '', 'Ja', '34');
 
 -- --------------------------------------------------------
 
 --
--- Tabellstruktur `users`
+-- Table structure for table `users`
 --
 
 DROP TABLE IF EXISTS `users`;
@@ -236,7 +240,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=22 ;
 
 --
--- Dumpning av Data i tabell `users`
+-- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `password`, `email`, `Privilege`, `regDate`, `token`) VALUES
