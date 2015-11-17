@@ -3,21 +3,9 @@ $pageId ="calendar";
 $pageTitle ="- kalender";
 include("include/header.php");
 
-
-//Merge this one with the one index page is using?
-function getNrOfRegisteredCal($db, $eventID)
+function draw_calendar($month,$year, $userLoggedIn)
 {
-    $sql = "SELECT COUNT(*) as count FROM registered WHERE eventID=?";
-    $params = array($eventID);
-    $res = $db->queryAndFetch($sql, $params);
-    if($db->RowCount() > 0)
-    {
-        return $res[0]->count;
-    }
-}
-
-function draw_calendar($db, $month,$year, $userLoggedIn)
-{
+	$eventObject = new EventObject();
 	/* draw table */
 	$calendar = '<table class="calendar">';
 
@@ -55,14 +43,16 @@ function draw_calendar($db, $month,$year, $userLoggedIn)
 		$calendar.= '<div class="day-number">'.$list_day . $addEvent_btn . "</p>";
 		
 		/** QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !!  IF MATCHES FOUND, PRINT THEM !! **/
+		// Need to refactor this method..
 		$current_date = date('Y-m-d', mktime(0,0,0,$month,$list_day,$year));
-		$sql = "SELECT eventName,id FROM events WHERE eventDate= '$current_date' ORDER BY startTime"; //Prepare SQL code
-		$result = $db->queryAndFetch($sql); //Execute query
+
+		$result = $eventObject->fetchEventByDay($current_date); //Execute query
+
 		if (isset($result[0]->eventName))
 		{
 			foreach($result as $row)
 			{
-				$calendar.= "<a href=''><p class='event_p'>" . $row->eventName . "<br/>Anmälda: ".getNrOfRegisteredCal($db, $row->id)."</a>";
+				$calendar.= "<a href=''><p class='event_p'>" . $row->eventName . "<br/>Anmälda: ".$eventObject->getNrOfRegisteredById($row->id)."</a>";
 			}
 		}
 		$calendar .= '</div>';
@@ -109,7 +99,7 @@ $month = date('m', strtotime('0 month'));
 $year = date('Y', strtotime('0 year'));
 echo "<div class='row clearFix'>";
 	echo "<div class='b'>";
-		echo draw_calendar($db, $month,$year, $user->isLoggedIn());
+		echo draw_calendar($month,$year, $user->isLoggedIn());
 	echo "</div>";
 echo "</div>";
 

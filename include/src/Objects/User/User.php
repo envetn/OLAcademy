@@ -1,14 +1,49 @@
 <?php
-class User
+
+class User extends DataObject
 {
 	private $privilege;
-	private $database;
 	
-	function __construct($db)
+	function __construct()
 	{
-		$this->database = $db;
+		parent::__construct("users");
 	}
 	
+	function fetchUserEntries()
+	{
+		$sql = "SELECT id,name,email,Privilege,regDate FROM users ORDER BY privilege LIMIT 10";
+		$res = $this->database->queryAndFetch($sql);
+		if($this->database->RowCount() > 0)
+		{
+			return $res;
+		}
+		return null;
+	}
+	
+	function fetchUserByName($name)
+	{
+		$sql = "SELECT id,name,email,Privilege,regDate FROM users WHERE name=?";
+		$params = array($name);
+		$res = $this->database->queryAndFetch($sql, $params);
+
+		if($this->database->RowCount() > 0)
+		{
+			return $res;
+		}
+		return null;
+	}
+
+	function updateUsersPrivilege($privilege,$id)
+	{
+		if(is_numeric($privilege) && is_numeric($id))
+		{
+			$sql = "UPDATE users SET Privilege=? WHERE id=? LIMIT 1";
+			$params = array($privilege,$id);
+			$this->database->queryAndFetch($sql, $params);
+			return true;
+		}
+		return false;
+	}
 	function Login($email, $passwd)
 	{
 		$sql = "SELECT id,name,email,Privilege FROM users WHERE email=? AND password=? LIMIT 1";

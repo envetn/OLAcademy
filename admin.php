@@ -2,8 +2,8 @@
 $pageId = "admin";
 $pageTitle = " - Admin";
 include ("include/header.php");
-$eventObject = new EventObject($db);
-$newsObject = new NewsObject($db);
+$eventObject = new EventObject();
+$newsObject = new NewsObject();
 
 $privilege = $user->getUserprivilege();
 
@@ -12,25 +12,22 @@ if (isset($_SESSION['Previous_page']))
 	unset($_SESSION['Previous_page']);
 }
 
-function tryToEditUser($db)
+function tryToEditUser($user)
 {
 	if (isset($_POST['userId']) && is_numeric($_POST['userId']))
 	{
 		try
 		{
-			//is allowed ?
-			$sql = "UPDATE users SET name=?, Privilege=? WHERE id=? LIMIT 1";
+			dump($_POST);
 			$userId = $_POST['userId'];
-			$name = $_POST['username'];
-			$Privilege = $_POST['privilege'];
-			$params = array($name,$Privilege,$userId);
-			
-			$db->ExecuteQuery($sql, $params);
-			return true;
+			$privilege = $_POST['privilege'];
+			return $user->updateUsersPrivilege($privilege,$userId);
+
 		}
 		catch ( Exception $e )
 		{
-			logError("< " . $_SESSION['uid'] . "  tryToEditUser > Error: " . $e . "\n");
+			//logError("< " . $_SESSION['uid'] . "  tryToEditUser > Error: " . $e . "\n");
+			dump($e);
 			return false;
 		}
 	}
@@ -53,21 +50,19 @@ function tryToRemoveEvent($eventObject)
 	}
 }
 
-function tryToRemoveUser($db)
+function tryToRemoveUser($user)
 {
 	if (isset($_POST['userId']) && is_numeric($_POST['userId']))
 	{
 		try
 		{
-			$sql = "DELETE FROM users WHERE id=? LIMIT 1";
-			$userId = $_POST['userId'];
-			$params = array($userId);
-			$db->ExecuteQuery($sql, $params);
-			return true;
+			$id = $_POST['userId'];
+			return $user->removeSingleEntryById($id);
 		}
 		catch ( Exception $e )
 		{
-			logError("< " . $_SESSION['uid'] . "  tryToRemoveUser > Error: " . $e . "\n");
+			//logError("< " . $_SESSION['uid'] . "  tryToRemoveUser > Error: " . $e . "\n");
+			dump($e);
 			return false;
 		}
 	}
@@ -103,7 +98,7 @@ function getTableTitleOfPosts($newsObject)
                        	<td>" . $row->added . "</td>
                         <td>
                             <a class='admin_news_remove' href='admin.php?r=" . $row->id . "'><img src='img/cross.png' width=18px height=18px></a>
-                            <a class='admin_news_remove' href='news.php?e=" . $row->id . "'><img src='img/edit.jpg' width=18px height=18px></a>
+                            <a class='admin_news_remove' href='news.php?e=" . $row->id . "'><img src='img/edit.png' width=18px height=18px></a>
                             <a class='admin_news_remove' href='news.php?offset=0&p=" . $row->id . "'>Show</a>
                         </td>
                     </tr>";
@@ -152,7 +147,7 @@ function getTableEvents($eventObject)
                             <td>" . $bus . "</td>
                             <td>
                                 <input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeEvent_1' value='" . $events->id . "'/>
-                                <a class='admin_news_remove' href='event.php?e=" . $events->id . "'><img src='img/edit.jpg' width=18px height=18px></a>
+                                <a class='admin_news_remove' href='event.php?e=" . $events->id . "'><img src='img/edit.png' width=18px height=18px></a>
                             </td>
                         </tr>
                        </form>";
@@ -160,7 +155,7 @@ function getTableEvents($eventObject)
 	return $htmlEvents . "</table>";
 }
 
-function getTableRegisteredUsers($db, $eventObject)
+function getTableRegisteredUsers($eventObject)
 {
 	if (isset($_GET['event']) && is_numeric($_GET['event']))
 	{
@@ -174,10 +169,10 @@ function getTableRegisteredUsers($db, $eventObject)
 			$registeredUsersTable = "<h3 id='tableHead'>Anmälda till : $event->eventName - $event->eventDate </h3></a>";
 			$registeredUsersTable .= '<table class="tableContent"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
 			
-			foreach ( $registeredUsers as $user )
+			foreach ( $registeredUsers as $regUser )
 			{
-				$registeredUsersTable .= "<tr><td>" . $user->name . "</td><td>" . $user->bus . "</td><td>" . $user->comment . "</td><td>";
-				$registeredUsersTable .= "<a href='?r=$user->id' ><img src='img/cross.png' width=18px height=18px></a>";
+				$registeredUsersTable .= "<tr><td>" . $regUser->name . "</td><td>" . $regUser->bus . "</td><td>" . $regUser->comment . "</td><td>";
+				$registeredUsersTable .= "<a href='?r=$regUser->id' ><img src='img/cross.png' width=18px height=18px></a>";
 				$registeredUsersTable .= "</td></tr>";
 			}
 			$registeredUsersTable .= "</table><hr>";
@@ -186,55 +181,52 @@ function getTableRegisteredUsers($db, $eventObject)
 	}
 	return "";
 }
-function searchForUser($search, $db)
+function searchForUser($search, $user)
 {
-	$sql = "SELECT id,name,email,Privilege,regDate FROM users WHERE name=?";
-	$params = array($search);
-	$res = $db->queryAndFetch($sql, $params);
+	$res = $user->fetchUserByName($search);
 	$result = "<table class='tableContent'><tr><th>Namn</th><th>email</th><th>Rättighet</th><th>Registrerad</th><th>Edit</th><tr>";
-	foreach ( $res as $user )
+	foreach ( $res as $key )
 	{
 		$result .= "<form method='post'><tr>
-                            <input type='hidden' name='userId' value='" . $user->id . "' />
-                            <td><a href='user.php?user=id'>" . $user->name . "</a></td>
-                            <td>" . $user->email . "</td>";
-		$result .= generateSelect($user);
-		$result .= "<td>" . $user->regDate . "</td>
+                            <input type='hidden' name='userId' value='" . $key->id . "' />
+                            <td><a href='user.php?user=id'>" . $key->name . "</a></td>
+                            <td>" . $key->email . "</td>";
+		$result .= generateSelect($key);
+		$result .= "<td>" . $key->regDate . "</td>
                             <td>
 								<input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeUser_1' value='Click me'>
-                                <input type='image' src='img/edit.jpg'  border='0' width=18px height=18px alt='Submit'  name='editUser_2' value='Click me2'>
+                                <input type='image' src='img/edit.png'  border='0' width=18px height=18px alt='Submit'  name='editUser_2' value='Click me2'>
                             </td>
                         </tr></form>";
 	}
 	return $result . "</table>";
 }
 
-function getTableUsers($db)
+function getTableUsers($user)
 {
-	$sql = "SELECT id,name,email,Privilege,regDate FROM users ORDER BY privilege LIMIT 10";
-	$res = $db->queryAndFetch($sql);
 	
+	$res = $user->fetchUserEntries();
 	$htmlUsers = "<h3 id='tableHead'>Användare</h3><a href='createUser.php'> < Lägg till > </a> <form method='get'><input type='hidden' name='c' value='2'/><input type='text' name='search' placeholder='Sök användare'/><button class='btn btn-primary'>Sök </button></form>";
 	if (isset($_GET['search']))
 	{
-		$htmlUsers .= searchForUser($_GET['search'], $db);
+		$htmlUsers .= searchForUser($_GET['search'], $user);
 	}
 	// Maybe not show all users?
 	$htmlUsers .= "<table class='tableContent'>
     <tr>
         <th>Namn</th><th>email</th><th>Rättighet</th><th>Registrerad</th><th>Edit</th>
     <tr>";
-	foreach ( $res as $user )
+	foreach ( $res as $key )
 	{
 		$htmlUsers .= "<form method='post'><tr>
-                            <input type='hidden' name='userId' value='" . $user->id . "' />
-                            <td><a href='user.php?user=id'>" . $user->name . "</a></td>
-                            <td>" . $user->email . "</td>";
-		$htmlUsers .= generateSelect($user);
-		$htmlUsers .= "<td>" . $user->regDate . "</td>
+                            <input type='hidden' name='userId' value='" . $key->id . "' />
+                            <td><a href='user.php?user=id'>" . $key->name . "</a></td>
+                            <td>" . $key->email . "</td>";
+		$htmlUsers .= generateSelect($key);
+		$htmlUsers .= "<td>" . $key->regDate . "</td>
                             <td>
 								<input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeUser_1' value='Click me'>
-                                <input type='image' src='img/edit.jpg'  border='0' width=18px height=18px alt='Submit'  name='editUser_2' value='Click me2'>
+                                <input type='image' src='img/edit.png'  border='0' width=18px height=18px alt='Submit'  name='editUser_2' value='Click me2'>
                             </td>
                         </tr></form>";
 	}
@@ -262,7 +254,7 @@ function generateSelect($user)
 	return $html;
 }
 
-function getTablesAndValidateGET($newsObject, $htmlAdmin, $eventObject, $db) // need a better solution than this
+function getTablesAndValidateGET($newsObject, $htmlAdmin, $eventObject, $user) // need a better solution than this
 {
 	if (isset($_GET['c']) && is_numeric(($_GET['c'])))
 	{
@@ -276,10 +268,10 @@ function getTablesAndValidateGET($newsObject, $htmlAdmin, $eventObject, $db) // 
 				$htmlAdmin = getTableEvents($eventObject);
 				break;
 			case 2 :
-				$htmlAdmin = getTableUsers($db);
+				$htmlAdmin = getTableUsers($user);
 				break;
 			case 3 :
-				$htmlAdmin = getTableRegisteredUsers($db, $eventObject);
+				$htmlAdmin = getTableRegisteredUsers( $eventObject);
 				break;
 			default :
 				$htmlAdmin = "<h4 id='infoHead'> Välj från menun till höger </h4>";
@@ -304,7 +296,7 @@ if ($privilege === "2")
 	
 	if (isset($_POST['removeUser_1_x'])) // Where does x come from?
 	{
-		if (tryToRemoveUser($db))
+		if (tryToRemoveUser($user))
 		{
 			$htmlAdmin .= "<h4 id='infoHead'>Användare borttagen </h4>";
 		}
@@ -315,7 +307,7 @@ if ($privilege === "2")
 	}
 	else if (isset($_POST['editUser_2_x']))
 	{
-		if (tryToEditUser($db))
+		if (tryToEditUser($user))
 		{
 			$htmlAdmin .= "<h4 id='infoHead'> User updated </h4>";
 		}
@@ -336,7 +328,7 @@ if ($privilege === "2")
 		}
 	}
 	
-	$htmlAdmin .= getTablesAndValidateGET($newsObject, $htmlAdmin, $eventObject, $db);
+	$htmlAdmin .= getTablesAndValidateGET($newsObject, $htmlAdmin, $eventObject, $user);
 	echo "<div class='row clearFix'>";
 	echo "<div style='clear:both; overflow: hidden;'>";
 	echo $sideBar;

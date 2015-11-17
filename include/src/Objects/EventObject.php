@@ -1,13 +1,14 @@
 <?php
 include ("DataObject.php");
+
 class EventObject extends DataObject
 {
 	private $today;
 	private $nextWeek;
 
-	function __construct($db)
+	function __construct()
 	{
-		parent::__construct($db,"events");
+		parent::__construct("events");
 
 		$this->today = date("Y-m-d");
 		$this->nextWeek = date("Y-m-d", time() + (6 * 24 * 60 * 60));
@@ -29,6 +30,31 @@ class EventObject extends DataObject
 	function rowResult()
 	{
 		return $this->database->RowCount();
+	}
+
+	public function fetchEventByDay($day)
+	{
+		$sql = "SELECT eventName,id FROM events WHERE eventDate=? ORDER BY startTime"; //Prepare SQL code
+		$params = array($day);
+		$res = $this->database->queryAndFetch($sql, $params);
+		if ($this->rowResult() > 0)
+		{
+			return $res;
+		}
+		return null;
+	}
+	
+	public function fetchRegisteredByUserIdAndEventId($userId, $eventId)
+	{
+		$sql = "SELECT * FROM registered WHERE userID=? and eventID=?";
+		$params = array($userId, $eventId);
+		$res = $this->database->queryAndFetch($sql, $params);
+		
+		if ($this->rowResult() > 0)
+		{
+			return $res;
+		}
+		return null;
 	}
 
 	public function removeEventAndRegisteredById($id)
@@ -80,7 +106,7 @@ class EventObject extends DataObject
 		$lastDay = (new DateTime('last day of this month'))->format('Y-m-d');
 		$params = array($firstDay,$lastDay);
 		$result = $this->database->queryAndFetch($sql, $params);
-		
+
 		if ($this->rowResult() > 0)
 		{
 			return $result;
@@ -123,6 +149,12 @@ class EventObject extends DataObject
 		}
 	}
 	
+	function addSingleEntryRegistered($params)
+	{
+		$sql = 'INSERT INTO registered (userID, name, date, comment, bus, eventID) VALUES(?,?,?,?,?,?)';
+		$result = $this->database->ExecuteQuery($sql, $params);
+	}
+
 	function getNrOfRegistered($date)
 	{
 		$sql = "SELECT COUNT(DISTINCT userID) as count FROM registered WHERE date=?";

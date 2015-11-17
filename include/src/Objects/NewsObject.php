@@ -1,9 +1,10 @@
  <?php
+
 class NewsObject extends DataObject
 {
-	function __construct($db)
+	function __construct()
 	{
-		parent::__construct($db,"news");
+		parent::__construct("news");
 	}
 
 	public function editSingleEntryById($id, $params)

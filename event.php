@@ -114,7 +114,7 @@ function validateEventParams()
 
 if ($privilege === "2") // Shall someone else be able to add??
 {
-	$eventObject = new EventObject($db);
+	$eventObject = new EventObject();
 	$singleEvent = "";
 	if (isset($_POST['btn_edit']))
 	{

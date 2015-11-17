@@ -4,7 +4,7 @@ $pageTitle ="- Gästbok";
 include("include/header.php");
 $limit  = 7; //Posts per page
 $offset = isset($_GET['offset']) && is_numeric($_GET['offset']) ? $_GET['offset'] : 0; //Start index
-$guestbookObject = new GuestbookObject($db);
+$guestbookObject = new GuestbookObject();
 
 function makePost($guestbookObject)
 {

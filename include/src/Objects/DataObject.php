@@ -1,14 +1,16 @@
 <?php
+include(INCLUDE_PATH . "/src/Database/database.php");
 class DataObject
 {
-
 	protected $database;
 	private $table;
 
-	public function __construct($db, $table)
+	public function __construct($table)
 	{
-		$this->database = $db;
+		global $GLOBAL;
+		$this->database = new Database($GLOBAL['database']);;
 		$this->table = $table;
+		
 	}
 
 	public function fetchAllEntries($orderBy = "")

@@ -2,12 +2,12 @@
 include("include/header.php"); 
 
 $pageId ="index";
-$userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
+$userId = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
 $username = isset($_SESSION['username']) ? $_SESSION['username']: "";
 
-$eventObject = new EventObject($db);
-$newsObject = new NewsObject($db);
-$guestbookObject = new GuestbookObject($db);
+$eventObject = new EventObject();
+$newsObject = new NewsObject();
+$guestbookObject = new GuestbookObject();
 
 $eventObject->updateEvents();
 if (isset($_GET['highlighted']))
@@ -26,26 +26,23 @@ else
 // Post functions
 if(isset($_POST['register']))
 {
-    $eventID = $_POST["eventID"];
+    $eventId = $_POST["eventID"];
 	$bus = isset($_POST['bus']) ? $_POST['bus'] : "Nej";
 	//check if already exists
-    $sql = "SELECT * FROM registered WHERE userID=? and eventId=?";
-    $params = array($userID, $eventID);
-    $db->queryAndFetch($sql, $params);
+	$eventObject->fetchRegisteredByUserIdAndEventId($userId, $eventId);
 	
-    if($db->RowCount() >= 1)
+    if($eventObject->rowResult() >= 1)
     {
 		$_SESSION['error'] = '<pre class=red>Du är redan anmäld till denna träningen.</pre>';
     }
-	elseif(!$userID)
+	elseif(!$userId)
 	{
 		$_SESSION['error'] = '<pre class=red>Du måste vara inloggad för att kunna anmäla dig.</pre>';
 	}
     else
     {
-        $sql = 'INSERT INTO registered (userID, name, date, comment, bus, eventID) VALUES(?,?,?,?,?,?)';
-        $params = array($userID,$username,$_POST['date'],$_POST['comment'],$bus,$eventID);
-        $db->ExecuteQuery($sql, $params);
+        $params = array($userId,$username,$_POST['date'],$_POST['comment'],$bus,$eventId);
+        $eventObject->addSingleEntryRegistered($params);
     }
 
 }

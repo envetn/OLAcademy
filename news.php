@@ -1,13 +1,13 @@
 <?php
 $pageId = "news";
-$pageTitle = "- Nyheter";
+$pageTitle = " - Nyheter";
 include ("include/header.php");
 
 /* initialize variables */
 $limit = 5; //Posts per page
 $offset = (isset($_GET['offset']) && is_numeric($_GET['offset'])) ? $_GET['offset'] : 0; //Start index
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : "";
-$newsObject = new NewsObject($db);
+$newsObject = new NewsObject();
 
 if (isset($_POST['btn_addNew']))
 {
@@ -81,9 +81,9 @@ function getEditForm($newsObject)
 	{
 		$singleArticle = "<form id='form_addNew' method='post' enctype='multipart/form-data'>
 	    		<input name='id' value='" . $id . "' type='hidden'/>
-	    		<input name='title' value='" . $res[0]->title . "' type='text'/><br/>
-	    		<textarea name='content' value='' type='text' cols='50' rows='5'>" . $res[0]->content . "</textarea><br/>
-	    		<label/>Av : " . $res[0]->title . "</label><br/>
+	    		<input name='title' value='" . $res->title . "' type='text'/><br/>
+	    		<textarea name='content' value='' type='text' cols='50' rows='5'>" . $res->content . "</textarea><br/>
+	    		<label/>Av : " . $res->title . "</label><br/>
 	    		<input type='submit' name='btn_Edit' id='btn_addnew' value='Spara'/>
 	    		</form>";
 	}

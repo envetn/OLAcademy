@@ -1,6 +1,5 @@
  <?php
 
- include("src/User/User.php");
 /*
  *Global 
 */

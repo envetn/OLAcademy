@@ -1,13 +1,13 @@
 <?php
 define('INCLUDE_PATH', __DIR__ . '');
 include_once(INCLUDE_PATH . "/config.php");
-include_once(INCLUDE_PATH . "/src/Database/database.php");
+
 include_once(INCLUDE_PATH . "/src/Objects/EventObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/NewsObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/GuestbookObject.php");
+include_once(INCLUDE_PATH . "/src/Objects/User/User.php");
 
-$db = new Database($GLOBAL['database']);
-$user = new User($db);
+$user = new User();
 $privilege =  $user->getUserprivilege();
 
 ?>

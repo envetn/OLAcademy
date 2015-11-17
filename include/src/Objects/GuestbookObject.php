@@ -3,9 +3,9 @@ class GuestbookObject extends DataObject
 {
 	private $today;
 
-	public function __construct($db)
+	function __construct()
 	{
-		parent::__construct($db, "posts");
+		parent::__construct("posts");
 		$this->today = date("Y-m-d H:i:s");
 	}
 
