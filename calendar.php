@@ -97,7 +97,7 @@ function draw_calendar($month,$year, $userLoggedIn)
 
 $month = date('m', strtotime('0 month'));
 $year = date('Y', strtotime('0 year'));
-echo "<div class='row clearFix'>";
+echo "<div class='row'>";
 	echo "<div class='b'>";
 		echo draw_calendar($month,$year, $user->isLoggedIn());
 	echo "</div>";

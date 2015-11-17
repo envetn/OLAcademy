@@ -167,7 +167,7 @@ catch ( Exception $e )
 	$singleArticle = "<article id='singeArticle'><h3> Ingen nyhet hittades </h3><hr/><br/> " . $e . "</article>";
 }
 
-echo "<div class='row clearFix'>";
+echo "<div class='row'>";
 echo "<div class='col-sm-8 elementBox'>";
 echo isset($singleArticle) ? $singleArticle : "";
 echo "</div>";

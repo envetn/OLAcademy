@@ -1,7 +1,10 @@
 <?php
-$pageId ="guestbook";
-$pageTitle ="- Gästbok";
 include("include/header.php");
+
+$pageId ="guestbook";
+$username = isset($_SESSION['username']) ? $_SESSION['username']: "";
+$pageTitle ="- Gästbok";
+
 $limit  = 7; //Posts per page
 $offset = isset($_GET['offset']) && is_numeric($_GET['offset']) ? $_GET['offset'] : 0; //Start index
 $guestbookObject = new GuestbookObject();
@@ -12,7 +15,7 @@ function makePost($guestbookObject)
 	$text = strip_tags($_POST['text']);
 	if(empty($name) || empty($text))
 	{
-		$_SESSION['error'] = "<pre class=red>Fyll i alla fält.</pre>";
+		$_SESSION['error'] = "<pre class='error'>Fyll i alla fält.</pre>";
 	}
 	else
 	{
@@ -21,11 +24,11 @@ function makePost($guestbookObject)
 		$max_name_length = 50;
 		if (strlen($text) > $max_text_length)
 		{
-			$_SESSION['error'] = "<pre class=red>Text must not exceed " . $max_text_length . " characters.</pre>";
+			$_SESSION['error'] = "<pre class='error'>Text must not exceed " . $max_text_length . " characters.</pre>";
 		}
 		elseif (strlen($name) > $max_name_length)
 		{
-			$_SESSION['error'] = "<pre class=red>Name must not exceed " . $max_name_length . " characters.</pre>";
+			$_SESSION['error'] = "<pre class='error'>Name must not exceed " . $max_name_length . " characters.</pre>";
 		}
 		else
 		{
@@ -44,8 +47,8 @@ if (isset($_POST['submit']))
 $postForm = 
 	'<div class="col-sm-4 elementBox">
 		<h2>Gästbok</h2>
-		<form action='.$_SERVER['PHP_SELF'].' method="POST">
-			<label>Namn:<br><input type="text" name="name" size="30"/></label><br>
+		<form action="'.$_SERVER['PHP_SELF'].'" method="POST">
+			<label>Namn:<br><input type="text" name="name" value="'.$username.'" size="30"/></label><br>
 			<label>Text:<br><textarea name="text" rows="8" cols="40"></textarea></label><br>
 			<label><input type="submit" class="btn btn-primary" name="submit" value="Skicka"/></label><br>
 		</form>

@@ -28,16 +28,10 @@ if(isset($_POST['register']))
 {
     $eventId = $_POST["eventID"];
 	$bus = isset($_POST['bus']) ? $_POST['bus'] : "Nej";
-	//check if already exists
-	$eventObject->fetchRegisteredByUserIdAndEventId($userId, $eventId);
 	
-    if($eventObject->rowResult() >= 1)
-    {
-		$_SESSION['error'] = '<pre class=red>Du är redan anmäld till denna träningen.</pre>';
-    }
-	elseif(!$userId)
+	if(!$user->isLoggedIn())
 	{
-		$_SESSION['error'] = '<pre class=red>Du måste vara inloggad för att kunna anmäla dig.</pre>';
+		$_SESSION['error'] = "<pre class='error'>Du måste vara inloggad för att kunna anmäla dig.</pre>";
 	}
     else
     {
@@ -61,10 +55,10 @@ if(isset($_GET['r']) && is_numeric($_GET['r']))
 
 //'. /*$GLOBAL['error']*/ .'
 echo isset($_SESSION['error']) ? $_SESSION['error'] : "";
-echo '<div class="row clearFix">';
+echo '<div class="row">';
 echo '<article class="col-sm-4 col-sm-push-8 elementBox"><h1>Träningar</h1>' . presentEvent($username, $eventObject) .' </article>';
-echo '<article class="col-sm-8 col-sm-pull-4 elementBox"><h1>Gästbok</h1>'. presentPost($guestbookObject, 0, 3);
-echo '<h1>Nyheter</h1>'. presentNews($newsObject, 0, 3, false) .' </article>';
+echo '<article class="col-sm-8 col-sm-pull-4 elementBox"><h1>Nyheter</h1>'. presentNews($newsObject, 0, 3, false);
+echo '<h1>Gästbok</h1>'. presentPost($guestbookObject, 0, 3) .' </article>';
 echo '</div>';
 include("include/footer.php");
 ?>

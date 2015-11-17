@@ -35,14 +35,14 @@ function presentPost($guestbookObject, $offset, $limit)
 
 	foreach($result as $row)
 	{
-		$text = nl2br($row->text); 
+		$text = $row->text; 
 		$post .= 
 				"<div class='guestbookPost'>
 					<div class='guestbookHeader'>
 						<span class='guestbookName'>" . $row->name . "</span>
 						<span class='guestbookDate'>" . $row->added . "</span>
 					</div>
-					<p class='guestbookText'>" . $text . "</p>
+					<pre class='guestbookText'>" . $text . "</pre>
 				</div>";
 	}
 	return $post;
@@ -55,10 +55,10 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
     $news = "";
     foreach($res as $row)
     {
-    	$content = \Michelf\Markdown::defaultTransform(validateText($row->content));
-        if(strlen($content) > 2000)
+    	$content = $row->content;
+        if(strlen($content) > 400)
         {
-            $content =  substr($content,0, 2000). "<a href='news.php?offset=0&p=$row->id'> ... Läs mer</a>";
+            $content =  substr($content, 0, 400) . "<a href='news.php?offset=0&p=$row->id'> ... Läs mer</a>";
         }
         else
         {
@@ -75,7 +75,7 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
 		}    			
 		$news .="<span class='newsAdded'>" . $row->added . " </span>
                 </div>
-                <p class='newsText'>" . $content . "</p>
+                <pre class='newsText'>" . $content . "</pre>
                 </div>";
 
     }
@@ -232,14 +232,11 @@ function presentEvent($username, $eventObject)
 	return $text;
 }
 
-function validateText($text)
+function makeLinks($text)
 {
-	if(strlen($text) > 150)
-	{
-		$text = substr($text, 0, 150) . "...";
-	}
+	//Makes clickable links
+	$text = preg_replace('!(((f|ht)tp(s)?://)[-a-zA-Zа-яА-Я()0-9@:%_+.~#?&;//=]+)!i', '<a href="$1" target="_blank">$1</a>', $text);
 	return $text;
-	//if there is no white space in the first 150chars. Then cast error or do asdasd-sadasd
 }
 
 /*
@@ -320,13 +317,6 @@ function displayErrorMessage($message)
 	</div>";
 }
 
-
-//Makes clickable links
-function makeLinks($text)
-{
-	$text = preg_replace('!(((f|ht)tp(s)?://)[-a-zA-Zа-яА-Я()0-9@:%_+.~#?&;//=]+)!i', '<a href="$1" target="_blank">$1</a>', $text);
-	return $text;
-}
 
 /* Log caught exceptions
  * In my opinion it is good to catch
