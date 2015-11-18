@@ -25,7 +25,7 @@ function exceptions_error_handler($severity, $message, $filename, $lineno)
 
 
 /* 
- * Present posts from table and prepare paging 
+ * Present posts from table
  *
  */
 function presentPost($guestbookObject, $offset, $limit)
@@ -85,7 +85,7 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
  * Paging
  *
  */
-function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl)
+function paging($limit, $offset, $nrOfRows, $numbers=5)
 {
 	$prev = $offset - $limit;
 	$next = $offset + $limit;
@@ -100,13 +100,13 @@ function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl)
 	{
 		if($j > 0) 
 		{
-			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=0$currentUrl'>1... </a> \n"; //Link to first page
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=0'>1... </a> \n"; //Link to first page
 		}
 		if($offset > 0) 
 		{
 			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$prev'>&lt;</a> \n";//Link to previous page
 		}
-		
+
 		//Pages within range
 		for($i = (0 + $j); $i < $num_page && $i < $numbers + $j; $i++)
 		{
@@ -117,16 +117,16 @@ function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl)
 			}
 			else 
 			{
-				$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$page_link$currentUrl'>" . ($i+1) . "</a> \n";
+				$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$page_link'>" . ($i+1) . "</a> \n";
 			}
 		}
 		if($nrOfRows > $offset + $limit)
 		{
-			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$next$currentUrl'>&gt;</a> \n";//Link to next page
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$next'>&gt;</a> \n";//Link to next page
 		}
 		if($num_page > $numbers && $cur_page <= $num_page-ceil($numbers/2))
 		{
-			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=".($num_page-1)*$limit."$currentUrl'> ...$num_page</a> \n";//Link to last page
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=".($num_page-1)*$limit."'> ...$num_page</a> \n";//Link to last page
 		}
 	}
 	return $paging;

@@ -133,6 +133,15 @@ background-color:#e7e7e7;
 	background-color: #5F6975;
 	border-radius: 10px;
 }
+
+
+.paging
+{
+	width: 80%;
+	margin: auto;
+	text-align: center;
+}
+
 /*
 ul {
     list-style-type: none;
@@ -200,30 +209,7 @@ a:hover, a:active {
 {
 	margin-top:0px;
 }
-.start_wrapper
-{
-	width:100%;
-	border:1px solid black;
-}
-.start_news, #start_gb
-{
-	width:60%;
-	padding-left:1%;
-}
-.start_register
-{
-	width:38%;
-	float:right;
-	border:1px solid black;
-}
-.index_news
-{
-	margin-bottom:1%;
-	margin-left:1%;
 
-
-	/*font-family: "helvetica", Arial, sans-serif;*/
-}
 
 /******User page *****/
 .form_addUser

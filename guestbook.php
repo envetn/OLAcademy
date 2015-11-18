@@ -1,10 +1,9 @@
 <?php
+$pageId ="guestbook";
+$pageTitle ="- Gästbok";
 include("include/header.php");
 
-$pageId ="guestbook";
 $username = isset($_SESSION['username']) ? $_SESSION['username']: "";
-$pageTitle ="- Gästbok";
-
 $limit  = 7; //Posts per page
 $offset = isset($_GET['offset']) && is_numeric($_GET['offset']) ? $_GET['offset'] : 0; //Start index
 $guestbookObject = new GuestbookObject();
@@ -45,10 +44,10 @@ if (isset($_POST['submit']))
 }
 
 $postForm = 
-	'<div class="col-sm-4 elementBox">
+	'<div class="col-sm-4 col-sm-pull-8 elementBox">
 		<h2>Gästbok</h2>
 		<form action="'.$_SERVER['PHP_SELF'].'" method="POST">
-			<label>Namn:<br><input type="text" name="name" value="'.$username.'" size="30"/></label><br>
+			<label>Namn:<br><input type="text" name="name" value="'.$username.'" size="20"/></label><br>
 			<label>Text:<br><textarea name="text" rows="8" cols="40"></textarea></label><br>
 			<label><input type="submit" class="btn btn-primary" name="submit" value="Skicka"/></label><br>
 		</form>
@@ -57,12 +56,12 @@ $postForm =
 
 echo isset($_SESSION['error']) ? $_SESSION['error'] : "";
 echo "<div class='row'>";
-	echo $postForm;
-	echo "<div class='col-sm-8 elementBox'>";
+	echo "<div class='col-sm-8 col-sm-push-4 elementBox'>";
 		echo presentPost($guestbookObject, $offset, $limit);
 		$nrOfRows = $guestbookObject->countAllRows();
-		echo paging($limit, $offset, $nrOfRows, $numbers=5, "");
+		echo "<div class='paging'>".paging($limit, $offset, $nrOfRows, $numbers=5)."</div>";
 	echo "</div>";
+	echo $postForm;
 echo "</div>";
 
 include("include/footer.php"); ?>

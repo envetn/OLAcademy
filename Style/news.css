@@ -37,15 +37,6 @@
 	margin: 0px;
 }
 
-.newsAuthor
-{
-	/* float: right; */
-}
-
-
-
-
-
 .newsPost:hover
 {
 	background:#FFA;
@@ -54,15 +45,6 @@
 {
 	background:#dbf5fc;
 }
-
-
-
-
-
-
-
-
-
 
 
 
@@ -102,22 +84,30 @@
 
 
 /************************/
-/****singeArticle*******/
+/****singleArticle*******/
 /************************/
- #singeArticle
+ #singleArticle
 {
 	background:white;
+	margin-bottom: 30px;
 } 
-#singeArticle p
+#singleArticle p
 {
 	margin:2%;
 	font-family: Arial, Helvetica, sans-serif;/*???*/
 	
 }
-#singeArticle h3
+#singleArticle h3
 {
 	text-align:center;
 }
+
+#author
+{
+	float: right;
+	padding-right: 7px;
+}
+
 #form_addNew
 {
 	border:1px solid black;

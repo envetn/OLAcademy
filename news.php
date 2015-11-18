@@ -97,14 +97,14 @@ function getArticleSideBar($newsObject, $offset, $limit)
 	$side_article = "";
 	if ($newsObject->isAllowedToDeleteEntry("")) // only admin
 	{
-		$side_article .= "<form method='get'><input style='float:right; margin-top:7px;' class='btn btn-primary'type='submit' value='Lägg till' name='action'/></form>";
+		$side_article .= "<form method='get'><input style='float:right;' class='btn btn-primary'type='submit' value='Lägg till' name='action'/></form>";
 	}
 
-	$side_article .= "<article id='side_article'><h4>Nyheter</h4>";
+	$side_article .= "<article id='side_article'><h2>Nyheter</h2>";
 	$side_article .= presentNews($newsObject, $offset, $limit, true);
 	$nrOfRows = $newsObject->countAllRows();
 	$side_article .= "</article>";
-	$side_article .= paging($limit, $offset, $nrOfRows, $numbers = 5, "");
+	$side_article .= "<div class='paging'>".paging($limit, $offset, $nrOfRows, $numbers = 5)."</div>";
 	
 	return $side_article;
 }
@@ -154,11 +154,11 @@ try
 	{
 		$res = validateSelectedPage($newsObject);
 		
-		$content = \Michelf\Markdown::defaultTransform($res->content);
+		$content = $res->content;
 		
-		$singleArticle = "<article id='singeArticle'><h3 style=''>" . $res->title . "</h3><hr style='width:80%;'/>";
-		$singleArticle .= "<p>" . $content . "</p>";
-		$singleArticle .= "<p>By: " . $res->author . "</p>";
+		$singleArticle = "<article id='singleArticle'><h3 style=''>" . $res->title . "</h3><hr style='width:80%;'/>";
+		$singleArticle .= "<pre class='newsText'>" . $content . "</pre>";
+		$singleArticle .= "<span id='author'>Skribent: " . $res->author . "</span>";
 		$singleArticle .= "</article>";
 	}
 }
@@ -168,10 +168,10 @@ catch ( Exception $e )
 }
 
 echo "<div class='row'>";
-echo "<div class='col-sm-8 elementBox'>";
+echo "<div class='col-sm-8 col-sm-push-4 elementBox'>";
 echo isset($singleArticle) ? $singleArticle : "";
 echo "</div>";
-echo "<div class='col-sm-4 elementBox'>";
+echo "<div class='col-sm-4 col-sm-pull-8 elementBox'>";
 echo getArticleSideBar($newsObject, $offset, $limit);
 echo "</div>";
 echo "</div>";
