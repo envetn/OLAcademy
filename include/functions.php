@@ -58,14 +58,12 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
     	$content = $row->content;
         if(strlen($content) > 400)
         {
-            $content =  substr($content, 0, 400) . "<a href='news.php?offset=0&p=$row->id'> ... Läs mer</a>";
-        }
-        else
-        {
-            $content .= "<a href='news.php?offset=0&p=$row->id'>&nbsp; Läs mer</a>";
+            $content =  substr($content, 0, 400) . " ...";
         }
         $news .= 
-				"<div class='newsPost'>
+				"
+				<div class='newsPost'>
+					<a href='news.php?offset=$offset&p=$row->id'><span class='boxLink'></span></a>
         			<div class='newsHeader'>
 						<span class='newsTitle'>".$row->title."</span>";
 		if ($showEdit && $newsObject->isAllowedToDeleteEntry("")) // admin, show all

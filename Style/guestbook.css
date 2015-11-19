@@ -3,6 +3,7 @@
 	border: 1px solid #AAA;
 	border-radius: 4px;
 	margin: 5px 0px;
+	position: relative;
 }
 
 .guestbookHeader
@@ -31,8 +32,8 @@
     font-size: 15px;
 	font-weight: normal;
     line-height: 1.2;
-    word-break: break-all;
     word-wrap: break-word;
+	white-space: normal;
 	padding: 7px;
 	margin: 0px;
 }
