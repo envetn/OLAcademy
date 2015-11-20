@@ -67,18 +67,6 @@ class EventObject extends DataObject
 		return true;
 	}
 
-	public function editSingleEntryById($id, $params) //uniqe for each object
-	{
-		if ($id > 0)
-		{
-			$sql = "UPDATE events SET eventName=?, info=?, startTime=?, eventDate=?, reccurance=?, bus=? WHERE id=?";
-			$params[] = $id;
-			$this->database->ExecuteQuery($sql, $params);
-			return true;
-		}
-		return false;
-	}
-
 	public function getWeeklyEvents()
 	{
 		$sql = "

@@ -6,7 +6,6 @@ include ("include/header.php");
 /* initialize variables */
 $limit = 5; //Posts per page
 $offset = (isset($_GET['offset']) && is_numeric($_GET['offset'])) ? $_GET['offset'] : 0; //Start index
-$username = isset($_SESSION['username']) ? $_SESSION['username'] : "";
 $newsObject = new NewsObject();
 
 if (isset($_POST['btn_addNew']))
@@ -15,14 +14,7 @@ if (isset($_POST['btn_addNew']))
 	{
 		if ($newsObject->isAllowedToDeleteEntry(""))
 		{
-			$title = strip_tags($_POST['title']);
-			//first strip tags, then add <a>
-			$content = strip_tags($_POST['content']);
-			$content = makeLinks($content);
-			$date = date("Y-m-d H:i:s");
-			$author = $username;
-
-			$params = array('title'=>$title,'content'=>$content,'author'=>$author);
+			$params = validateParameters();
 			$newsObject->insertEntyToDatabase($params);
 
 		}
@@ -35,19 +27,27 @@ if (isset($_POST['btn_Edit']))
 	{
 		if ($newsObject->isAllowedToDeleteEntry(""))
 		{
-			$title = strip_tags($_POST['title']);
 
-			$content = strip_tags($_POST['content']);
-			$content = makeLinks($content);
-			$author = $username;
-			$date = date("Y-m-d H:i:s");
+			$params = validateParameters();
 			$id = strip_tags($_POST['id']);
+			$condition['id'] = $id;
 
-			$params = array($title,$content,$author,$date,$id);
-			$newsObject->editSingleEntryById($id, $params);
+			$newsObject->editSingleEntry($params, $condition);
 			header("Location: news.php?p=" . $id);
 		}
 	}
+}
+
+function validateParameters()
+{
+	$title = strip_tags($_POST['title']);
+	$content = strip_tags($_POST['content']);
+	$content = makeLinks($content);
+	$date = date("Y-m-d H:i:s");
+	$author = isset($_SESSION['username']) ? $_SESSION['username'] : "";
+
+	$params = array('title'=>$title,'content'=>$content, 'author' => $author, 'added'=>$date);
+	return $params;
 }
 
 function getAddForm()

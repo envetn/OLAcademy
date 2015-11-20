@@ -78,11 +78,9 @@ function tryToEditEvent($eventObject)
 	{
 		$params = validateEventParams();
 		$id = is_numeric($_POST['id']) ? strip_tags($_POST['id']) : - 1;
+		$condition['id'] = $id;
 
-		$params = array('title'=>$title,'content'=>$content,'author'=>$author, 'added' => $date);
-		$eventObject->insertEntyToDatabase($params);
-
-		return $eventObject->editSingleEntryById($id, $params);
+		return $eventObject->editSingleEntry($params, $condition);
 	}
 	catch ( Exception $e )
 	{

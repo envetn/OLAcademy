@@ -98,7 +98,7 @@ function getTableTitleOfPosts($newsObject)
                        	<td>" . $row->added . "</td>
                         <td>
                             <a class='admin_news_remove' href='admin.php?r=" . $row->id . "'><img src='img/cross.png' width=18px height=18px></a>
-                            <a class='admin_news_remove' href='news.php?e=" . $row->id . "'><img src='img/edit.png' width=18px height=18px></a>
+                            <a class='admin_news_remove' href='news.php?action=edit&id=" . $row->id . "'><img src='img/edit.png' width=18px height=18px></a>
                             <a class='admin_news_remove' href='news.php?offset=0&p=" . $row->id . "'>Show</a>
                         </td>
                     </tr>";

@@ -20,13 +20,6 @@ class GuestbookObject extends DataObject
 		parent::insertEntyToDatabase($values);
 	}
 
-	public function addSingleEntry($params)
-	{
-		$sql = "INSERT INTO posts (name, text, added) VALUES(?,?,?)";
-		$params[] = $this->today;
-		$this->database->ExecuteQuery($sql, $params);
-	}
-
 	public function isAllowedToDeleteEntry($id)
 	{
 		if (isset($_SESSION['privilege']) && $_SESSION['privilege'] === "2")
