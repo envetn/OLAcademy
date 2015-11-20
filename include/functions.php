@@ -1,7 +1,7 @@
  <?php
 
 /*
- *Global 
+ *Global
 */
 $GLOBAL['salt_cookie']					= "!+?";
 $GLOBAL['salt_char']                    = "#@$";
@@ -24,7 +24,7 @@ function exceptions_error_handler($severity, $message, $filename, $lineno)
 }
 
 
-/* 
+/*
  * Present posts from table
  *
  */
@@ -35,8 +35,8 @@ function presentPost($guestbookObject, $offset, $limit)
 
 	foreach($result as $row)
 	{
-		$text = $row->text; 
-		$post .= 
+		$text = $row->text;
+		$post .=
 				"<div class='guestbookPost'>
 					<div class='guestbookHeader'>
 						<span class='guestbookName'>" . $row->name . "</span>
@@ -60,7 +60,7 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
         {
             $content =  substr($content, 0, 400) . " ...";
         }
-        $news .= 
+        $news .=
 				"
 				<div class='newsPost'>
 					<a href='news.php?offset=$offset&p=$row->id'><span class='boxLink'></span></a>
@@ -70,7 +70,7 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
 		{
 			$news .= "<a class='newsEdit' href='news.php?action=edit&id=" . $row->id . "'><img src='img/edit.png' width=18px height=18px></a>";
 			$news .= "<a class='newsEdit' href='news.php?action=remove&id=" . $row->id . "'><img src='img/cross.png' width=18px height=18px></a>";
-		}    			
+		}
 		$news .="<span class='newsAdded'>" . $row->added . " </span>
                 </div>
                 <pre class='newsText'>" . $content . "</pre>
@@ -83,24 +83,24 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
  * Paging
  *
  */
-function paging($limit, $offset, $nrOfRows, $numbers=5)
+function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl="") // admin.php uses currentUrl
 {
 	$prev = $offset - $limit;
 	$next = $offset + $limit;
 	$num_page = ceil($nrOfRows/$limit);
 	$cur_page = $offset/$limit + 1;
 	$paging = "";
-	
+
 	$j = $numbers >= $num_page || $cur_page <= ceil($numbers/2) ? 0 : $cur_page - ceil($numbers/2);
 	if($cur_page > $num_page-ceil($numbers/2) && $num_page - $numbers > 0) $j = $num_page - $numbers;
 
 	if($nrOfRows > $limit)
 	{
-		if($j > 0) 
+		if($j > 0)
 		{
-			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=0'>1... </a> \n"; //Link to first page
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=0$currentUrl'>1... </a> \n"; //Link to first page
 		}
-		if($offset > 0) 
+		if($offset > 0)
 		{
 			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$prev'>&lt;</a> \n";//Link to previous page
 		}
@@ -109,31 +109,31 @@ function paging($limit, $offset, $nrOfRows, $numbers=5)
 		for($i = (0 + $j); $i < $num_page && $i < $numbers + $j; $i++)
 		{
 			$page_link = $i * $limit;
-			if($i*$limit == $offset) 
+			if($i*$limit == $offset)
 			{
 				$paging .= " <b>" . ($i+1) . "</b> \n";
 			}
-			else 
+			else
 			{
-				$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$page_link'>" . ($i+1) . "</a> \n";
+				$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$page_link$currentUrl'>" . ($i+1) . "</a> \n";
 			}
 		}
 		if($nrOfRows > $offset + $limit)
 		{
-			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$next'>&gt;</a> \n";//Link to next page
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$next$currentUrl'>&gt;</a> \n";//Link to next page
 		}
 		if($num_page > $numbers && $cur_page <= $num_page-ceil($numbers/2))
 		{
-			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=".($num_page-1)*$limit."'> ...$num_page</a> \n";//Link to last page
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=".($num_page-1)*$limit."$currentUrl'> ...$num_page</a> \n";//Link to last page
 		}
 	}
 	return $paging;
-} 
+}
 
 function presentEvent($username, $eventObject)
 {
 	$events = $eventObject->getWeeklyEvents();
-	
+
 	$text = "";
 	for ($i=0;$i<7;$i++)
 	{
@@ -185,7 +185,7 @@ function presentEvent($username, $eventObject)
 					foreach ($registeredUsers as $user)
 					{
 						$registeredUsersTable .= "<tr><td>" . $user->name . "</td><td>" . $user->comment . "</td>";
-						
+
 						if($key->bus == 1)
 						{
 							$registeredUsersTable .= "<td>" . $user->bus . "</td>";
@@ -278,6 +278,7 @@ function showLoginLogout($user, $salt_char)
 		$email = strip_tags($_POST['email']);
 		$password = md5($_POST['passwd'] . $salt_char);
 
+		//if(!$user->login($email,$_POST['passwd']))
 		if(!$user->login($email,$password))
 		{
 			$error .= "<p style='color:red;'>Fel lösenord eller email </p>";
@@ -287,9 +288,11 @@ function showLoginLogout($user, $salt_char)
 			header("location: ". $_SERVER['PHP_SELF']);
 		}
 	}
-	else
-	{}
-	
+	else if(isset($_POST['Registera']))
+	{
+		header("location: createUser.php");
+	}
+
 	if(isset($_SESSION['uid']))
 	{
 		$form = "<form method='post' class='navbar-form navbar-right'><a href='user.php'>Användare: " . $_SESSION['username'] . "</a>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn btn-primary' name='logout'>Logout</button></form>";

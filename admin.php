@@ -161,7 +161,8 @@ function getTableRegisteredUsers($eventObject)
 	{
 		
 		$eventId = $_GET['event'];
-		$event = $eventObject->fetchSingleEntryById($eventId);
+		$values = array('variable' => 'id', 'value' => $id);
+		$event = $eventObject->fetchSingleEntryByValue($values);
 		
 		$registeredUsers = $eventObject->getRegisteredById($eventId);
 		if ($event != null)

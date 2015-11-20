@@ -1,84 +1,123 @@
 <?php
-include(INCLUDE_PATH . "/src/Database/database.php");
-class DataObject
+include (INCLUDE_PATH . "/src/Database/Database.php");
+abstract class DataObject
 {
 	protected $database;
 	private $table;
+	private $sql;
+	const SEPERATOR = ',';
+	const QUESTION_MARK = '?';
+	const START_PARENTHESES = '(';
+	const END_PARENTHESES	= ')';
 
 	public function __construct($table)
 	{
 		global $GLOBAL;
-		$this->database = new Database($GLOBAL['database']);;
+		$this->database = new Database($GLOBAL['database']);
 		$this->table = $table;
-		
 	}
 
 	public function fetchAllEntries($orderBy = "")
 	{
-		$sql = " SELECT * FROM ". $this->table;
-		if($orderBy != "")
+		$this->sql = " SELECT * FROM " . $this->table;
+		if ($orderBy != "")
 		{
-			$sql .= " ORDER BY " .$orderBy;
+			$this->sql .= " ORDER BY " . $orderBy;
 		}
-		$result = $this->database->queryAndFetch($sql);
+		$result = $this->database->queryAndFetch($this->sql);
 		return $result;
 	}
 
-	public function fetchSingleEntryById($id)
+	public function fetchSingleEntryByValue($values = array())
 	{
-		$sql = "SELECT * FROM ". $this->table;
-		
-		if($id === -1)
+		$this->sql = "SELECT * FROM " . $this->table;
+		$params = array();
+
+		if (isset($values['variable']))
 		{
-			$sql .= " ORDER BY added DESC LIMIT 1";
+			$this->sql .= " WHERE " . $values['variable'] . "=? LIMIT 1";
+			$params[] = $values['value'];
 		}
 		else
 		{
-			$sql .= " WHERE id=? LIMIT 1";
+			$this->sql .= " ORDER BY id DESC LIMIT 1";
 		}
 
-		$params = array($id);
-		$result = $this->database->queryAndFetch($sql, $params);
+		$res = $this->database->queryAndFetch($this->sql, $params);
+
 		if ($this->database->RowCount() == 1)
 		{
-			return $result[0];
+			return $res[0];
 		}
 		return null;
 	}
 
+	private function validateParametersData($values)
+	{
+		// Building INSERT INTO news (column, column, column, column) VALUES (?,?,?,?)";
+		$nextIterator = new ArrayIterator($values);
+		$nextIterator->rewind();
+		$nextIterator->next();
+
+		$sql = "INSERT INTO " . $this->table . " (";
+		$sqlValues = " VALUES " . self::START_PARENTHESES;
+		$params = array();
+
+		foreach( $values as $name => $value )
+		{
+			$next_val = $nextIterator->current();
+
+			$sql .= $name;
+			$sqlValues .= self::QUESTION_MARK;
+			$params[] = $value;
+			if (strlen($next_val) > 0)
+			{
+				$sql .= self::SEPERATOR;
+				$sqlValues .= self::SEPERATOR;
+			}
+			$nextIterator->next();
+		}
+
+		$sql .= self::END_PARENTHESES . $sqlValues . self::END_PARENTHESES;
+		$query = array('sql' => $sql, 'params' => $params);
+
+		return $query;
+	}
+
+	public function insertEntyToDatabase($values)
+	{
+		$query = $this->validateParametersData($values);
+
+		$sql = $query['sql'];
+		$params = $query['params'];
+		$this->database->ExecuteQuery($sql, $params);
+
+		return true;
+	}
+
 	public function fetchEntryWithOffset($offset, $limit)
 	{
-		$sql = "SELECT * FROM ". $this->table . " ORDER BY added DESC LIMIT $offset, $limit";
-		$res = $this->database->queryAndFetch ( $sql );
+		$this->sql = "SELECT * FROM " . $this->table . " ORDER BY added DESC LIMIT $offset, $limit";
+		$res = $this->database->queryAndFetch($this->sql);
 		return $res;
 	}
 
 	public function removeSingleEntryById($id)
 	{
-		$sql = "DELETE FROM ". $this->table . " WHERE id=? LIMIT 1";
-		$this->database->ExecuteQuery($sql, array($id));
+		$this->sql = "DELETE FROM " . $this->table . " WHERE id=? LIMIT 1";
+		$this->database->ExecuteQuery($this->sql, array($id));
 		return true;
 	}
-	
+
+	public function rowCount()
+	{
+		return $this->database->RowCount();
+	}
+
 	public function countAllRows()
 	{
-		$sql = "SELECT count(*) as rows FROM ". $this->table;
-		$result = $this->database->queryAndFetch($sql);
+		$this->sql = "SELECT count(*) as rows FROM " . $this->table;
+		$result = $this->database->queryAndFetch($this->sql);
 		return $result[0]->rows;
 	}
-	
-	// 	public function editSingleEntryById($id, $params)
-	// 	{
-	
-	// 	}
-	
-	// 	public function addSingleEntry($params)
-	// 	{
-	
-	// 	}
-	
-	// 	public function isAllowedToDeleteEntry($id)
-	// 	{
-	
-	// 	}
 }

@@ -21,11 +21,10 @@ if (isset($_POST['btn_addNew']))
 			$content = makeLinks($content);
 			$date = date("Y-m-d H:i:s");
 			$author = $username;
-			
-			$params = array($title,$content,$author,$date);
-			$newsObject->addSingleEntry($params);
 
-			header("Location: news.php");
+			$params = array('title'=>$title,'content'=>$content,'author'=>$author);
+			$newsObject->insertEntyToDatabase($params);
+
 		}
 	}
 }
@@ -75,8 +74,9 @@ function removeNews($newsObject)
 function getEditForm($newsObject)
 {
 	$id = $_GET['id'];
-	$res = $newsObject->fetchSingleEntryById($id);
-	
+	$values = array('variable' => 'id', 'value' => $id);
+	$res = $newsObject->fetchSingleEntryByValue($values);
+	$singleArticle = "";
 	if ($res != null)
 	{
 		$singleArticle = "<form id='form_addNew' method='post' enctype='multipart/form-data'>
@@ -93,7 +93,7 @@ function getEditForm($newsObject)
 function getArticleSideBar($newsObject, $offset, $limit)
 {
 	$res = $newsObject->fetchEntryWithOffset($offset, $limit);
-	
+
 	$side_article = "";
 	if ($newsObject->isAllowedToDeleteEntry("")) // only admin
 	{
@@ -105,20 +105,19 @@ function getArticleSideBar($newsObject, $offset, $limit)
 	$nrOfRows = $newsObject->countAllRows();
 	$side_article .= "</article>";
 	$side_article .= "<div class='paging'>".paging($limit, $offset, $nrOfRows, $numbers = 5)."</div>";
-	
+
 	return $side_article;
 }
 function validateSelectedPage($newsObject)
 {
+	$values = array();
 	if (isset($_GET['p']) && is_numeric($_GET['p']))
 	{
 		$id = $_GET['p'];
+		$values = array('variable' => 'id', 'value' => $id);
 	}
-	else
-	{
-		$id = - 1;
-	}
-	return $newsObject->fetchSingleEntryById($id);
+
+	return $newsObject->fetchSingleEntryByValue($values);
 }
 
 function validateAction($newsObject)
@@ -126,7 +125,7 @@ function validateAction($newsObject)
 	$singleArticle = "";
 	if (isset($_GET["action"]) && $newsObject->isAllowedToDeleteEntry(""))
 	{
-		
+
 		$choice = $_GET["action"];
 		switch ($choice)
 		{
@@ -137,7 +136,7 @@ function validateAction($newsObject)
 			case "remove" :
 				removeNews($newsObject);
 				break;
-					
+
 			case "edit" :
 				$singleArticle = getEditForm($newsObject);
 				break;
@@ -148,14 +147,14 @@ function validateAction($newsObject)
 
 try
 {
+
 	$singleArticle = validateAction($newsObject);
-	
-	if (strlen($singleArticle) < 1)
+
+	if (strlen($singleArticle) < 1 )
 	{
 		$res = validateSelectedPage($newsObject);
-		
 		$content = $res->content;
-		
+
 		$singleArticle = "<article id='singleArticle'><h3 style=''>" . $res->title . "</h3><hr style='width:80%;'/>";
 		$singleArticle .= "<pre class='newsText'>" . $content . "</pre>";
 		$singleArticle .= "<span id='author'>Skribent: " . $res->author . "</span>";

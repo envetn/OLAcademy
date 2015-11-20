@@ -14,6 +14,12 @@ class GuestbookObject extends DataObject
 		// TO be implemented
 	}
 
+	public function insertEntyToDatabase($values)
+	{
+		$values['added'] = $this->today;
+		parent::insertEntyToDatabase($values);
+	}
+
 	public function addSingleEntry($params)
 	{
 		$sql = "INSERT INTO posts (name, text, added) VALUES(?,?,?)";

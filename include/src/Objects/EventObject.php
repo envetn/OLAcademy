@@ -43,13 +43,13 @@ class EventObject extends DataObject
 		}
 		return null;
 	}
-	
+
 	public function fetchRegisteredByUserIdAndEventId($userId, $eventId)
 	{
 		$sql = "SELECT * FROM registered WHERE userID=? and eventID=?";
 		$params = array($userId, $eventId);
 		$res = $this->database->queryAndFetch($sql, $params);
-		
+
 		if ($this->rowResult() > 0)
 		{
 			return $res;
@@ -77,13 +77,6 @@ class EventObject extends DataObject
 			return true;
 		}
 		return false;
-	}
-
-	public function addSingleEntry($params) //uniqe for each object
-	{
-		$sql = "INSERT INTO events (eventName, info, startTime, eventDate, reccurance, bus) VALUES(?,?,?,?,?,?)";
-		$this->database->ExecuteQuery($sql, $params);
-		return true;
 	}
 
 	public function getWeeklyEvents()
@@ -123,7 +116,7 @@ class EventObject extends DataObject
         ";
 		$currentDate = date('Y-m-d', strtotime($this->today . ' -1 day'));
 		$prev_date = date('Y-m-d', strtotime($currentDate . ' -30 day'));
-		
+
 		$params = array($prev_date,$currentDate);
 		$res = $this->database->queryAndFetch($sql, $params);
 		if ($this->rowResult() > 0)
@@ -139,7 +132,7 @@ class EventObject extends DataObject
 					$sql = "UPDATE events SET eventDate=? WHERE id=? LIMIT 1";
 					$updateParams = array($newDate,$id);
 					$this->database->ExecuteQuery($sql, $updateParams);
-					
+
 					// Clear all registered from updated event
 					// duplicated in admin.php
 					$sql = "DELETE FROM registered WHERE eventID=?";
@@ -148,7 +141,7 @@ class EventObject extends DataObject
 			}
 		}
 	}
-	
+
 	function addSingleEntryRegistered($params)
 	{
 		$sql = 'INSERT INTO registered (userID, name, date, comment, bus, eventID) VALUES(?,?,?,?,?,?)';
@@ -166,7 +159,7 @@ class EventObject extends DataObject
 		}
 		return 0;
 	}
-	
+
 	function getNrOfRegisteredById($id)
 	{
 		$sql = "SELECT COUNT(*) AS count FROM registered WHERE eventID=?";
@@ -178,7 +171,7 @@ class EventObject extends DataObject
 		}
 		return 0;
 	}
-	
+
 	function getRegisteredById($id)
 	{
 		$sql = "SELECT * FROM registered WHERE eventID=?";
@@ -186,7 +179,7 @@ class EventObject extends DataObject
 		$result = $this->database->queryAndFetch($sql, $params);
 		return $result;
 	}
-	
+
 	public function removeSingleRegistered($id)
 	{
 		$sql = "DELETE FROM registered WHERE id=? LIMIT 1";

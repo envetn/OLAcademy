@@ -13,10 +13,10 @@ class NewsObject extends DataObject
 		$this->database->ExecuteQuery($sql, $params);
 	}
 
-	public function addSingleEntry($params)
+	public function insertEntyToDatabase($values)
 	{
-		$sql = "INSERT INTO news (title, content, author, added) VALUES (?,?,?,?)";
-		$this->database->ExecuteQuery($sql, $params);
+		$values['added'] = $this->today;
+		parent::insertEntyToDatabase($values);
 	}
 
 	public function isAllowedToDeleteEntry($id)

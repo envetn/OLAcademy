@@ -18,12 +18,12 @@ function validateDay($day)
 	{
 		return date('Y-m-d');
 	}
-	
+
 	if (strlen($day) == 1) // 8 -> 08
 	{
 		$day = "0" . $day;
 	}
-	
+
 	$day = date('Y-m') . "-" . $day;
 	return $day;
 }
@@ -34,13 +34,14 @@ function getEventAndValidateGET($eventObject)
 	if (isset($_GET['e']) && is_numeric($_GET['e']))
 	{
 		$eventId = $_GET['e'];
-		$res = $eventObject->fetchSingleEntryById($eventId);
+		$values = array('variable' => 'id', 'value' => $eventId);
+		$res = $eventObject->fetchSingleEntryByValue($values);
 		if ($res != null)
 		{
 			// could use a function for this..
 			$reccurance = $res->reccurance == '1' ? "checked" : "";
 			$bus = $res->bus == '1' ? "checked" : "";
-			
+
 			$singleEvent .= "<form id='form_addNew' method='post' enctype='multipart/form-data'>
     		<input name='id' value='" . $res->id . "' 				type='hidden'/>
     		<input name='eventName' value='" . $res->eventName . "'  type='text'/><br/>
@@ -56,7 +57,7 @@ function getEventAndValidateGET($eventObject)
 	else if (isset($_GET['a']) && is_numeric($_GET['a']))
 	{
 		$date = isset($_GET['day']) ? $date = validateDay($_GET['day']) : $date = date('Y-m-d');
-		
+
 		$time = date('H:i:s', time() - date('Z'));
 		$singleEvent .= "<form id='form_addNew' method='post' enctype='multipart/form-data'>
     		<input name='eventName' value='' placeholder='Träning' type='text'/><br/>
@@ -77,6 +78,10 @@ function tryToEditEvent($eventObject)
 	{
 		$params = validateEventParams();
 		$id = is_numeric($_POST['id']) ? strip_tags($_POST['id']) : - 1;
+
+		$params = array('title'=>$title,'content'=>$content,'author'=>$author, 'added' => $date);
+		$eventObject->insertEntyToDatabase($params);
+
 		return $eventObject->editSingleEntryById($id, $params);
 	}
 	catch ( Exception $e )
@@ -91,7 +96,7 @@ function tryToAddEvent($eventObject)
 	try
 	{
 		$params = validateEventParams();
-		return $eventObject->addSingleEntry($params);
+		return $eventObject->insertEntyToDatabase($params);
 	}
 	catch ( Exception $e )
 	{
@@ -108,8 +113,11 @@ function validateEventParams()
 	$date = strip_tags($_POST['date']);
 	$reccurance = isset($_POST['reccurance']) ? 1 : 0;
 	$bus = isset($_POST['bus']) ? 1 : 0;
-	
-	return array($eventName,$info,$startTime,$date,$reccurance,$bus);
+
+	// is this solution pretty?
+	$params = array('eventName'=>$eventName,'info'=>$info,'startTime'=>$startTime, 'eventDate' => $date, 'reccurance' => $reccurance, 'bus' => $bus);
+
+	return $params;
 }
 
 if ($privilege === "2") // Shall someone else be able to add??

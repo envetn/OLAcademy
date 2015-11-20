@@ -31,8 +31,8 @@ function makePost($guestbookObject)
 		}
 		else
 		{
-			$params = array($name, $text);
-			$guestbookObject->addSingleEntry($params);
+			$params = array('name'=>$name,'text'=>$text);
+			$guestbookObject->insertEntyToDatabase($params);
 		}
 	}
 }
