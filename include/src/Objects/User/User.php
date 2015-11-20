@@ -46,13 +46,12 @@ class User extends DataObject
 
 	function Login($email, $password)
 	{
-		$sql = "SELECT password FROM users WHERE email=? LIMIT 1";
-		$params = array($email);
-		$res = $this->database->queryAndFetch($sql, $params, true);
+		$values = array('variable' => 'email', 'value' => $email);
+		$res = parent::fetchSingleEntryByValue($values);
 
 		if($this->rowCount() == 1)
 		{
-			if (password_verify($password, $res[0]->password)) // requires PHP 5.4
+			if (password_verify($password, $res->password)) // requires PHP 5.4
 			{
 				$sql = "SELECT id,name,email,Privilege FROM users WHERE email=? LIMIT 1";
 				$params = array($email); // No duplicates of email

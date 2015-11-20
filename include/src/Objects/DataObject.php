@@ -4,9 +4,9 @@ abstract class DataObject
 {
 	protected $database;
 	private $table;
-	private $sql;
 	const SEPERATOR = ',';
 	const QUESTION_MARK = '?';
+	const EQUAL_SIGN = "=";
 	const START_PARENTHESES = '(';
 	const END_PARENTHESES	= ')';
 
@@ -19,31 +19,31 @@ abstract class DataObject
 
 	public function fetchAllEntries($orderBy = "")
 	{
-		$this->sql = " SELECT * FROM " . $this->table;
+		$sql = " SELECT * FROM " . $this->table;
 		if ($orderBy != "")
 		{
-			$this->sql .= " ORDER BY " . $orderBy;
+			$sql .= " ORDER BY " . $orderBy;
 		}
-		$result = $this->database->queryAndFetch($this->sql);
+		$result = $this->database->queryAndFetch($sql);
 		return $result;
 	}
 
 	public function fetchSingleEntryByValue($values = array())
 	{
-		$this->sql = "SELECT * FROM " . $this->table;
+		$sql = "SELECT * FROM " . $this->table;
 		$params = array();
 
 		if (isset($values['variable']))
 		{
-			$this->sql .= " WHERE " . $values['variable'] . "=? LIMIT 1";
+			$sql .= " WHERE " . $values['variable'] . "=? LIMIT 1";
 			$params[] = $values['value'];
 		}
 		else
 		{
-			$this->sql .= " ORDER BY id DESC LIMIT 1";
+			$sql .= " ORDER BY id DESC LIMIT 1";
 		}
 
-		$res = $this->database->queryAndFetch($this->sql, $params);
+		$res = $this->database->queryAndFetch($sql, $params);
 
 		if ($this->database->RowCount() == 1)
 		{
@@ -76,15 +76,15 @@ abstract class DataObject
 
 	public function fetchEntryWithOffset($offset, $limit)
 	{
-		$this->sql = "SELECT * FROM " . $this->table . " ORDER BY added DESC LIMIT $offset, $limit";
-		$res = $this->database->queryAndFetch($this->sql);
+		$sql = "SELECT * FROM " . $this->table . " ORDER BY added DESC LIMIT $offset, $limit";
+		$res = $this->database->queryAndFetch($sql);
 		return $res;
 	}
 
 	public function removeSingleEntryById($id)
 	{
-		$this->sql = "DELETE FROM " . $this->table . " WHERE id=? LIMIT 1";
-		$this->database->ExecuteQuery($this->sql, array($id));
+		$sql = "DELETE FROM " . $this->table . " WHERE id=? LIMIT 1";
+		$this->database->ExecuteQuery($sql, array($id));
 		return true;
 	}
 
@@ -95,8 +95,8 @@ abstract class DataObject
 
 	public function countAllRows()
 	{
-		$this->sql = "SELECT count(*) as rows FROM " . $this->table;
-		$result = $this->database->queryAndFetch($this->sql);
+		$sql = "SELECT count(*) as rows FROM " . $this->table;
+		$result = $this->database->queryAndFetch($sql);
 		return $result[0]->rows;
 	}
 
@@ -114,7 +114,7 @@ abstract class DataObject
 		{
 			$next_val = $nextIterator->current();
 
-			$sql .= $name . "=" . self::QUESTION_MARK;
+			$sql .= $name . self::EQUAL_SIGN . self::QUESTION_MARK;
 			$params[] = $value;
 			if (strlen($next_val) > 0)
 			{
@@ -125,7 +125,7 @@ abstract class DataObject
 
 		foreach($condition as $name => $value)
 		{
-			$sql .= " WHERE " . $name . "=" . self::QUESTION_MARK;
+			$sql .= " WHERE " . $name . self::EQUAL_SIGN . self::QUESTION_MARK;
 			$params[] = $value;
 			break;
 		}

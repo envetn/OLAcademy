@@ -47,7 +47,7 @@ $privilege =  $user->getUserprivilege();
 					<li><a id="news-" href='news.php'>Nyheter</a></li>
 					<li><a id="guestbook-" href='guestbook.php'>Gästbok</a></li>
 					<li><a id="calendar-" href='calendar.php'>Kalender</a></li>
-					<?php echo $user->getUserPrivilege() == 2 ? "<li><a id='admin-' href='admin.php'>Admin</a>" : "";?>
+					<?php echo $user->getUserPrivilege() === "2" ? "<li><a id='admin-' href='admin.php'>Admin</a>" : "";?>
 				</ul>
                     <?php echo showLoginLogout($user, $GLOBAL['salt_char']);?>
 			</div>

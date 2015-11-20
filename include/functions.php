@@ -276,10 +276,8 @@ function showLoginLogout($user, $salt_char)
 	else if(isset($_POST['login']) && !( isset($_SESSION['uid']) && isset($_SESSION['username']) ) )
 	{
 		$email = strip_tags($_POST['email']);
-		$password = md5($_POST['passwd'] . $salt_char);
 
-		//if(!$user->login($email,$_POST['passwd']))
-		if(!$user->login($email,$password))
+		if(!$user->login($email,$_POST['passwd']))
 		{
 			$error .= "<p style='color:red;'>Fel lösenord eller email </p>";
 		}

@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 16, 2015 at 08:52 PM
+-- Generation Time: Nov 21, 2015 at 12:29 AM
 -- Server version: 5.5.46-0ubuntu0.14.04.2
--- PHP Version: 5.5.9-1ubuntu4.14
+-- PHP Version: 5.6.15-1+deb.sury.org~trusty+1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -36,14 +36,13 @@ CREATE TABLE IF NOT EXISTS `events` (
   `reccurance` tinyint(1) NOT NULL,
   `bus` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=39 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=48 ;
 
 --
 -- Dumping data for table `events`
 --
 
 INSERT INTO `events` (`id`, `eventDate`, `startTime`, `eventName`, `info`, `reccurance`, `bus`) VALUES
-(22, '2015-11-21', '18:00:00', '123', '2015-11-14', 1, 0),
 (26, '2015-11-16', '19:00:00', 'Mellan 10km och 20km', '2015-11-16', 0, 0),
 (28, '2015-11-17', '18:30:00', 'Samling efter intervallerna i hallen', '2015-11-16', 1, 0),
 (30, '2015-11-30', '20:00:00', 'Intervaller', 'Info', 1, 1),
@@ -51,7 +50,11 @@ INSERT INTO `events` (`id`, `eventDate`, `startTime`, `eventName`, `info`, `recc
 (34, '2015-11-17', '05:20:16', 'Ã…terkommande', 'Detta Ã¤r en Ã¥terkommande trÃ¤ning', 1, 1),
 (35, '2015-11-20', '17:00:00', 'Fredags trÃ¤ning', 'TrÃ¤ning pÃ¥ en fredag', 1, 0),
 (36, '2015-11-20', '19:00:00', 'Bio', 'Tag med eget snacks', 1, 0),
-(38, '2015-11-16', '11:00:20', '123123123', '123', 0, 1);
+(38, '2015-11-16', '11:00:20', '123123123', '123', 0, 1),
+(39, '2015-11-24', '18:00:00', '7654', '8765', 0, 1),
+(40, '2015-11-19', '17:00:00', '123123123', '123', 1, 1),
+(41, '2015-11-20', '17:00:00', 'Fredags trÃ¤ning', 'TrÃ¤ning pÃ¥ en fredag', 1, 0),
+(47, '2015-11-21', '18:00:00', '123', '2015-11-14', 1, 0);
 
 -- --------------------------------------------------------
 
@@ -67,7 +70,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `author` varchar(100) CHARACTER SET latin1 NOT NULL,
   `added` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=72 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=79 ;
 
 --
 -- Dumping data for table `news`
@@ -75,7 +78,6 @@ CREATE TABLE IF NOT EXISTS `news` (
 
 INSERT INTO `news` (`id`, `title`, `content`, `author`, `added`) VALUES
 (1, 'test', 'testestetetetn rltjh elkrhl kehkjhg jhgl jdhfljghdf lghfdklh glkdfhg lkjdfhglk jdfhgldkfjhg dkfjhgdklfjhg dklfjhg kldjfhg kdjfhg kjdlfhg lkjdhg', 'Lorem Ipsum', '2015-05-12 00:00:00'),
-(2, 'Lorem Ipsum', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae. \r\n\r\nSed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'lofie', '2015-11-14 00:00:00'),
 (5, 'Looooooooooooooorem', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras congue eros elementum diam fermentum sagittis. Nunc odio dolor, efficitur vitae imperdiet sed, maximus sed erat. Nulla sit amet venenatis nisl, in interdum nulla. Maecenas sit amet sapien non arcu fringilla molestie. Quisque ut mattis lorem. Maecenas vitae maximus orci. Aliquam hendrerit sagittis lacus, quis luctus ligula dapibus sit amet. Donec facilisis vel mauris in elementum. ', 'Me', '2015-05-13 00:00:00'),
 (6, '123123', '123123121 312 3123 123 123 123 123 123 123 123 123 12 312 3123 123 123 12 3123 123 123 123 123 123 123 1', 'Lofie', '2015-05-20 00:00:00'),
 (8, 'asd', 'asdasd asdsa', 'asdasdasd', '2015-05-20 00:00:00'),
@@ -130,15 +132,12 @@ INSERT INTO `news` (`id`, `title`, `content`, `author`, `added`) VALUES
 (59, 'Test title47', 'Test content47', 'lofie47', '2015-10-29 00:00:00'),
 (60, 'Test title48', 'Test content48', 'lofie48', '2015-10-29 00:00:00'),
 (61, 'Test title49', 'Test content49', 'lofie49', '2015-10-29 00:00:00'),
-(63, '123', '123', 'lofie', '2015-11-14 00:00:00'),
 (64, 'Test title', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae. ', 'lofie', '2015-11-14 00:00:00'),
 (65, 'test 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae.\r\n\r\nSed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'lofie', '2015-11-14 00:00:00'),
 (66, 'test 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae.\r\n\r\nSed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'lofie', '2015-11-14 00:00:00'),
 (67, 'test 3', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae.\r\n\r\nSed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'lofie', '2015-11-14 00:00:00'),
 (68, 'test 5', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae.\r\n\r\nSed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'lofie', '2015-11-14 00:00:00'),
-(69, 'test 5', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae.\r\n\r\nSed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'lofie', '2015-11-14 00:00:00'),
-(70, 'test', 'test', 'adam', '2015-11-15 21:25:58'),
-(71, '123', '123', 'lofie', '2015-11-16 19:11:32');
+(69, 'test 5', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae.\r\n\r\nSed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'lofie', '2015-11-14 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -153,7 +152,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
   `text` text COLLATE utf8_unicode_ci NOT NULL,
   `added` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=103 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=111 ;
 
 --
 -- Dumping data for table `posts`
@@ -184,8 +183,7 @@ INSERT INTO `posts` (`id`, `name`, `text`, `added`) VALUES
 (98, 'asd', 'asd', '2015-11-15 14:02:05'),
 (99, 'asd', 'asd', '2015-11-15 14:03:58'),
 (100, 'asd', 'asd', '2015-11-15 14:05:36'),
-(101, 'asd', 'asd', '2015-11-15 14:06:09'),
-(102, 'kuuuuuuuuuuuu', 'dasdasdkkkkkkkkkkkkkkkkkkkkkkk\r\n', '2015-11-16 19:29:57');
+(101, 'asd', 'asd', '2015-11-15 14:06:09');
 
 -- --------------------------------------------------------
 
@@ -203,7 +201,7 @@ CREATE TABLE IF NOT EXISTS `registered` (
   `bus` tinytext COLLATE utf8_unicode_ci NOT NULL,
   `eventID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=36 ;
 
 --
 -- Dumping data for table `registered`
@@ -211,7 +209,6 @@ CREATE TABLE IF NOT EXISTS `registered` (
 
 INSERT INTO `registered` (`id`, `userID`, `name`, `date`, `comment`, `bus`, `eventID`) VALUES
 (5, 19, 'lofie', '2015-11-16', '', 'Ja', '30'),
-(7, 19, 'lofie', '2015-11-18', '', 'Ja', '33'),
 (8, 19, 'lofie', '2015-11-20', '', 'Ja', '35'),
 (9, 19, 'lofie', '2015-11-20', '', 'Ja', '36'),
 (13, 19, 'lofie', '2015-11-16', '', 'Ja', '26'),
@@ -219,7 +216,9 @@ INSERT INTO `registered` (`id`, `userID`, `name`, `date`, `comment`, `bus`, `eve
 (18, 21, 'adam', '2015-11-17', 'hej', 'Ja', '34'),
 (19, 21, 'adam', '2015-11-17', '', 'Nej', '28'),
 (20, 19, 'lofie', '2015-11-17', '', 'Nej', '28'),
-(21, 19, 'lofie', '2015-11-17', '', 'Ja', '34');
+(21, 19, 'lofie', '2015-11-17', '', 'Ja', '34'),
+(34, 19, 'lofie', '2015-11-18', '', 'Nej', '33'),
+(35, 20, 'lofielus', '2015-11-18', '', 'Nej', '33');
 
 -- --------------------------------------------------------
 
@@ -237,18 +236,16 @@ CREATE TABLE IF NOT EXISTS `users` (
   `regDate` date NOT NULL,
   `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=22 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=31 ;
 
 --
 -- Dumping data for table `users`
 --
 
 INSERT INTO `users` (`id`, `name`, `password`, `email`, `Privilege`, `regDate`, `token`) VALUES
-(17, 'Derpeus', '7b1d38174cc8c3c6176c41dd0caf8cce', 'lofie2@lofie.com', 0, '2015-10-26', ''),
-(18, 'lofie3', '948d3a9e76a39ad77c1019eaad618f15', 'lofie3@lofie.com', 1, '2015-10-26', ''),
-(19, 'lofie', 'e72d98c95b368f83ada8608ed12fc178', 'lofie@lofie.com', 2, '2015-10-26', ''),
-(20, 'lofie4', '055c555208e5212ec8f9678c663a5d69', 'lofie4@lofie.com', 1, '2015-10-26', 'be3a750d22cb23ce91b8c4958e2fc89b4cf8203dad4c0c0d9d8a488df8681a07'),
-(21, 'adam', 'c05a25cb543f8425ce9f74bb650618b5', 'adamgeorgsson@gmail.com ', 2, '2015-11-15', '');
+(28, 'admin', '$2y$12$y9eOKspPsW1O1Tw9XjaK3.EVS25YMy8i5J9uhxTI9O41DjqwpM7ny', 'admin@admin.com', 0, '2015-11-19', ''),
+(29, 'Lofielus', '$2y$12$WUwZLD69Q7sR8b1Mf6h.UevSRQDPxNXwrSDVIrbfB/p14EaJ7rUYy', 'lofie@lofie.com', 2, '2015-11-19', '99a3d93c0a722c3ee35435595976f5bbd5b3cc751a10509e9a5eee23ed870a8e'),
+(30, 'Adam', '$2y$12$Ix9Oi//nwE.O02hUcvmwROgze.EXwX0q/piLok0UeJld41bJrCw2C', 'adamgeorgsson@gmail.com', 2, '2015-11-21', '');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
