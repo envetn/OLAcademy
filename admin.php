@@ -18,7 +18,6 @@ function tryToEditUser($user)
 	{
 		try
 		{
-			dump($_POST);
 			$userId = $_POST['userId'];
 			$privilege = $_POST['privilege'];
 			return $user->updateUsersPrivilege($privilege,$userId);
@@ -132,7 +131,8 @@ function getTableEvents($eventObject)
 		{
 			$info = substr($info, 0, 40) . "<a href='event.php?s=$events->id'> ... </a>";
 		}
-		$registered = $eventObject->getNrOfRegisteredById($events->id);
+		$values = array('variable' => 'id', 'value' => $events->id);
+		$registered = $eventObject->getNumberOfRegisteredByValue($values);
 		$reccurance = $events->reccurance == '1' ? "Ja" : "Nej";
 		$bus = $events->bus == '1' ? "Ja" : "Nej";
 		$htmlEvents .= "<form method='post'>
@@ -161,10 +161,11 @@ function getTableRegisteredUsers($eventObject)
 	{
 		
 		$eventId = $_GET['event'];
-		$values = array('variable' => 'id', 'value' => $id);
+		$values = array('variable' => 'id', 'value' => $eventId);
+		
 		$event = $eventObject->fetchSingleEntryByValue($values);
 		
-		$registeredUsers = $eventObject->getRegisteredById($eventId);
+		$registeredUsers = $eventObject->getRegisteredByValue($values);
 		if ($event != null)
 		{
 			$registeredUsersTable = "<h3 id='tableHead'>Anmälda till : $event->eventName - $event->eventDate </h3></a>";

@@ -1,10 +1,12 @@
-<?php
+<?php 
 include ("DataObject.php");
+include ("Registered.php");
 
 class EventObject extends DataObject
 {
 	private $today;
 	private $nextWeek;
+	private $registered;
 
 	function __construct()
 	{
@@ -12,6 +14,7 @@ class EventObject extends DataObject
 
 		$this->today = date("Y-m-d");
 		$this->nextWeek = date("Y-m-d", time() + (6 * 24 * 60 * 60));
+		$this->registered = new Registered();
 	}
 
 	public function isAllowedToDeleteEntry($id)
@@ -98,23 +101,24 @@ class EventObject extends DataObject
 	function updateEvents()
 	{
 		$sql = "
-        SELECT id,date,reccurance
+        SELECT id,eventDate,reccurance
         FROM events
         WHERE eventDate BETWEEN ? AND ?
         ";
 		$currentDate = date('Y-m-d', strtotime($this->today . ' -1 day'));
 		$prev_date = date('Y-m-d', strtotime($currentDate . ' -30 day'));
-
 		$params = array($prev_date,$currentDate);
+
 		$res = $this->database->queryAndFetch($sql, $params);
 		if ($this->rowResult() > 0)
 		{
 			foreach ( $res as $event )
 			{
-				if ($event->reccurance == true)
+				echo $event->reccurance;
+				if ($event->reccurance === "1")
 				{
 					// Set new date.
-					$eventDay = $event->date;
+					$eventDay = $event->eventDate;
 					$newDate = date('Y-m-d', strtotime($eventDay . ' + 7 day'));
 					$id = $event->id;
 					$sql = "UPDATE events SET eventDate=? WHERE id=? LIMIT 1";
@@ -130,49 +134,39 @@ class EventObject extends DataObject
 		}
 	}
 
-	function addSingleEntryRegistered($params)
+	// registered functions
+	public function registerUserToEvent($params)
 	{
-		$sql = 'INSERT INTO registered (userID, name, date, comment, bus, eventID) VALUES(?,?,?,?,?,?)';
-		$result = $this->database->ExecuteQuery($sql, $params);
+		$this->registered->insertEntyToDatabase($params);
+	}
+	
+	public function unRegisterUserToEvent($id)
+	{
+		$this->registered->removeSingleEntryById($id);
 	}
 
-	function getNrOfRegistered($date)
+	public function getRegisteredByValue($value = array())
 	{
-		$sql = "SELECT COUNT(DISTINCT userID) as count FROM registered WHERE date=?";
-		$params = array($date);
-		$result = $this->database->queryAndFetch($sql, $params);
-		if ($this->rowResult() > 0)
+		// get content of Registered
+		if($value['variable'] == 'id')
 		{
-			return $result[0]->count;
+			$res = $this->registered->getRegisteredById($value['value']);
+			return $res;
 		}
-		return 0;
 	}
 
-	function getNrOfRegisteredById($id)
+	public function getNumberOfRegisteredByValue($value = array())
 	{
-		$sql = "SELECT COUNT(*) AS count FROM registered WHERE eventID=?";
-		$params = array($id);
-		$result = $this->database->queryAndFetch($sql, $params);
-		if ($this->rowResult() > 0)
+		// get count from registered
+		if($value['variable'] == 'id')
 		{
-			return $result[0]->count;
+			$res = $this->registered->getNrOfRegisteredById($value['value']);
 		}
-		return 0;
-	}
-
-	function getRegisteredById($id)
-	{
-		$sql = "SELECT * FROM registered WHERE eventID=?";
-		$params = array($id);
-		$result = $this->database->queryAndFetch($sql, $params);
-		return $result;
-	}
-
-	public function removeSingleRegistered($id)
-	{
-		$sql = "DELETE FROM registered WHERE id=? LIMIT 1";
-		$params = array($id);
-		$this->database->ExecuteQuery($sql, $params);
+		else if($value['variable'] == 'date')
+		{
+			$res = $this->registered->getNrOfRegisteredbyDate($value['value']);			
+		}
+		return $res;
 	}
 }
 

@@ -35,8 +35,8 @@ if(isset($_POST['register']))
 	}
     else
     {
-        $params = array($userId,$username,$_POST['date'],$_POST['comment'],$bus,$eventId);
-        $eventObject->addSingleEntryRegistered($params);
+        $params = array('userID' => $userId, 'name' => $username, 'date' => $_POST['date'], 'comment' => $_POST['comment'], 'bus' => $bus,'eventID' => $eventId);
+        $eventObject->registerUserToEvent($params);
     }
 
 }
@@ -47,7 +47,7 @@ if(isset($_GET['r']) && is_numeric($_GET['r']))
     $id = $_GET['r'];
     if($eventObject->isAllowedToDeleteEntry($id))
     {
-    	$eventObject->removeSingleRegistered($id);
+    	$eventObject->unRegisterUserToEvent($id);
     }
     header("Location: index.php");
 }

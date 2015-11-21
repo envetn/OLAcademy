@@ -52,7 +52,8 @@ function draw_calendar($month,$year, $userLoggedIn)
 		{
 			foreach($result as $row)
 			{
-				$calendar.= "<a href=''><p class='event_p'>" . $row->eventName . "<br/>Anmälda: ".$eventObject->getNrOfRegisteredById($row->id)."</a>";
+				$values = array('variable' =>'id', 'value' => $row->id);
+				$calendar.= "<a href=''><p class='event_p'>" . $row->eventName . "<br/>Anmälda: ".$eventObject->getNumberOfRegisteredByValue($values)."</a>";
 			}
 		}
 		$calendar .= '</div>';

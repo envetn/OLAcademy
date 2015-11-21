@@ -153,7 +153,7 @@ abstract class DataObject
 			$sql .= $name;
 			$sqlValues .= self::QUESTION_MARK;
 			$params[] = $value;
-			if (strlen($next_val) > 0)
+			if (isset($next_val))
 			{
 				$sql .= self::SEPERATOR;
 				$sqlValues .= self::SEPERATOR;

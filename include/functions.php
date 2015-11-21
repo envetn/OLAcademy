@@ -137,7 +137,8 @@ function presentEvent($username, $eventObject)
 	$text = "";
 	for ($i=0;$i<7;$i++)
 	{
-		$registered = $eventObject->getNrOfRegistered(date("Y-m-d", time()+($i * 86400))); //7 db requests. Optimize?
+		$values = array('variable' => 'date', 'value' => date("Y-m-d", time()+($i * 86400)));
+		$registered = $eventObject->getNumberOfRegisteredByValue($values); //7 db requests. Optimize?
 		$weekDay = date("N", time()+($i * 86400));
 		switch ($weekDay)
 		{
@@ -179,7 +180,8 @@ function presentEvent($username, $eventObject)
 					{
 						$registeredUsersTable .= "<th>Bussplats</th>";
 					}
-					$registeredUsers = $eventObject->getRegisteredById($key->id);
+					$values = array('variable' => 'id', 'value' => $key->id);
+					$registeredUsers = $eventObject->getRegisteredByValue($values);
 					$registered = false;
 
 					foreach ($registeredUsers as $user)
