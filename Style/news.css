@@ -1,28 +1,6 @@
-.newsPost
-{
-	border: 1px solid #AAA;
-	border-radius: 4px;
-	margin: 5px 0px;
-	position: relative;
-}
-
 .newsHeader
 {
-	padding: 7px 7px 0px 7px;
 	background-color: #f6f7c3;
-	border-bottom: 1px solid #DDD;
-}
-
-.newsTitle
-{
-	font-weight: bold;
-}
-
-.newsAdded
-{
-	margin-right: 3px;
-	font-size: smaller;
-	float: right;
 }
 
 .newsEdit
@@ -33,21 +11,6 @@
 	float: right;
 	z-index: 1;
 }
-
-.newsText
-{
-	display: block;
-	font-family: Arial, Helvetica, sans-serif;
-    font-size: 15px;
-	font-weight: normal;
-    line-height: 1.2;
-    word-wrap: break-word;
-	white-space: normal;
-	padding: 7px;
-	margin: 0px;
-}
-
-
 
 #div_articles
 {

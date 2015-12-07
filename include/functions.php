@@ -61,8 +61,7 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
             $content =  substr($content, 0, 400) . " ...";
         }
         $news .=
-				"
-				<div class='newsPost'>
+				"<div class='newsPost'>
 					<a href='news.php?offset=$offset&p=$row->id'><span class='boxLink'></span></a>
         			<div class='newsHeader'>
 						<span class='newsTitle'>".$row->title."</span>";
@@ -138,7 +137,7 @@ function presentEvent($username, $eventObject)
 	for ($i=0;$i<7;$i++)
 	{
 		$values = array('variable' => 'date', 'value' => date("Y-m-d", time()+($i * 86400)));
-		$registered = $eventObject->getNumberOfRegisteredByValue($values); //7 db requests. Optimize?
+		$nrOfRegistered = $eventObject->getNumberOfRegisteredByValue($values); //7 db requests. Optimize?
 		$weekDay = date("N", time()+($i * 86400));
 		switch ($weekDay)
 		{
@@ -166,7 +165,7 @@ function presentEvent($username, $eventObject)
 		    default:
 			$text .= "-<br>";
 		}
-		$text .= "<span style='margin-left:2%;'>$registered</span><img src='img/runner.png'></h4>";
+		$text .= "<span class='runner'>$nrOfRegistered<img src='img/runner.png'></span></h4>";
 
 		if ($_SESSION['highlighted'] == $i)
 		{
@@ -175,10 +174,10 @@ function presentEvent($username, $eventObject)
 				if ($key->eventDate == date("Y-m-d", time()+($i * 86400)))
 				{
 					// Get registered users to event
-					$registeredUsersTable = '<table style="width:100%"><th>Anmälda</th><th>Kommentar</th>';
+					$registeredUsersTable = '<table class="regTable"><tr><th>Anmälda</th><th>Kommentar</th>';
 					if($key->bus == 1)
 					{
-						$registeredUsersTable .= "<th>Bussplats</th>";
+						$registeredUsersTable .= '<th colspan="2">Buss</th></tr>';
 					}
 					$values = array('variable' => 'id', 'value' => $key->id);
 					$registeredUsers = $eventObject->getRegisteredByValue($values);
@@ -186,45 +185,63 @@ function presentEvent($username, $eventObject)
 
 					foreach ($registeredUsers as $user)
 					{
-						$registeredUsersTable .= "<tr><td>" . $user->name . "</td><td>" . $user->comment . "</td>";
+						$registeredUsersTable .= '<tr class="regTableRow"><td class="regTableName">' . $user->name . '</td><td class="regTableComment">' . $user->comment . '</td>';
 
 						if($key->bus == 1)
 						{
-							$registeredUsersTable .= "<td>" . $user->bus . "</td>";
+							$registeredUsersTable .= '<td class="regTableBus">' . $user->bus . '</td>';
 						}
 
 						$userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
 						if ($user->userID === $userID && !$registered)
 						{
-							$registeredUsersTable .= "<td><a href='?r=$user->id' ><img src='img/cross.png' width=18px height=18px></a></td>";
+							$registeredUsersTable .= '<td class="regTableDel"><a href="?r='.$user->id.'" ><img src="img/cross.png" width="18px" height="18px"></a></td>';
 							$registered = true;
+						}
+						else 
+						{
+							$registeredUsersTable .= '<td class="regTableDel"></td>';
 						}
 						$registeredUsersTable .= "</tr>";
 					}
-					$registeredUsersTable .= "</table><hr>";
-
+					$registeredUsersTable .= "</table>";
+					
+					
 					$text .=
-					"<form method='POST' action='index.php'>
-						<input type='hidden' name='eventID' value=" . $key->id . ">
-						<input type='hidden' name='date' value=" . date("Y-m-d", time()+($i * 86400)) . ">
-						<strong><u>" .$key->eventName . "</u></strong><br>
-						" .$key->info. "<br>
-						<br>";
+						"<div class='eventPost'>
+							<div class='eventHeader'>
+								<span class='eventName'>" .$key->eventName . "</span>
+								<span class='eventTime'>" .$key->startTime. "</span>
+							</div>
+							<span class='eventInfo'>" .$key->info. "</span>
+						</div>";
+						
+					$text .=
+						"<form method='POST' action='index.php'>
+							<input type='hidden' name='eventID' value=" . $key->id . ">
+							<input type='hidden' name='date' value=" . date("Y-m-d", time()+($i * 86400)) . ">";
+					
 					if(!$registered)
 					{
-						$text .=
-						"<button type='submit' class='btn btn-primary' name='register' value='Anmäl'>Anmäl</button><br/>
-						<label for='comment'>Kommentar</label>
-						<input type='text' name='comment'>";
+						$text .= "<input type='text' class='regInput' name='comment' placeholder='Kommentar'>";
 						if($key->bus == 1 )
 						{
-							$text .= "<br/><label for='bus'>Plats i bussen</label><input type='checkbox' name='bus' value='Ja' checked><br>";
+							$text .= "<label class='busLabel' for='bus'>Bussplats</label><input type='checkbox' name='bus' value='Ja' checked><br>";
 						}
+						else
+						{
+							$text .= "<br>";
+						}
+						
+						$text .= "<button type='submit' class='btn btn-primary regInput' name='register' value='Anmäl'>Anmäl</button>";
 					}
 
 					$text .="</form>";
-					$text .= $registeredUsersTable;
-
+					if(count($registeredUsers) > 0)
+					{
+						$text .= $registeredUsersTable;
+					}
+					$text .=  '<hr>';
 				}
 			}
 		}

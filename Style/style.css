@@ -22,7 +22,6 @@ body
 	margin:1%;
 	margin:auto;
     font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
-    /*color:#1e3948;*/
 }
 
 main, .navbar, footer
@@ -59,19 +58,24 @@ footer
 	color: #fff;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) 
+{
     main, footer, .navbar
 	{
         width: 750px;
     }
 }
-@media (min-width: 992px) {
+
+@media (min-width: 992px) 
+{
     main, footer, .navbar
 	{
         width: 990px;
     }
 }
-@media (min-width: 1260px) {
+
+@media (min-width: 1260px) 
+{
     main, footer, .navbar
 	{
         width: 1230px;
@@ -87,7 +91,6 @@ h1,h2,h3
 {
 	margin-top:0px;
 }
-
 
 /*--know what tab that is in use-- */
 header#index a#index-,
@@ -112,7 +115,6 @@ background-color:#e7e7e7;
 	padding: 0;
 }
 
-
 .menu_a
 {
 	padding-left:1%;
@@ -130,14 +132,12 @@ background-color:#e7e7e7;
 	border-radius: 10px;
 }
 
-
 .paging
 {
 	width: 80%;
 	margin: auto;
 	text-align: center;
 }
-
 
   /* edit: fixes overlap error in IE7/8, 
      make sure you have an empty gif 
@@ -162,40 +162,10 @@ background-color:#e7e7e7;
 	opacity: 0.2;
 }
 
-/*
-ul {
-    list-style-type: none;
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-}
-
-li {
-    float: left;
-}
-
-a:link, a:visited {
-    display: block;
-    width: 120px;
-    font-weight: bold;
-    color: #FFFFFF;
-    background-color: #98bf21;
-    text-align: center;
-    padding: 4px;
-    text-decoration: none;
-    text-transform: uppercase;
-}
-
-a:hover, a:active {
-    background-color: #7A991A;
-}*/
-#login_submit
+.runner
 {
-
-}
-
-#form_login
-{
+	position: absolute;
+	left: 5em;
 }
 
 #login
@@ -229,6 +199,96 @@ a:hover, a:active {
 	margin-top:0px;
 }
 
+/******News-, Guestbook- nad Eventposts *****/
+.guestbookPost, .newsPost, .eventPost
+{
+	border: 1px solid #AAA;
+	border-radius: 4px;
+	margin: 5px 0px;
+	position: relative;
+}
+
+.guestbookHeader, .newsHeader, .eventHeader
+{
+	padding: 7px 7px 0px 7px;
+	border-bottom: 1px solid #DDD;
+}
+
+.guestbookName, .newsName, .eventName
+{
+	font-weight: bold;
+}
+
+.guestbookDate, .newsAdded, .eventTime
+{
+	margin-right: 3px;
+	font-size: smaller;
+	float: right;
+}
+
+.guestbookText, .newsText, .eventInfo
+{
+	display: block;
+	font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+	font-weight: normal;
+    line-height: 1.2;
+    word-wrap: break-word;
+	white-space: normal;
+	padding: 7px;
+	margin: 0px;
+}
+
+.eventHeader
+{
+	background-color: #b2ffd2;
+}
+
+/******Registered table and form*****/
+.regTable
+{
+	width: 100%;
+}
+
+.regTableRow:nth-child(even)
+{
+	background-color: #ECF1EF;
+}
+
+.regTableName
+{
+	width: 30%;
+	padding: 2px;
+}
+
+.regTableComment
+{
+	padding: 2px;
+}
+
+.regTableBus
+{
+	width: 3%;
+	padding: 2px;
+}
+
+.regTableDel
+{
+	width: 1%;
+	padding: 2px;
+}
+
+.busLabel
+{
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+.regInput
+{
+	margin-top: 5px;
+	margin-bottom: 5px;
+}
 
 /******User page *****/
 .form_addUser
@@ -303,9 +363,4 @@ q{
 .visible-xs-block
 {
 	display:block!important;
-}
-
-tr td
-{
-	padding-left:7px;
 }
