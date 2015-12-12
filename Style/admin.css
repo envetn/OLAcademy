@@ -1,18 +1,22 @@
-/* eyyy you mess up my style with this global styling!
 
-td
+.admin_rowContent td
 {
     border: 1px solid black;
-	width:20%;
+	width:23%;
 }
-td span
+.admin_rowContent td span
 {
      margin-left:2%;
 }
-th
+.admin_rowHead th
 {
 	padding-right:7px;
-} */
+}
+
+#searchResult
+{
+	margin-bottom:20px;
+}
 #sidebar
 {
 	float:left;
@@ -58,10 +62,10 @@ th
 }
 #tableHead
 {
-	#text-align:center;
 	padding-left:1%;
 	color:#286090;
 }
+
 #infoHead
 {
 	text-align:center;
@@ -70,8 +74,8 @@ th
 .tableContent
 {
 	padding:2%;
-	margin:2%;
-	width:96%;
+	margin:0px;
+	width:100%;
 }
 .paging_div
 {
@@ -81,10 +85,9 @@ th
 .dropdownPrivilege
 {
 	width:99%;
-	
 	font-family: Cursive;
     outline: none;
     cursor: pointer;
 	-webkit-appearance: none;
-   -moz-appearance: none;
+    -moz-appearance: none;
 }

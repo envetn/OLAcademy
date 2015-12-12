@@ -72,10 +72,10 @@ function getTableTitleOfPosts($newsObject)
 	$offset = isset($_GET['offset']) ? $_GET['offset'] : 0;
 	$limit = 20;
 	$res = $newsObject->fetchEntryWithOffset($offset, $limit);
-	
-	$news = "<h3 id='tableHead'>Nyheter</h3><a href='news.php?action=Lägg+till'> < Lägg till > </a><table class='tableContent'>
-    <tr>
-        <th>Title</th><th>Av</th><th>Tillagd</th><th>Ta bort</th>
+
+	$news = "<h3 class='tableHead'>Nyheter</h3><a href='news.php?action=Lägg+till'> < Lägg till > </a><table class='tableContent'>
+    <tr class='admin_rowHead'>
+        <th class=''>Title</th><th>Av</th><th>Tillagd</th><th>Ta bort</th>
     <tr>";
 	foreach ( $res as $row )
 	{
@@ -89,9 +89,9 @@ function getTableTitleOfPosts($newsObject)
 		{
 			$title = substr($title, 0, 20) . " ...";
 		}
-		
+
 		$news .= "
-                    <tr>
+                    <tr class='admin_rowContent'>
                         <td><span>" . $title . "</span></td>
                         <td><span>" . $row->author . "</span></td>
                        	<td>" . $row->added . "</td>
@@ -105,7 +105,7 @@ function getTableTitleOfPosts($newsObject)
 	$news .= "</table>";
 	$nrOfRows = $newsObject->countAllRows();
 	$news .= "<div class='paging_div'>" . paging($limit, $offset, $nrOfRows, 5, "&c=0") . "</div>";
-	
+
 	return $news;
 }
 
@@ -119,9 +119,9 @@ function getTableEvents($eventObject)
 	{
 		$res = $eventObject->getWeeklyEvents();
 	}
-	
+
 	$htmlEvents = "<h3 id='tableHead'>Veckans träningar</h3><a href='event.php?a=1'> < Lägg till > </a><a href='" . getUrlPath() . "&showAll=true'> < Visa alla > </a><table class='tableContent'>
-    <tr>
+     <tr class='admin_rowHead'>
         <th>Event</th><th>Info</th><th>När</th><th>Datum</th><th>Anmälda</th><th>Återkommande</th><th>Buss</th><th>Edit</th>
     </tr>";
 	foreach ( $res as $events )
@@ -136,19 +136,19 @@ function getTableEvents($eventObject)
 		$reccurance = $events->reccurance == '1' ? "Ja" : "Nej";
 		$bus = $events->bus == '1' ? "Ja" : "Nej";
 		$htmlEvents .= "<form method='post'>
-							<tr>
+							<tr class='admin_rowContent'>
         					<input type='hidden' name='eventId' value='" . $events->id . "' />
-                            <td>" . $events->eventName . "</td>
-                            <td>" . $info . "</td>
-                            <td>" . $events->startTime . "</td>
-                            <td>" . $events->eventDate . "</td>
-                           	<td><a href='admin.php?c=3&event=" . $events->id . "'>" . $registered . " - Visa</a></td>
-                            <td>" . $reccurance . "</td>
-                            <td>" . $bus . "</td>
-                            <td>
+                            <td><span>" . $events->eventName . "</span></td>
+                            <td><span>" . $info . "</td>
+                            <td><span>" . $events->startTime . "</span></td>
+                            <td><span>" . $events->eventDate . "</span></td>
+                            <td><span><a href='admin.php?c=3&event=" . $events->id . "'>" . $registered . " - Visa</a></span></td>
+                            <td><span>" . $reccurance . "</span></td>
+                            <td><span>" . $bus . "</span></td>
+                            <td><span>
                                 <input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeEvent_1' value='" . $events->id . "'/>
                                 <a class='admin_news_remove' href='event.php?e=" . $events->id . "'><img src='img/edit.png' width=18px height=18px></a>
-                            </td>
+                            </td></span>
                         </tr>
                        </form>";
 	}
@@ -159,18 +159,18 @@ function getTableRegisteredUsers($eventObject)
 {
 	if (isset($_GET['event']) && is_numeric($_GET['event']))
 	{
-		
+
 		$eventId = $_GET['event'];
 		$values = array('variable' => 'id', 'value' => $eventId);
-		
+
 		$event = $eventObject->fetchSingleEntryByValue($values);
-		
+
 		$registeredUsers = $eventObject->getRegisteredByValue($values);
 		if ($event != null)
 		{
 			$registeredUsersTable = "<h3 id='tableHead'>Anmälda till : $event->eventName - $event->eventDate </h3></a>";
 			$registeredUsersTable .= '<table class="tableContent"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
-			
+
 			foreach ( $registeredUsers as $regUser )
 			{
 				$registeredUsersTable .= "<tr><td>" . $regUser->name . "</td><td>" . $regUser->bus . "</td><td>" . $regUser->comment . "</td><td>";
@@ -183,30 +183,40 @@ function getTableRegisteredUsers($eventObject)
 	}
 	return "";
 }
+
 function searchForUser($search, $user)
 {
-	$res = $user->fetchUserByName($search);
-	$result = "<table class='tableContent'><tr><th>Namn</th><th>email</th><th>Rättighet</th><th>Registrerad</th><th>Edit</th><tr>";
-	foreach ( $res as $key )
+	if($search <= 1)
 	{
-		$result .= "<form method='post'><tr>
-                            <input type='hidden' name='userId' value='" . $key->id . "' />
-                            <td><a href='user.php?user=id'>" . $key->name . "</a></td>
-                            <td>" . $key->email . "</td>";
-		$result .= generateSelect($key);
-		$result .= "<td>" . $key->regDate . "</td>
+		$res = $user->fetchUserByName($search);
+		if($res != null)
+		{
+			$result = "<table class='tableContent' id='searchResult'><tr class='admin_rowHead'><th>Namn</th><th>email</th><th>Rättighet</th><th>Registrerad</th><th>Edit</th><tr>";
+			foreach ( $res as $key )
+			{
+				$result .= "<form method='post'>
+							<tr class='admin_rowContent'>
+	                            <input type='hidden' name='userId' value='" . $key->id . "' />
+	                            <td><a href='user.php?user=id'>" . $key->name . "</a></td>
+	                            <td>" . $key->email . "</td>";
+				$result .= generateSelect($key->Privilege);
+				$result .= "<td>" . $key->regDate . "</td>
                             <td>
 								<input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeUser_1' value='Click me'>
                                 <input type='image' src='img/edit.png'  border='0' width=18px height=18px alt='Submit'  name='editUser_2' value='Click me2'>
                             </td>
                         </tr></form>";
+			}
+			return $result . "</table>";
+		}
+		return "<pre class='error'>Användare: ".$search." hittades inte</pre>";
 	}
-	return $result . "</table>";
+	return "<pre class='error'>Fyll i sökfältet.</pre>";
 }
 
 function getTableUsers($user)
 {
-	
+
 	$res = $user->fetchUserEntries();
 	$htmlUsers = "<h3 id='tableHead'>Användare</h3><a href='createUser.php'> < Lägg till > </a> <form method='get'><input type='hidden' name='c' value='2'/><input type='text' name='search' placeholder='Sök användare'/><button class='btn btn-primary'>Sök </button></form>";
 	if (isset($_GET['search']))
@@ -215,16 +225,18 @@ function getTableUsers($user)
 	}
 	// Maybe not show all users?
 	$htmlUsers .= "<table class='tableContent'>
-    <tr>
+    <tr class='admin_rowHead'>
         <th>Namn</th><th>email</th><th>Rättighet</th><th>Registrerad</th><th>Edit</th>
     <tr>";
 	foreach ( $res as $key )
 	{
-		$htmlUsers .= "<form method='post'><tr>
+		$htmlUsers .= "<form method='post'>
+						<tr class='admin_rowContent'>
                             <input type='hidden' name='userId' value='" . $key->id . "' />
-                            <td><a href='user.php?user=id'>" . $key->name . "</a></td>
-                            <td>" . $key->email . "</td>";
-		$htmlUsers .= generateSelect($key);
+                            <td><span><a href='user.php?user=id'>" . $key->name . "</a></span></td>
+                            <td><span>" . $key->email . "</span></td>";
+
+		$htmlUsers .= generateSelect($key->Privilege);
 		$htmlUsers .= "<td>" . $key->regDate . "</td>
                             <td>
 								<input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeUser_1' value='Click me'>
@@ -235,19 +247,19 @@ function getTableUsers($user)
 	return $htmlUsers . "</table>";
 }
 
-function generateSelect($user)
+function generateSelect($privilege)
 {
 	$html = "<td> <select class='dropdownPrivilege' name='privilege'>";
-	switch ($user->Privilege)
+	switch ($privilege)
 	{
 		case 2 :
 			$html .= "<option value='2' selected='selected' > Admin </option> <option value='1'> Användare </option><option value='0' > Cockatrice </option>";
 			break;
-		
+
 		case 1 :
 			$html .= "<option value='2' > Admin </option> <option value='1' selected='selected' > Användare </option><option value='0' > Cockatrice </option>";
 			break;
-		
+
 		case 0 :
 			$html .= "<option value='2' > Admin </option> <option value='1'> Användare </option><option value='0' selected='selected'  > Cockatrice </option>";
 			break;
@@ -295,7 +307,7 @@ if ($privilege === "2")
                 <li><a href='" . $_SERVER['PHP_SELF'] . "?c=2'>Användare</a></li>
                </ul></div>";
 	$htmlAdmin = "<div id='content'>";
-	
+
 	if (isset($_POST['removeUser_1_x'])) // Where does x come from?
 	{
 		if (tryToRemoveUser($user))
@@ -329,7 +341,7 @@ if ($privilege === "2")
 			$htmlAdmin .= "<h4 id='infoHead'> Not removed... </h4>";
 		}
 	}
-	
+
 	$htmlAdmin .= getTablesAndValidateGET($newsObject, $htmlAdmin, $eventObject, $user);
 	echo "<div class='row clearFix'>";
 	echo "<div style='clear:both; overflow: hidden;'>";
