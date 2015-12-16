@@ -38,6 +38,13 @@ class Registered extends DataObject
 		return $result;
 	}
 
+	function getRegisteredByDate($date)
+	{
+		$sql = "SELECT * FROM registered WHERE eventDate=?";
+		$params = array($date);
+		$result = $this->database->queryAndFetch($sql, $params);
+		return $result;
+	}
 	public function removeSingleRegistered($id)
 	{
 		$sql = "DELETE FROM registered WHERE id=? LIMIT 1";

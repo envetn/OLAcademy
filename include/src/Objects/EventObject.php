@@ -1,4 +1,4 @@
-<?php 
+<?php
 include ("DataObject.php");
 include ("Registered.php");
 
@@ -64,9 +64,8 @@ class EventObject extends DataObject
 	{
 		parent::removeSingleEntryById($id);
 
-		// Clear all registered from updated event
-		$sql = "DELETE FROM registered WHERE eventID=?";
-		$this->database->ExecuteQuery($sql, array($id));
+		$this->registered->removeSingleRegistered($id);
+
 		return true;
 	}
 
@@ -104,7 +103,7 @@ class EventObject extends DataObject
         SELECT id,eventDate,reccurance
         FROM events
         WHERE eventDate BETWEEN ? AND ?
-        ";
+        AND reccurance=1";
 		$currentDate = date('Y-m-d', strtotime($this->today . ' -1 day'));
 		$prev_date = date('Y-m-d', strtotime($currentDate . ' -30 day'));
 		$params = array($prev_date,$currentDate);
@@ -114,21 +113,17 @@ class EventObject extends DataObject
 		{
 			foreach ( $res as $event )
 			{
-				echo $event->reccurance;
 				if ($event->reccurance === "1")
 				{
 					// Set new date.
-					$eventDay = $event->eventDate;
-					$newDate = date('Y-m-d', strtotime($eventDay . ' + 7 day'));
-					$id = $event->id;
-					$sql = "UPDATE events SET eventDate=? WHERE id=? LIMIT 1";
-					$updateParams = array($newDate,$id);
-					$this->database->ExecuteQuery($sql, $updateParams);
+					$newDate = date('Y-m-d', strtotime($event->eventDate . ' + 7 day'));
+
+					$values = array('eventDate' => $newDate);
+					$condition = array('id' => $event->id);
+					parent::editSingleEntry($values, $condition);
 
 					// Clear all registered from updated event
-					// duplicated in admin.php
-					$sql = "DELETE FROM registered WHERE eventID=?";
-					$this->database->ExecuteQuery($sql, array($id));
+					$this->registered->removeSingleRegistered($event->id);
 				}
 			}
 		}
@@ -139,7 +134,7 @@ class EventObject extends DataObject
 	{
 		$this->registered->insertEntyToDatabase($params);
 	}
-	
+
 	public function unRegisterUserToEvent($id)
 	{
 		$this->registered->removeSingleEntryById($id);
@@ -151,8 +146,13 @@ class EventObject extends DataObject
 		if($value['variable'] == 'id')
 		{
 			$res = $this->registered->getRegisteredById($value['value']);
-			return $res;
 		}
+		else if($value['variable'] == 'date')
+		{
+			$res = $this->registered->getRegisteredByDate($values['value']);
+		}
+
+		return $res;
 	}
 
 	public function getNumberOfRegisteredByValue($value = array())
@@ -164,7 +164,7 @@ class EventObject extends DataObject
 		}
 		else if($value['variable'] == 'date')
 		{
-			$res = $this->registered->getNrOfRegisteredbyDate($value['value']);			
+			$res = $this->registered->getNrOfRegisteredbyDate($value['value']);
 		}
 		return $res;
 	}
