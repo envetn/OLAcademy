@@ -97,11 +97,11 @@ function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl="") // admin
 	{
 		if($j > 0)
 		{
-			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=0$currentUrl'>1... </a> \n"; //Link to first page
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=0$currentUrl'><span class='pageLink'>&#8810;</span></a> \n"; //Link to first page
 		}
 		if($offset > 0)
 		{
-			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$prev'>&lt;</a> \n";//Link to previous page
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$prev'><span class='pageLink'>&lt;</span></a> \n";//Link to previous page
 		}
 
 		//Pages within range
@@ -110,20 +110,20 @@ function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl="") // admin
 			$page_link = $i * $limit;
 			if($i*$limit == $offset)
 			{
-				$paging .= " <b>" . ($i+1) . "</b> \n";
+				$paging .= "<span id='pageActive'>" . ($i+1) . "</span> \n";
 			}
 			else
 			{
-				$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$page_link$currentUrl'>" . ($i+1) . "</a> \n";
+				$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$page_link$currentUrl'><span class='pageLink'>" . ($i+1) . "</span></a> \n";
 			}
 		}
 		if($nrOfRows > $offset + $limit)
 		{
-			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$next$currentUrl'>&gt;</a> \n";//Link to next page
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=$next$currentUrl'><span class='pageLink'>&gt;</span></a> \n";//Link to next page
 		}
 		if($num_page > $numbers && $cur_page <= $num_page-ceil($numbers/2))
 		{
-			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=".($num_page-1)*$limit."$currentUrl'> ...$num_page</a> \n";//Link to last page
+			$paging .= "<a href='$_SERVER[PHP_SELF]?offset=".($num_page-1)*$limit."$currentUrl'><span class='pageLink'> &#8811;</span></a> \n";//Link to last page
 		}
 	}
 	return $paging;
@@ -288,7 +288,6 @@ function getExtensionOnUrl()
  */
 function showLoginLogout($user, $salt_char)
 {
-	$error = "";
 	if(isset($_COOKIE['rememberme_olacademy']))
 	{
 		$user->getUserByCookie();
@@ -299,7 +298,7 @@ function showLoginLogout($user, $salt_char)
 
 		if(!$user->login($email,$_POST['passwd']))
 		{
-			$error .= "<p style='color:red;'>Fel lösenord eller email </p>";
+			$_SESSION['error'] = "<pre class='error'>Fel lösenord eller email </pre>";
 		}
 		else
 		{
@@ -325,7 +324,7 @@ function showLoginLogout($user, $salt_char)
 		$form = $user->getLoginForm();
 	}
 
-	return $error . $form;
+	return $form;
 }
 
 function displayErrorMessage($message)

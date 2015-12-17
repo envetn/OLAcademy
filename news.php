@@ -166,6 +166,7 @@ catch ( Exception $e )
 	$singleArticle = "<article id='singeArticle'><h3> Ingen nyhet hittades </h3><hr/><br/> " . $e . "</article>";
 }
 
+echo isset($_SESSION['error']) ? $_SESSION['error'] : "";
 echo "<div class='row'>";
 echo "<div class='col-sm-8 col-sm-push-4 elementBox'>";
 echo isset($singleArticle) ? $singleArticle : "";
