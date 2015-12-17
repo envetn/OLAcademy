@@ -72,10 +72,10 @@ class EventObject extends DataObject
 	public function getWeeklyEvents()
 	{
 		$sql = "
-	        SELECT *
+	        SELECT id, eventDate, DATE_FORMAT(startTime, '%H:%i') AS startTime, eventName, info, reccurance, bus
 	        FROM events
 	        WHERE eventDate BETWEEN ? AND ?
-			ORDER BY eventDate
+			ORDER BY startTime
 	        ";
 		$params = array($this->today,$this->nextWeek);
 		$result = $this->database->queryAndFetch($sql, $params);

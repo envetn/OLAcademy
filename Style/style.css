@@ -263,6 +263,7 @@ background-color:#e7e7e7;
 
 .regTableComment
 {
+	word-break:break-all;
 	padding: 2px;
 }
 

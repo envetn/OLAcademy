@@ -28,6 +28,8 @@ if(isset($_POST['register']))
 {
     $eventId = $_POST["eventID"];
 	$bus = isset($_POST['bus']) ? $_POST['bus'] : "Nej";
+	$comment = $_POST['comment'];
+	$comment = makeLinks($comment);
 	
 	if(!$user->isLoggedIn())
 	{
@@ -35,7 +37,7 @@ if(isset($_POST['register']))
 	}
     else
     {
-        $params = array('userID' => $userId, 'name' => $username, 'date' => $_POST['date'], 'comment' => $_POST['comment'], 'bus' => $bus,'eventID' => $eventId);
+        $params = array('userID' => $userId, 'name' => $username, 'date' => $_POST['date'], 'comment' => $comment, 'bus' => $bus,'eventID' => $eventId);
         $eventObject->registerUserToEvent($params);
     }
 

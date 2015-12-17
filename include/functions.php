@@ -185,7 +185,8 @@ function presentEvent($username, $eventObject)
 
 					foreach ($registeredUsers as $user)
 					{
-						$registeredUsersTable .= '<tr class="regTableRow"><td class="regTableName">' . $user->name . '</td><td class="regTableComment">' . $user->comment . '</td>';
+						$registeredUsersTable .= '<tr class="regTableRow"><td class="regTableName">' . $user->name . 
+						'</td><td class="regTableComment">' . substr($user->comment, 0, 140) . '</td>';
 
 						if($key->bus == 1)
 						{
