@@ -1,5 +1,5 @@
 <?php
-include("include/header.php"); 
+include("include/header.php");
 
 $pageId ="index";
 $userId = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
@@ -30,7 +30,7 @@ if(isset($_POST['register']))
 	$bus = isset($_POST['bus']) ? $_POST['bus'] : "Nej";
 	$comment = $_POST['comment'];
 	$comment = makeLinks($comment);
-	
+
 	if(!$user->isLoggedIn())
 	{
 		$_SESSION['error'] = "<pre class='error'>Du måste vara inloggad för att kunna anmäla dig.</pre>";

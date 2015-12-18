@@ -30,6 +30,18 @@ abstract class DataObject
 
 	public function fetchSingleEntryByValue($values = array())
 	{
+		/**
+		 *	Todo: Update this simular to editSingleEntry and insertEntyToDatabase
+		 *	e.g: Send in array of condition and values which will create:
+		 *	Value: SELECT val,val2,val3 FROM table
+		 *	Condition: "Where variable=value1 AND variable2=value2"
+		 *	If empty use default SELECT
+		 *	Condition array will look like this for eg: news: array(title=>$title, author=>$author)
+		 * 	Value array will look like this: array('content', 'author')
+		 *	This should build: SELECT content, author FROM news WHERE title=$title AND author=$author
+		 */
+
+
 		$sql = "SELECT * FROM " . $this->table;
 		$params = array();
 

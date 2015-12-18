@@ -62,13 +62,15 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
         }
         $news .=
 				"<div class='newsPost'>
-					<a href='news.php?offset=$offset&p=$row->id'><span class='boxLink'></span></a>
+					<a href='news.php?offset=$offset&amp;p=$row->id'><span class='boxLink'></span></a>
+
+
         			<div class='newsHeader'>
 						<span class='newsTitle'>".$row->title."</span>";
 		if ($showEdit && $newsObject->isAllowedToDeleteEntry("")) // admin, show all
 		{
-			$news .= "<a class='newsEdit' href='news.php?action=edit&id=" . $row->id . "'><img src='img/edit.png' width=18px height=18px></a>";
-			$news .= "<a class='newsEdit' href='news.php?action=remove&id=" . $row->id . "'><img src='img/cross.png' width=18px height=18px></a>";
+			$news .= "<a class='newsEdit' href='news.php?action=edit&amp;id=" . $row->id . "'><img src='img/edit.png' width=18px height=18px></a>";
+			$news .= "<a class='newsEdit' href='news.php?action=remove&amp;id=" . $row->id . "'><img src='img/cross.png' width=18px height=18px></a>";
 		}
 		$news .="<span class='newsAdded'>" . $row->added . " </span>
                 </div>
@@ -78,6 +80,7 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
     }
     return $news;
 }
+
 /*
  * Paging
  *
@@ -165,7 +168,7 @@ function presentEvent($username, $eventObject)
 		    default:
 			$text .= "-<br>";
 		}
-		$text .= "<span class='runner'>$nrOfRegistered<img src='img/runner.png'></span></h4>";
+		$text .= "<span class='runner'>$nrOfRegistered<img src='img/runner.png' alt='runner'></span></h4>";
 
 		if ($_SESSION['highlighted'] == $i)
 		{
@@ -185,7 +188,7 @@ function presentEvent($username, $eventObject)
 
 					foreach ($registeredUsers as $user)
 					{
-						$registeredUsersTable .= '<tr class="regTableRow"><td class="regTableName">' . $user->name . 
+						$registeredUsersTable .= '<tr class="regTableRow"><td class="regTableName">' . $user->name .
 						'</td><td class="regTableComment">' . substr($user->comment, 0, 140) . '</td>';
 
 						if($key->bus == 1)
@@ -199,15 +202,15 @@ function presentEvent($username, $eventObject)
 							$registeredUsersTable .= '<td class="regTableDel"><a href="?r='.$user->id.'" ><img src="img/cross.png" width="18px" height="18px"></a></td>';
 							$registered = true;
 						}
-						else 
+						else
 						{
 							$registeredUsersTable .= '<td class="regTableDel"></td>';
 						}
 						$registeredUsersTable .= "</tr>";
 					}
 					$registeredUsersTable .= "</table>";
-					
-					
+
+
 					$text .=
 						"<div class='eventPost'>
 							<div class='eventHeader'>
@@ -216,12 +219,12 @@ function presentEvent($username, $eventObject)
 							</div>
 							<span class='eventInfo'>" .$key->info. "</span>
 						</div>";
-						
+
 					$text .=
 						"<form method='POST' action='index.php'>
 							<input type='hidden' name='eventID' value=" . $key->id . ">
 							<input type='hidden' name='date' value=" . date("Y-m-d", time()+($i * 86400)) . ">";
-					
+
 					if(!$registered)
 					{
 						$text .= "<input type='text' class='regInput' name='comment' placeholder='Kommentar'>";
@@ -233,7 +236,7 @@ function presentEvent($username, $eventObject)
 						{
 							$text .= "<br>";
 						}
-						
+
 						$text .= "<button type='submit' class='btn btn-primary regInput' name='register' value='Anmäl'>Anmäl</button>";
 					}
 
@@ -298,7 +301,7 @@ function showLoginLogout($user, $salt_char)
 
 		if(!$user->login($email,$_POST['passwd']))
 		{
-			$_SESSION['error'] = "<pre class='error'>Fel lösenord eller email </pre>";
+			$_SESSION['error'] = "<pre class='error'>Fel lösenord eller email <a href='user.php?renew=true'> Glömt lösenord ?</a> </pre>";
 		}
 		else
 		{
@@ -307,7 +310,7 @@ function showLoginLogout($user, $salt_char)
 	}
 	else if(isset($_POST['Registera']))
 	{
-		header("location: createUser.php");
+		header("location: user.php");
 	}
 
 	if(isset($_SESSION['uid']))

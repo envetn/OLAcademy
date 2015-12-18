@@ -21,6 +21,7 @@ class User extends DataObject
 
 	function fetchUserByName($name)
 	{
+		$name = strip_tags($name);
 		$sql = "SELECT id,name,email,Privilege,regDate FROM users WHERE name=?";
 		$params = array($name);
 		$res = $this->database->queryAndFetch($sql, $params);
@@ -36,9 +37,10 @@ class User extends DataObject
 	{
 		if (is_numeric($privilege) && is_numeric($id))
 		{
-			$sql = "UPDATE users SET Privilege=? WHERE id=? LIMIT 1";
-			$params = array($privilege,$id);
-			$this->database->queryAndFetch($sql, $params);
+			$values = array('Privilege' => $privilege);
+			$condition = array('id' => $id);
+			parent::editSingleEntry($values, $condition);
+
 			return true;
 		}
 		return false;
@@ -77,32 +79,6 @@ class User extends DataObject
 		}
 
 		return false;
-
-		/*
-		 * old function
-		 *
-		 * $sql = "SELECT id,name,email,Privilege FROM users WHERE email=? AND password=? LIMIT 1";
-		 * $params = array($email, $passwd);
-		 * $res = $this->database->queryAndFetch($sql, $params);
-		 * if($this->rowCount() == 1)
-		 * {
-		 *
-		 * $_SESSION['uid'] = $res[0]->id;
-		 * $_SESSION['username'] = $res[0]->name;
-		 * $_SESSION['email']= $res[0]->email;
-		 * $_SESSION['privilege'] = $res[0]->Privilege;
-		 *
-		 * //after successful logon
-		 * //check if remember_me isset
-		 * if(isset($_POST['remember_me']))
-		 * {
-		 * $SECRET_KEY = "!+?";
-		 * setRememberMe($res[0]->name,$SECRET_KEY);
-		 * }
-		 *
-		 * return true;
-		 * }
-		 */
 	}
 
 	function getUserPrivilege()
@@ -166,7 +142,7 @@ class User extends DataObject
 
 	function getLoginForm()
 	{
-		return '<form id="signin" class="navbar-form navbar-right" role="form" method="post">
+		return '<form id="signin" class="navbar-form navbar-right" method="post">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
 						<input id="email" type="email" class="form-control" name="email" value="" placeholder="Användarnamn">
@@ -178,32 +154,76 @@ class User extends DataObject
 
 					</div>
 
-					<button type="submit" class="btn btn-primary" name="login">Login</button>
+					<button type="submit" class="btn btn-primary" id="btn_login" name="login">Login</button>
 					<button type="submit" class="btn btn-primary" name="Registera">Registera</button>
 	                 <input type="checkbox" name="remember_me" value="remember_me" id="remember_me"/>
 				</form>';
 	}
 
-	function updateUser($name, $email, $newPassword)
+	public function updateUser($name, $email, $newPassword)
 	{
-		$params = array($name,$email);
 		$id = $_SESSION['uid'];
-		$sql = "UPDATE users SET name=?, email=?";
+		$values = array('name' => $name,'email' => $email);
+		$condition = array('id' => $id);
+
 		if ($newPassword != "")
 		{
 			$password = password_hash($newPassword, PASSWORD_BCRYPT, array('cost'=>12));
-			$params[] = $password;
-
-			$sql .= ", password=?";
+			$values['password'] = $password;
 		}
 
-		$sql .= " WHERE id=? LIMIT 1";
-		$params[] = $id;
-		$this->database->queryAndFetch($sql, $params);
-		$_SESSION['username'] = $name;
+		parent::editSingleEntry($values, $condition);
 
 		$_SESSION['success'] = "<pre class=red>Updaterad!</pre>";
+		$_SESSION['username'] = $name;
+	//	header("location: " .$_SERVER['PHP_SELF']."");
+	}
 
-		header("location:" .$_SERVER['PHP_SELF']."");
+	public function forgottenPassword($email)
+	{
+		// validate email
+		$emailValue = array('variable' => 'email', 'value' => $email);
+		$res = parent::fetchSingleEntryByValue($emailValue);
+
+		if ($res != null)
+		{
+			// generate a new password.
+			$plainTextPassword = $this->generateRandomPassword();
+			$password = password_hash($plainTextPassword, PASSWORD_BCRYPT, array('cost' => 12));
+
+			// set password to database
+			$values = array('password' => $password);
+			$condition = array('email' => $email);
+			if (parent::editSingleEntry($values, $condition))
+			{
+				$this->sendNewPassword($plainTextPassword);
+			}
+		}
+	}
+
+	private function sendNewPassword($plainTextPassword)
+	{
+		$headers = "From: ourServer@olacademy.com";
+		$message = "Ditt nya lösenord: " . $plainTextPassword;
+		$email = 'olle.ch@hotmail.com';
+
+		echo "Ditt nya lösenord: " . $plainTextPassword;
+		// Send... not working
+		// Need mailserver for this to work
+
+// 		if (mail($email, 'My Subject', $message, $headers))
+// 		{
+// 			echo "mail sent to " . $email;
+// 		}
+// 		else
+// 		{
+// 			// gives /usr/sbin/sendmail: not found
+// 			echo "Something went wrong...";
+// 		}
+	}
+
+	private function generateRandomPassword()
+	{
+		return "qwerty1234";
 	}
 }

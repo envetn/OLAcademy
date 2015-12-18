@@ -1,23 +1,3 @@
-<style>
-label {
-	display: inline-block;
-	width: 100px;
-	text-align: left;
-	padding-right: 10%;
-}
-
-input {
-	margin-bottom: 1%;
-	padding-left: 2px
-}
-
-#changePassword {
-	border: 1px solid black;
-	width: 40%;
-	padding: 1%;
-}
-​
-</style>
 <?php
 include ('include/header.php');
 
@@ -27,6 +7,7 @@ include ('include/header.php');
  * else
  * Possible to create new user
  */
+
 $privilege = $user->getUserprivilege();
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : "";
 
@@ -63,7 +44,7 @@ function getUserInformation($user)
 	if ($user->rowCount() == 1)
 	{
 		$form = "
-            <form method='post'>
+            <form method='post' id='userInformation'>
              <label>Användarnamn</label><input type='text' value='" . $res->name . "' name='username'/><br/>
              <label>Email</label><input type='text' value='" . $res->email . "' name='email'/><br/>
              <label>Nyvarande lösenord</label><input type='password' value='' name='oldPassword'/><br/>
@@ -79,10 +60,48 @@ function getUserInformation($user)
 		return $form;
 	}
 }
+
+function validateCreateUserPost($user)
+{
+	if (isset($_POST['spara']))
+	{
+		$username = strip_tags(ucfirst($_POST['username']));
+
+		$password = $_POST['password'];
+		$passwordRepeat = $_POST['passwordRepeat'];
+
+		$email = strip_tags($_POST['email']);
+		$priv = isset($_POST['Privilege']) ? $_POST['Privilege'] : "0";
+		$date = date("Y-m-d H:i:s");
+
+		if ($password === $passwordRepeat)
+		{
+			$values = array('variable' => 'email', 'value' => $email);
+			$res = $user->fetchSingleEntryByValue($values);
+			if ($res === null)
+			{
+				$password = password_hash($_POST['password'], PASSWORD_BCRYPT, array('cost' => 12));
+				$params = array('name' => $username,'password' => $password, 'email' => $email, 'Privilege' => $priv,'regDate' => $date);
+				$user->insertEntyToDatabase($params);
+
+				$success = "Inserted into database";
+			}
+			else
+			{
+				$_SESSION['error'] = "<pre class=red>Användare med den emailen finns redan</pre>";
+			}
+		}
+		else
+		{
+			$_SESSION['error'] = "<pre class=red>Lösenorden matchade inte</pre>";
+		}
+	}
+}
+
 if (isset($_SESSION['username']))
 {
 	// Logged in
-	echo getUserInformation($user);
+	$userConf = getUserInformation($user);
 
 	if (isset($_POST['spara']))
 	{
@@ -97,10 +116,12 @@ if (isset($_SESSION['username']))
 				$newPassword = $_POST['newPassword'];
 				$newPasswordRepeat = $_POST['newPasswordRepeat'];
 				validatePasswords($newPassword, $newPasswordRepeat, $user);
+				$success = "Lösenord uppdaterat";
 			}
 			else
 			{
 				updateUser($user);
+				$success = "Användare uppdaterad";
 			}
 		}
 		else
@@ -109,9 +130,39 @@ if (isset($_SESSION['username']))
 		}
 	}
 }
+else if(isset($_GET['renew']))
+{
+	if(isset($_POST['send']))
+	{
+		$email = strip_tags($_POST['email']);
+		$user->forgottenPassword($email);
+	}
+
+	$userConf = "
+		<div class='row'>
+		<form method='post'  id='userInformation'>
+			<label>Email</label><input type='text' name='email' /><br />
+			<input type='submit' value='Skicka' name='send' class='btn btn-primary'/>
+		</form>
+	</div>
+	";
+}
 else
 {
 	//show createUser
+	validateCreateUserPost($user);
+	$userConf = "
+	<div class='row'>
+		<form method='post'  id='userInformation'>
+			<label>Användarnamn</label><input type='text' value='' name='username' /><br />
+			<label>Email</label><input type='text' name='email' /><br />
+			<label>Lösenord</label><input type='password' value='' name='password' /><br />
+				<label>Upprepa lösenord</label><input type='password' value='' name='passwordRepeat' /><br />
+			<input type='submit' value='spara' name='spara' class='btn btn-primary'/>
+		</form>
+	</div>
+	";
 }
 echo isset($_SESSION['error']) ? $_SESSION['error'] : "";
-echo isset($_SESSION['success']) ? $_SESSION['success'] : "";
+echo isset($success) ? $success : "";
+echo $userConf;

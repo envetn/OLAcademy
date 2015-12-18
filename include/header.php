@@ -6,15 +6,17 @@ include_once(INCLUDE_PATH . "/src/Objects/EventObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/NewsObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/GuestbookObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/User/User.php");
+include_once(INCLUDE_PATH . "/src/Image/Image.php");
 
 $user = new User();
 $privilege =  $user->getUserprivilege();
 
 ?>
-<!doctype html>  
+<!doctype html>
 <html lang='sv'>
 <head>
-    <meta name="viewport" content="width=device-width initial-scale=1", charset="UTF-8">
+    <meta name="viewport" content="width=device-width initial-scale=1"/>
+    <meta charset="utf-8" />
 	<title> <?php echo isset($pageTitle) ? $GLOBAL['pageTitle']. $pageTitle : $GLOBAL['pageTitle']; ?></title>
 
 	<!--<script src="//code.jquery.com/jquery.min.js"></script>-->

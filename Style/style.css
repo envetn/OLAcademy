@@ -52,13 +52,13 @@ main
 	border-top-right-radius: 5px;
 }
 
-footer 
+footer
 {
 	background-color: #0070B6;
 	color: #fff;
 }
 
-@media (min-width: 768px) 
+@media (min-width: 768px)
 {
     main, footer, .navbar
 	{
@@ -66,7 +66,7 @@ footer
     }
 }
 
-@media (min-width: 992px) 
+@media (min-width: 992px)
 {
     main, footer, .navbar
 	{
@@ -74,7 +74,7 @@ footer
     }
 }
 
-@media (min-width: 1260px) 
+@media (min-width: 1260px)
 {
     main, footer, .navbar
 	{
@@ -82,22 +82,22 @@ footer
     }
 }
 
-a:link 
+a:link
 {
     text-decoration: none;
 }
 
-a:visited 
+a:visited
 {
     text-decoration: none;
 }
 
-a:hover 
+a:hover
 {
     text-decoration: none;
 }
 
-a:active 
+a:active
 {
     text-decoration: none;
 }
@@ -167,8 +167,8 @@ background-color:#e7e7e7;
 	background: #0070b6;
 }
 
-  /* edit: fixes overlap error in IE7/8, 
-     make sure you have an empty gif 
+  /* edit: fixes overlap error in IE7/8,
+     make sure you have an empty gif
   background-image: url('empty.gif');*/
 .boxLink
 {
@@ -326,7 +326,7 @@ background-color:#e7e7e7;
 	padding:1%;
 	width:40%;
 	border-bottom-right-radius: 20px;
-	border-top-right-radius: 20px;	
+	border-top-right-radius: 20px;
 }
 
 .form_addUser label
@@ -340,7 +340,7 @@ background-color:#e7e7e7;
 /******ERROR*******/
 .youShallNotPassDiv
 {
-	
+
 	text-align:center;
 	padding:5px 0px 0px 0px;
 	display: block;
@@ -348,8 +348,8 @@ background-color:#e7e7e7;
     margin-right: auto;
     background:white;
     border-bottom-right-radius: 20px;
-	border-top-right-radius: 20px;	
-	width:30%;	
+	border-top-right-radius: 20px;
+	width:30%;
 }
 
 .youShallNotPassDivP p
@@ -392,4 +392,31 @@ q{
 .visible-xs-block
 {
 	display:block!important;
+}
+
+/***** User style ***/
+#userInformation
+{
+	padding-left: 2%;
+}
+
+#userInformation label
+{
+	display: inline-block;
+	width: 100px;
+	text-align: left;
+	padding-right: 10%;
+}
+
+#userInformation input
+{
+	margin-bottom: 1%;
+	padding-left: 2px
+}
+
+#changePassword
+{
+	border: 1px solid black;
+	width: 40%;
+	padding: 1%;
 }
