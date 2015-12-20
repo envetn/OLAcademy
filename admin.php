@@ -196,11 +196,11 @@ function searchForUser($search, $user)
 
 			return $result . "</table>";
 		}
-		$_SESSION['error'] = "<pre class='error'>Användare: " . $search . " hittades inte</pre>";
+		populateError("Användare: " . $search . " hittades inte");
 	}
 	else
 	{
-		$_SESSION['error'] = "<pre class='error'>Fyll i sökfältet.</pre>";
+		populateError("Fyll i sökfältet.");
 	}
 }
 
