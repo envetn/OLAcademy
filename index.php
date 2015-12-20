@@ -33,7 +33,7 @@ if(isset($_POST['register']))
 
 	if(!$user->isLoggedIn())
 	{
-		$_SESSION['error'] = "<pre class='error'>Du måste vara inloggad för att kunna anmäla dig.</pre>";
+		populateError("Du måste vara inloggad för att kunna anmäla dig.");
 	}
     else
     {
@@ -56,7 +56,7 @@ if(isset($_GET['r']) && is_numeric($_GET['r']))
 
 
 //'. /*$GLOBAL['error']*/ .'
-echo isset($_SESSION['error']) ? $_SESSION['error'] : "";
+displayError();
 echo '<div class="row">';
 echo '<article class="col-sm-4 col-sm-push-8 elementBox"><h1>Träningar</h1>' . presentEvent($username, $eventObject) .' </article>';
 echo '<article class="col-sm-8 col-sm-pull-4 elementBox"><h1>Nyheter</h1>'. presentNews($newsObject, 0, 3, false);

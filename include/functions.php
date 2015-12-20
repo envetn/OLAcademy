@@ -289,6 +289,7 @@ function getExtensionOnUrl()
  * and hashed passwd that matches the
  * input value, grant user access.
  */
+
 function showLoginLogout($user, $salt_char)
 {
 	if(isset($_COOKIE['rememberme_olacademy']))
@@ -301,7 +302,7 @@ function showLoginLogout($user, $salt_char)
 
 		if(!$user->login($email,$_POST['passwd']))
 		{
-			$_SESSION['error'] = "<pre class='error'>Fel lösenord eller email <a href='user.php?renew=true'> Glömt lösenord ?</a> </pre>";
+			populateError("Fel lösenord eller email <a href='user.php?renew=true'> Glömt lösenord ?</a>");
 		}
 		else
 		{
@@ -345,6 +346,24 @@ function displayErrorMessage($message)
  * In that case user will not be able to see
  * if s/he generated an unexpected error.
  */
+
+function displayError()
+{
+	if(strlen($_SESSION['error']) > 1)
+	{
+		echo $_SESSION['error'];
+		$_SESSION['error'] = "";
+	}
+}
+
+function populateError($message)
+{
+	if(($_SESSION['error']) == "")
+	{
+		$_SESSION['error'] = "<pre class='error'>$message</pre>";
+	}
+}
+
 function logError($message)
 {
 	try
@@ -358,6 +377,7 @@ function logError($message)
 		var_dump($e . "<br/> " . $message);
 	}
 }
+
 function dump($value)
 {
 	echo "<div style='background:white'>";

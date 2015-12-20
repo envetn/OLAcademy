@@ -15,4 +15,6 @@ $GLOBAL['salt_cookie']					= "!+?";
 
 $_SESSION['error'] = "";
 
+$_SESSION['success'] = "";
+
 ?>

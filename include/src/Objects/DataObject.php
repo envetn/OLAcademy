@@ -28,40 +28,74 @@ abstract class DataObject
 		return $result;
 	}
 
-	public function fetchSingleEntryByValue($values = array())
+	public function fetchSingleEntryByValue($condition = array(), $values = array())
 	{
-		/**
-		 *	Todo: Update this simular to editSingleEntry and insertEntyToDatabase
-		 *	e.g: Send in array of condition and values which will create:
-		 *	Value: SELECT val,val2,val3 FROM table
-		 *	Condition: "Where variable=value1 AND variable2=value2"
-		 *	If empty use default SELECT
-		 *	Condition array will look like this for eg: news: array(title=>$title, author=>$author)
-		 * 	Value array will look like this: array('content', 'author')
-		 *	This should build: SELECT content, author FROM news WHERE title=$title AND author=$author
-		 */
+		// Building SELECT value(s) FROM table WHERE condition(s)
+		$query = $this->validateSelectValues($condition, $values);
 
-
-		$sql = "SELECT * FROM " . $this->table;
-		$params = array();
-
-		if (isset($values['variable']))
-		{
-			$sql .= " WHERE " . $values['variable'] . "=? LIMIT 1";
-			$params[] = $values['value'];
-		}
-		else
-		{
-			$sql .= " ORDER BY id DESC LIMIT 1";
-		}
-
-		$res = $this->database->queryAndFetch($sql, $params);
+		$res = $this->database->queryAndFetch($query['sql'], $query['params']);
 
 		if ($this->database->RowCount() == 1)
 		{
 			return $res[0];
 		}
 		return null;
+	}
+
+	private function validateSelectValues($condition , $select)
+	{
+		$sql = "SELECT ";
+		$params = array();
+
+		if(!empty($select))
+		{
+			$nextIterator = new ArrayIterator($select);
+			$nextIterator->rewind();
+			$nextIterator->next();
+
+			foreach( $select as $name => $value )
+			{
+				$next_val = $nextIterator->current();
+				$sql .= $value;
+				if(strlen($next_val) > 0)
+				{
+					$sql .= self::SEPERATOR;
+				}
+				$nextIterator->next();
+			}
+		}
+		else
+		{
+			$sql .= "*";
+		}
+
+		$sql .= " FROM " . $this->table;
+		if(!empty($condition))
+		{
+			$nextIterator = new ArrayIterator($condition);
+			$nextIterator->rewind();
+			$nextIterator->next();
+			$sql .= " WHERE ";
+
+			foreach( $condition as $name => $value )
+			{
+				$next_val = $nextIterator->current();
+				$sql .= $name . self::EQUAL_SIGN . self::QUESTION_MARK;
+				$params[] = $value;
+
+				if(strlen($next_val) > 0)
+				{
+					$sql .= " AND ";
+				}
+				$nextIterator->next();
+			}
+		}
+		else
+		{
+			$sql .= " ORDER BY id DESC LIMIT 1";
+		}
+		$query = array('sql' => $sql, 'params' => $params);
+		return $query;
 	}
 
 	public function insertEntyToDatabase($values)

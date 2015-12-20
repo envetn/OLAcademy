@@ -73,9 +73,10 @@ function removeNews($newsObject)
 
 function getEditForm($newsObject)
 {
-	$id = $_GET['id'];
-	$values = array('variable' => 'id', 'value' => $id);
-	$res = $newsObject->fetchSingleEntryByValue($values);
+	$id = strip_tags($_GET['id']);
+	$condition = array('id' => id);
+
+	$res = $newsObject->fetchSingleEntryByValue($condition);
 	$singleArticle = "";
 	if ($res != null)
 	{
@@ -114,7 +115,7 @@ function validateSelectedPage($newsObject)
 	if (isset($_GET['p']) && is_numeric($_GET['p']))
 	{
 		$id = $_GET['p'];
-		$values = array('variable' => 'id', 'value' => $id);
+		$values = array('id' => $id);
 	}
 
 	return $newsObject->fetchSingleEntryByValue($values);

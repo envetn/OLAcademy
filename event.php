@@ -34,8 +34,9 @@ function getEventAndValidateGET($eventObject)
 	if (isset($_GET['e']) && is_numeric($_GET['e']))
 	{
 		$eventId = $_GET['e'];
-		$values = array('variable' => 'id', 'value' => $eventId);
+		$values = array('id' => $eventId);
 		$res = $eventObject->fetchSingleEntryByValue($values);
+
 		if ($res != null)
 		{
 			// could use a function for this..

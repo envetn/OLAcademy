@@ -20,10 +20,9 @@ function tryToEditUser($user)
 		{
 			$userId = $_POST['userId'];
 			$privilege = $_POST['privilege'];
-			return $user->updateUsersPrivilege($privilege,$userId);
-
+			return $user->updateUsersPrivilege($privilege, $userId);
 		}
-		catch ( Exception $e )
+		catch (Exception $e)
 		{
 			//logError("< " . $_SESSION['uid'] . "  tryToEditUser > Error: " . $e . "\n");
 			dump($e);
@@ -41,9 +40,10 @@ function tryToRemoveEvent($eventObject)
 			$id = $_POST['eventId'];
 			return $eventObject->removeSingleEntryById($id);
 		}
-		catch ( Exception $e )
+		catch (Exception $e)
 		{
-			logError("< " . $_SESSION['uid'] . "  tryToRemoveEvent > Error: " . $e . "\n");
+			// 			logError("< " . $_SESSION['uid'] . "  tryToRemoveEvent > Error: " . $e . "\n");
+			dump($e);
 			return false;
 		}
 	}
@@ -58,7 +58,7 @@ function tryToRemoveUser($user)
 			$id = $_POST['userId'];
 			return $user->removeSingleEntryById($id);
 		}
-		catch ( Exception $e )
+		catch (Exception $e)
 		{
 			//logError("< " . $_SESSION['uid'] . "  tryToRemoveUser > Error: " . $e . "\n");
 			dump($e);
@@ -161,7 +161,7 @@ function getTableRegisteredUsers($eventObject)
 	{
 
 		$eventId = $_GET['event'];
-		$values = array('variable' => 'id', 'value' => $eventId);
+		$values = array('id' => $eventId);
 
 		$event = $eventObject->fetchSingleEntryByValue($values);
 
@@ -186,37 +186,26 @@ function getTableRegisteredUsers($eventObject)
 
 function searchForUser($search, $user)
 {
-	if($search <= 1)
+	if (strlen($search) > 1)
 	{
 		$res = $user->fetchUserByName($search);
-		if($res != null)
+		if ($res != null)
 		{
 			$result = "<table class='tableContent' id='searchResult'><tr class='admin_rowHead'><th>Namn</th><th>email</th><th>Rättighet</th><th>Registrerad</th><th>Edit</th><tr>";
-			foreach ( $res as $key )
-			{
-				$result .= "<form method='post'>
-							<tr class='admin_rowContent'>
-	                            <input type='hidden' name='userId' value='" . $key->id . "' />
-	                            <td><a href='user.php?user=id'>" . $key->name . "</a></td>
-	                            <td>" . $key->email . "</td>";
-				$result .= generateSelect($key->Privilege);
-				$result .= "<td>" . $key->regDate . "</td>
-                            <td>
-								<input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeUser_1' value='Click me'>
-                                <input type='image' src='img/edit.png'  border='0' width=18px height=18px alt='Submit'  name='editUser_2' value='Click me2'>
-                            </td>
-                        </tr></form>";
-			}
+			$result .= userForm($res);
+
 			return $result . "</table>";
 		}
-		return "<pre class='error'>Användare: ".$search." hittades inte</pre>";
+		$_SESSION['error'] = "<pre class='error'>Användare: " . $search . " hittades inte</pre>";
 	}
-	return "<pre class='error'>Fyll i sökfältet.</pre>";
+	else
+	{
+		$_SESSION['error'] = "<pre class='error'>Fyll i sökfältet.</pre>";
+	}
 }
 
 function getTableUsers($user)
 {
-
 	$res = $user->fetchUserEntries();
 	$htmlUsers = "<h3 id='tableHead'>Användare</h3><a href='createUser.php'> < Lägg till > </a> <form method='get'><input type='hidden' name='c' value='2'/><input type='text' name='search' placeholder='Sök användare'/><button class='btn btn-primary'>Sök </button></form>";
 	if (isset($_GET['search']))
@@ -230,21 +219,26 @@ function getTableUsers($user)
     <tr>";
 	foreach ( $res as $key )
 	{
-		$htmlUsers .= "<form method='post'>
-						<tr class='admin_rowContent'>
-                            <input type='hidden' name='userId' value='" . $key->id . "' />
-                            <td><span><a href='user.php?user=id'>" . $key->name . "</a></span></td>
-                            <td><span>" . $key->email . "</span></td>";
+		$htmlUsers .= userForm($key);
+	}
+	return $htmlUsers . "</table>";
+}
 
-		$htmlUsers .= generateSelect($key->Privilege);
-		$htmlUsers .= "<td>" . $key->regDate . "</td>
+function userForm($user)
+{
+	$userTable = "<form method='post'>
+						<tr class='admin_rowContent'>
+                            <input type='hidden' name='userId' value='" . $user->id . "' />
+                            <td><span><a href='user.php?user=id'>" . $user->name . "</a></span></td>
+                            <td><span>" . $user->email . "</span></td>";
+	$userTable .= generateSelect($user->Privilege);
+	$userTable .= "<td>" . $user->regDate . "</td>
                             <td>
 								<input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeUser_1' value='Click me'>
                                 <input type='image' src='img/edit.png'  border='0' width=18px height=18px alt='Submit'  name='editUser_2' value='Click me2'>
                             </td>
                         </tr></form>";
-	}
-	return $htmlUsers . "</table>";
+	return $userTable;
 }
 
 function generateSelect($privilege)
@@ -285,7 +279,7 @@ function getTablesAndValidateGET($newsObject, $htmlAdmin, $eventObject, $user) /
 				$htmlAdmin = getTableUsers($user);
 				break;
 			case 3 :
-				$htmlAdmin = getTableRegisteredUsers( $eventObject);
+				$htmlAdmin = getTableRegisteredUsers($eventObject);
 				break;
 			default :
 				$htmlAdmin = "<h4 id='infoHead'> Välj från menun till höger </h4>";
@@ -323,11 +317,11 @@ if ($privilege === "2")
 	{
 		if (tryToEditUser($user))
 		{
-			$htmlAdmin .= "<h4 id='infoHead'> User updated </h4>";
+			$htmlAdmin .= "<h4 id='infoHead'> Användare uppdaterad</h4>";
 		}
 		else
 		{
-			$htmlAdmin .= "<h4 id='infoHead'> zNot updated... </h4>";
+			$htmlAdmin .= "<h4 id='infoHead'>Det blev något fel, användaren uppdaterades inte </h4>";
 		}
 	}
 	else if (isset($_POST['removeEvent_1_x']))
@@ -338,11 +332,12 @@ if ($privilege === "2")
 		}
 		else
 		{
-			$htmlAdmin .= "<h4 id='infoHead'> Not removed... </h4>";
+			$htmlAdmin .= "<h4 id='infoHead'>Det blev något fel, träniongen uppdaterades inte </h4>";
 		}
 	}
 
 	$htmlAdmin .= getTablesAndValidateGET($newsObject, $htmlAdmin, $eventObject, $user);
+	displayError();
 	echo "<div class='row clearFix'>";
 	echo "<div style='clear:both; overflow: hidden;'>";
 	echo $sideBar;
@@ -351,5 +346,5 @@ if ($privilege === "2")
 }
 else
 {
-	echo displayErrorMessage("BEGONE!!!");
+	header("Location: index.php");
 }

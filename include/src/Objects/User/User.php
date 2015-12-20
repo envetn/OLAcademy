@@ -1,8 +1,6 @@
 <?php
 class User extends DataObject
 {
-	private $privilege;
-
 	function __construct()
 	{
 		parent::__construct("users");
@@ -22,11 +20,13 @@ class User extends DataObject
 	function fetchUserByName($name)
 	{
 		$name = strip_tags($name);
-		$sql = "SELECT id,name,email,Privilege,regDate FROM users WHERE name=?";
-		$params = array($name);
-		$res = $this->database->queryAndFetch($sql, $params);
 
-		if ($this->database->RowCount() > 0)
+		$condition = array('name' => $name);
+		$values = array('id','name','email','Privilege', 'regDate'); // never select password.
+
+		$res = parent::fetchSingleEntryByValue($condition, $values);
+
+		if ($res != null)
 		{
 			return $res;
 		}
@@ -48,8 +48,8 @@ class User extends DataObject
 
 	function Login($email, $password)
 	{
-		$values = array('variable' => 'email', 'value' => $email);
-		$res = parent::fetchSingleEntryByValue($values);
+		$condition = array('email' => $email);
+		$res = parent::fetchSingleEntryByValue($condition);
 
 		if($this->rowCount() == 1)
 		{
@@ -182,8 +182,9 @@ class User extends DataObject
 	public function forgottenPassword($email)
 	{
 		// validate email
-		$emailValue = array('variable' => 'email', 'value' => $email);
-		$res = parent::fetchSingleEntryByValue($emailValue);
+		$condition = array('email' => $email);
+		$values = array('id');
+		$res = parent::fetchSingleEntryByValue($condition, $values);
 
 		if ($res != null)
 		{
@@ -193,7 +194,6 @@ class User extends DataObject
 
 			// set password to database
 			$values = array('password' => $password);
-			$condition = array('email' => $email);
 			if (parent::editSingleEntry($values, $condition))
 			{
 				$this->sendNewPassword($plainTextPassword);

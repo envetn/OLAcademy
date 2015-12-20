@@ -38,7 +38,7 @@ function updateUser($user, $newPassword = "")
 function getUserInformation($user)
 {
 	$id = $_SESSION['uid'];
-	$values = array('variable' => 'id', 'value' => $id);
+	$values = array('id' => $id);
 	$res = $user->fetchSingleEntryByValue($values);
 
 	if ($user->rowCount() == 1)
@@ -76,7 +76,7 @@ function validateCreateUserPost($user)
 
 		if ($password === $passwordRepeat)
 		{
-			$values = array('variable' => 'email', 'value' => $email);
+			$values = array('email' => $email);
 			$res = $user->fetchSingleEntryByValue($values);
 			if ($res === null)
 			{
@@ -116,12 +116,12 @@ if (isset($_SESSION['username']))
 				$newPassword = $_POST['newPassword'];
 				$newPasswordRepeat = $_POST['newPasswordRepeat'];
 				validatePasswords($newPassword, $newPasswordRepeat, $user);
-				$success = "Lösenord uppdaterat";
+				$_SESSION['success'] = "Lösenord uppdaterat";
 			}
 			else
 			{
 				updateUser($user);
-				$success = "Användare uppdaterad";
+				$_SESSION['success'] = "Användare uppdaterad";
 			}
 		}
 		else
@@ -164,5 +164,5 @@ else
 	";
 }
 echo isset($_SESSION['error']) ? $_SESSION['error'] : "";
-echo isset($success) ? $success : "";
+echo isset($_SESSION['success']) ? $_SESSION['success'] : "";
 echo $userConf;
