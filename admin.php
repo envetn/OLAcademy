@@ -131,7 +131,7 @@ function getTableEvents($eventObject)
 		{
 			$info = substr($info, 0, 40) . "<a href='event.php?s=$events->id'> ... </a>";
 		}
-		$values = array('variable' => 'id', 'value' => $events->id);
+		$values = array('id' => $events->id);
 		$registered = $eventObject->getNumberOfRegisteredByValue($values);
 		$reccurance = $events->reccurance == '1' ? "Ja" : "Nej";
 		$bus = $events->bus == '1' ? "Ja" : "Nej";
@@ -165,7 +165,8 @@ function getTableRegisteredUsers($eventObject)
 
 		$event = $eventObject->fetchSingleEntryByValue($values);
 
-		$registeredUsers = $eventObject->getRegisteredByValue($values);
+		$regValues = array('eventID' => $eventId);
+		$registeredUsers = $eventObject->getRegisteredByValue($regValues);
 		if ($event != null)
 		{
 			$registeredUsersTable = "<h3 id='tableHead'>Anmälda till : $event->eventName - $event->eventDate </h3></a>";
@@ -173,7 +174,7 @@ function getTableRegisteredUsers($eventObject)
 
 			foreach ( $registeredUsers as $regUser )
 			{
-				$registeredUsersTable .= "<tr><td>" . $regUser->name . "</td><td>" . $regUser->bus . "</td><td>" . $regUser->comment . "</td><td>";
+				$registeredUsersTable .= "<tr class='admin_rowContent'><td>" . $regUser->name . "</td><td>" . $regUser->bus . "</td><td>" . $regUser->comment . "</td><td>";
 				$registeredUsersTable .= "<a href='?r=$regUser->id' ><img src='img/cross.png' width=18px height=18px></a>";
 				$registeredUsersTable .= "</td></tr>";
 			}
@@ -207,7 +208,7 @@ function searchForUser($search, $user)
 function getTableUsers($user)
 {
 	$res = $user->fetchUserEntries();
-	$htmlUsers = "<h3 id='tableHead'>Användare</h3><a href='createUser.php'> < Lägg till > </a> <form method='get'><input type='hidden' name='c' value='2'/><input type='text' name='search' placeholder='Sök användare'/><button class='btn btn-primary'>Sök </button></form>";
+	$htmlUsers = "<h3 id='tableHead'>Användare</h3><a href='user.php'> < Lägg till > </a> <form method='get'><input type='hidden' name='c' value='2'/><input type='text' name='search' placeholder='Sök användare'/><button class='btn btn-primary'>Sök </button></form>";
 	if (isset($_GET['search']))
 	{
 		$htmlUsers .= searchForUser($_GET['search'], $user);

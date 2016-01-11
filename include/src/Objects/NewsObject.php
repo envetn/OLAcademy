@@ -1,10 +1,13 @@
  <?php
-
 class NewsObject extends DataObject
 {
+	private $today;
+	private $image;
+
 	function __construct()
 	{
 		parent::__construct("news");
+		$this->today = date("Y-m-d H:i:s");
 	}
 
 	public function editSingleEntryById($id, $params)
@@ -27,7 +30,11 @@ class NewsObject extends DataObject
 		}
 		return false;
 	}
-
+	public function uploadImage($debug = false)
+	{
+		$this->image = new Image("uploaded_file", $debug);
+		$this->image->validateFile();
+		return $this->image->uploadImage();
+	}
 }
-
 ?>

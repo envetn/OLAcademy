@@ -15,8 +15,9 @@ if (isset($_POST['btn_addNew']))
 		if ($newsObject->isAllowedToDeleteEntry(""))
 		{
 			$params = validateParameters();
-			$newsObject->insertEntyToDatabase($params);
-
+			$imagePath = $newsObject->uploadImage(true);
+			$params['image'] = $imagePath;
+			$newsObject->insertEntyToDatabase($params, true);
 		}
 	}
 }
@@ -56,6 +57,7 @@ function getAddForm()
 	<input name='title' placeholder='Title' type='text'/><br/>
 	<textarea name='content' placeholder='Innehåll' type='text' cols='50' rows='5'></textarea><br/>
 	<label >Av : " . $_SESSION['username'] . "</label><br/>
+	<input name='uploaded_file' type='file'/><br />
 	<input type='submit' name='btn_addNew' id='btn_addnew' value='Lägg till'/>
 	</form>";
 	return $singleArticle;
@@ -98,7 +100,7 @@ function getArticleSideBar($newsObject, $offset, $limit)
 	$side_article = "";
 	if ($newsObject->isAllowedToDeleteEntry("")) // only admin
 	{
-		$side_article .= "<form method='get'><input style='float:right;' class='btn btn-primary'type='submit' value='Lägg till' name='action'/></form>";
+		$side_article .= "<form method='get' id='addNews'><input style='float:right;' class='btn btn-primary'type='submit' value='Lägg till' name='action'/></form>";
 	}
 
 	$side_article .= "<article id='side_article'><h2>Nyheter</h2>";
@@ -109,6 +111,7 @@ function getArticleSideBar($newsObject, $offset, $limit)
 
 	return $side_article;
 }
+
 function validateSelectedPage($newsObject)
 {
 	$values = array();
@@ -158,7 +161,9 @@ try
 
 		$singleArticle = "<article id='singleArticle'><h3 style=''>" . $res->title . "</h3><hr style='width:80%;'/>";
 		$singleArticle .= "<pre class='newsText'>" . $content . "</pre>";
+		$singleArticle .= strlen($res->image) > 1 ? "<img src='$res->image'/>" : "";
 		$singleArticle .= "<span id='author'>Skribent: " . $res->author . "</span>";
+
 		$singleArticle .= "</article>";
 	}
 }

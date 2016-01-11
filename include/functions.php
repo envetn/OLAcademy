@@ -182,32 +182,35 @@ function presentEvent($username, $eventObject)
 					{
 						$registeredUsersTable .= '<th colspan="2">Buss</th></tr>';
 					}
-					$values = array('variable' => 'id', 'value' => $key->id);
+					$values = array('eventID' => $key->id);
 					$registeredUsers = $eventObject->getRegisteredByValue($values);
 					$registered = false;
-
-					foreach ($registeredUsers as $user)
+					if($registeredUsers != null)
 					{
-						$registeredUsersTable .= '<tr class="regTableRow"><td class="regTableName">' . $user->name .
-						'</td><td class="regTableComment">' . substr($user->comment, 0, 140) . '</td>';
+						foreach ($registeredUsers as $user)
+						{
+							$registeredUsersTable .= '<tr class="regTableRow"><td class="regTableName">' . $user->name .
+							'</td><td class="regTableComment">' . substr($user->comment, 0, 140) . '</td>';
 
-						if($key->bus == 1)
-						{
-							$registeredUsersTable .= '<td class="regTableBus">' . $user->bus . '</td>';
-						}
+							if($key->bus == 1)
+							{
+								$registeredUsersTable .= '<td class="regTableBus">' . $user->bus . '</td>';
+							}
 
-						$userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
-						if ($user->userID === $userID && !$registered)
-						{
-							$registeredUsersTable .= '<td class="regTableDel"><a href="?r='.$user->id.'" ><img src="img/cross.png" width="18px" height="18px"></a></td>';
-							$registered = true;
+							$userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
+							if ($user->userID === $userID && !$registered)
+							{
+								$registeredUsersTable .= '<td class="regTableDel"><a href="?r='.$user->id.'" ><img src="img/cross.png" width="18px" height="18px"></a></td>';
+								$registered = true;
+							}
+							else
+							{
+								$registeredUsersTable .= '<td class="regTableDel"></td>';
+							}
+							$registeredUsersTable .= "</tr>";
 						}
-						else
-						{
-							$registeredUsersTable .= '<td class="regTableDel"></td>';
-						}
-						$registeredUsersTable .= "</tr>";
 					}
+
 					$registeredUsersTable .= "</table>";
 
 

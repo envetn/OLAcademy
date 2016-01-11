@@ -28,6 +28,21 @@ abstract class DataObject
 		return $result;
 	}
 
+
+	public function fetchAllEntriesByValue($condition = array(), $values = array())
+	{
+		// Building SELECT value(s) FROM table WHERE condition(s)
+		$query = $this->validateSelectValues($condition, $values);
+
+		$res = $this->database->queryAndFetch($query['sql'], $query['params']);
+
+		if ($this->database->RowCount() >= 1)
+		{
+			return $res;
+		}
+		return null;
+	}
+
 	public function fetchSingleEntryByValue($condition = array(), $values = array())
 	{
 		// Building SELECT value(s) FROM table WHERE condition(s)

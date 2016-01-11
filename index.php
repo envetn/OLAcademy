@@ -37,10 +37,14 @@ if(isset($_POST['register']))
 	}
     else
     {
-        $params = array('userID' => $userId, 'name' => $username, 'date' => $_POST['date'], 'comment' => $comment, 'bus' => $bus,'eventID' => $eventId);
-        $eventObject->registerUserToEvent($params);
+    	$conditions = array('userID' => $userId, 'eventID' => $eventId);
+    	$res = $eventObject->getRegisteredByValue($conditions);
+    	if($res == null)
+    	{
+    		$params = array('userID' => $userId, 'name' => $username, 'date' => $_POST['date'], 'comment' => $comment, 'bus' => $bus,'eventID' => $eventId);
+    		$eventObject->registerUserToEvent($params);
+    	}
     }
-
 }
 
 if(isset($_GET['r']) && is_numeric($_GET['r']))
@@ -53,7 +57,6 @@ if(isset($_GET['r']) && is_numeric($_GET['r']))
     }
     header("Location: index.php");
 }
-
 
 //'. /*$GLOBAL['error']*/ .'
 displayError();

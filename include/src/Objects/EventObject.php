@@ -47,19 +47,6 @@ class EventObject extends DataObject
 		return null;
 	}
 
-	public function fetchRegisteredByUserIdAndEventId($userId, $eventId)
-	{
-		$sql = "SELECT * FROM registered WHERE userID=? and eventID=?";
-		$params = array($userId, $eventId);
-		$res = $this->database->queryAndFetch($sql, $params);
-
-		if ($this->rowResult() > 0)
-		{
-			return $res;
-		}
-		return null;
-	}
-
 	public function removeEventAndRegisteredById($id)
 	{
 		parent::removeSingleEntryById($id);
@@ -140,32 +127,17 @@ class EventObject extends DataObject
 		$this->registered->removeSingleEntryById($id);
 	}
 
-	public function getRegisteredByValue($value = array())
+	public function getRegisteredByValue($condition = array())
 	{
 		// get content of Registered
-		if($value['variable'] == 'id')
-		{
-			$res = $this->registered->getRegisteredById($value['value']);
-		}
-		else if($value['variable'] == 'date')
-		{
-			$res = $this->registered->getRegisteredByDate($values['value']);
-		}
+		$res = $this->registered->fetchAllEntriesByValue($condition);
 
 		return $res;
 	}
 
 	public function getNumberOfRegisteredByValue($value = array())
 	{
-		// get count from registered
-		if($value['variable'] == 'id')
-		{
-			$res = $this->registered->getNrOfRegisteredById($value['value']);
-		}
-		else if($value['variable'] == 'date')
-		{
-			$res = $this->registered->getNrOfRegisteredbyDate($value['value']);
-		}
+		$res = $this->registered->getNrOfRegisteredByValue($value);
 		return $res;
 	}
 }

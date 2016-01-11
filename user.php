@@ -81,7 +81,7 @@ function validateCreateUserPost($user)
 			if ($res === null)
 			{
 				$password = password_hash($_POST['password'], PASSWORD_BCRYPT, array('cost' => 12));
-				$params = array('name' => $username,'password' => $password, 'email' => $email, 'Privilege' => $priv,'regDate' => $date);
+				$params = array('name' => $username, 'password' => $password, 'email' => $email, 'Privilege' => $priv, 'regDate' => $date);
 				$user->insertEntyToDatabase($params);
 
 				$success = "Inserted into database";
@@ -116,12 +116,13 @@ if (isset($_SESSION['username']))
 				$newPassword = $_POST['newPassword'];
 				$newPasswordRepeat = $_POST['newPasswordRepeat'];
 				validatePasswords($newPassword, $newPasswordRepeat, $user);
-				$_SESSION['success'] = "Lösenord uppdaterat";
+				$success = "Lösenord uppdaterat";
+
 			}
 			else
 			{
 				updateUser($user);
-				$_SESSION['success'] = "Användare uppdaterad";
+				$success = "Användare uppdaterad";
 			}
 		}
 		else
@@ -130,9 +131,9 @@ if (isset($_SESSION['username']))
 		}
 	}
 }
-else if(isset($_GET['renew']))
+else if (isset($_GET['renew']))
 {
-	if(isset($_POST['send']))
+	if (isset($_POST['send']))
 	{
 		$email = strip_tags($_POST['email']);
 		$user->forgottenPassword($email);
@@ -164,5 +165,5 @@ else
 	";
 }
 echo isset($_SESSION['error']) ? $_SESSION['error'] : "";
-echo isset($_SESSION['success']) ? $_SESSION['success'] : "";
+echo isset($success) ? $success : "";
 echo $userConf;
