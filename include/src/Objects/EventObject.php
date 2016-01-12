@@ -20,7 +20,7 @@ class EventObject extends DataObject
 	public function isAllowedToDeleteEntry($id)
 	{
 		$sql = "SELECT * FROM registered WHERE id=? AND userID=?";
-		$params = array($id,$_SESSION['uid']);
+		$params = array($id,$_SESSION["uid"]);
 		$res = $this->database->queryAndFetch($sql, $params);
 
 		if ($this->rowResult() == 1)

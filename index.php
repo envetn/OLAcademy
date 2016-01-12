@@ -2,33 +2,33 @@
 include("include/header.php");
 
 $pageId ="index";
-$userId = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
-$username = isset($_SESSION['username']) ? $_SESSION['username']: "";
+$userId = isset($_SESSION["uid"]) ? $_SESSION["uid"] : false;
+$username = isset($_SESSION["username"]) ? $_SESSION["username"]: "";
 
 $eventObject = new EventObject();
 $newsObject = new NewsObject();
 $guestbookObject = new GuestbookObject();
 
 $eventObject->updateEvents();
-if (isset($_GET['highlighted']))
+if (isset($_GET["highlighted"]))
 {
-    $_SESSION['highlighted'] = $_GET['highlighted'];
+    $_SESSION["highlighted"] = $_GET["highlighted"];
 }
-elseif (isset($_SESSION['highlighted']))
+elseif (isset($_SESSION["highlighted"]))
 {
-	$_SESSION['highlighted'] = $_SESSION['highlighted'];
+	$_SESSION["highlighted"] = $_SESSION["highlighted"];
 }
 else
 {
-    $_SESSION['highlighted'] = 0;
+    $_SESSION["highlighted"] = 0;
 }
 
 // Post functions
-if(isset($_POST['register']))
+if(isset($_POST["register"]))
 {
     $eventId = $_POST["eventID"];
-	$bus = isset($_POST['bus']) ? $_POST['bus'] : "Nej";
-	$comment = $_POST['comment'];
+	$bus = isset($_POST["bus"]) ? $_POST["bus"] : "Nej";
+	$comment = $_POST["comment"];
 	$comment = makeLinks($comment);
 
 	if(!$user->isLoggedIn())
@@ -41,16 +41,15 @@ if(isset($_POST['register']))
     	$res = $eventObject->getRegisteredByValue($conditions);
     	if($res == null)
     	{
-    		$params = array('userID' => $userId, 'name' => $username, 'date' => $_POST['date'], 'comment' => $comment, 'bus' => $bus,'eventID' => $eventId);
+    		$params = array('userID' => $userId, 'name' => $username, 'date' => $_POST["date"], 'comment' => $comment, 'bus' => $bus,'eventID' => $eventId);
     		$eventObject->registerUserToEvent($params);
     	}
     }
 }
 
-if(isset($_GET['r']) && is_numeric($_GET['r']))
+if(isset($_GET["r"]) && is_numeric($_GET["r"]))
 {
-
-    $id = $_GET['r'];
+    $id = $_GET["r"];
     if($eventObject->isAllowedToDeleteEntry($id))
     {
     	$eventObject->unRegisterUserToEvent($id);
@@ -58,7 +57,7 @@ if(isset($_GET['r']) && is_numeric($_GET['r']))
     header("Location: index.php");
 }
 
-//'. /*$GLOBAL['error']*/ .'
+//'. /*$GLOBAL["error"]*/ .'
 displayError();
 echo '<div class="row">';
 echo '<article class="col-sm-4 col-sm-push-8 elementBox"><h1>Träningar</h1>' . presentEvent($username, $eventObject) .' </article>';

@@ -18,23 +18,26 @@ class NewsObject extends DataObject
 
 	public function insertEntyToDatabase($values)
 	{
-		$values['added'] = $this->today;
+		$values["added"] = $this->today;
 		parent::insertEntyToDatabase($values);
 	}
 
-	public function isAllowedToDeleteEntry($id)
+	public function isAllowedToDeleteEntry()
 	{
-		if (isset($_SESSION['privilege']) && $_SESSION['privilege'] === "2")
+		if (isset($_SESSION["privilege"]) && $_SESSION["privilege"] === "2")
 		{
 			return true;
 		}
 		return false;
 	}
+
 	public function uploadImage($debug = false)
 	{
 		$this->image = new Image("uploaded_file", $debug);
-		$this->image->validateFile();
-		return $this->image->uploadImage();
+		if($this->image->validateFile())
+		{
+			return $this->image->uploadImage();
+		}
 	}
 }
 ?>

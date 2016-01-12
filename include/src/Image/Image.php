@@ -27,7 +27,6 @@ class Image
 	{
 		$kaboom = explode(".", $_FILES[$this->name]["name"]);
 		$fileExt = end($kaboom);
-		
 		$this->fileName = uniqid(); // enough for now
 		$this->fileName .= "." . $fileExt;
 		$filePath =/* IMAGE_PATH . */"img/newsImg/";
@@ -43,6 +42,10 @@ class Image
 		{
 			$this->imageDebug();
 		}
+		if(strlen($filePath . $this->fileName) <= 5)
+		{
+			return null;
+		}
 		return $filePath . $this->fileName;
 	}
 
@@ -52,9 +55,9 @@ class Image
 		// Need a better way of handling error..
 		if (! $this->fileTmpLoc)
 		{
-			echo "ERROR: Please browse for a file before clicking the upload button.";
-			echo $this->fileTmpLoc;
-			exit();
+// 			echo "ERROR: Please browse for a file before clicking the upload button.";
+// 			echo $this->fileTmpLoc;
+// 			exit();
 		}
 		else if ($this->fileSize > MAX_SIZE)
 		{

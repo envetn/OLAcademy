@@ -13,7 +13,7 @@ abstract class DataObject
 	public function __construct($table)
 	{
 		global $GLOBAL;
-		$this->database = new Database($GLOBAL['database']);
+		$this->database = new Database($GLOBAL["database"]);
 		$this->table = $table;
 	}
 
@@ -34,7 +34,7 @@ abstract class DataObject
 		// Building SELECT value(s) FROM table WHERE condition(s)
 		$query = $this->validateSelectValues($condition, $values);
 
-		$res = $this->database->queryAndFetch($query['sql'], $query['params']);
+		$res = $this->database->queryAndFetch($query["sql"], $query["params"]);
 
 		if ($this->database->RowCount() >= 1)
 		{
@@ -48,8 +48,7 @@ abstract class DataObject
 		// Building SELECT value(s) FROM table WHERE condition(s)
 		$query = $this->validateSelectValues($condition, $values);
 
-		$res = $this->database->queryAndFetch($query['sql'], $query['params']);
-
+		$res = $this->database->queryAndFetch($query["sql"], $query["params"]);
 		if ($this->database->RowCount() == 1)
 		{
 			return $res[0];
@@ -117,8 +116,8 @@ abstract class DataObject
 	{
 		$query = $this->validateInputParametersData($values);
 
-		$sql = $query['sql'];
-		$params = $query['params'];
+		$sql = $query["sql"];
+		$params = $query["params"];
 		$this->database->ExecuteQuery($sql, $params);
 
 		return true;
@@ -128,8 +127,8 @@ abstract class DataObject
 	{
 		$query = $this->validateUpdateParameters($values, $condition);
 
-		$sql = $query['sql'];
-		$params = $query['params'];
+		$sql = $query["sql"];
+		$params = $query["params"];
 		$this->database->ExecuteQuery($sql, $params);
 
 		return true;

@@ -3,9 +3,6 @@
 /*
  *Global
 */
-$GLOBAL['salt_cookie']					= "!+?";
-$GLOBAL['salt_char']                    = "#@$";
-
 function linux_server()
 {
     return in_array(strtolower(PHP_OS), array("linux", "superior operating system"));
@@ -170,49 +167,48 @@ function presentEvent($username, $eventObject)
 		}
 		$text .= "<span class='runner'>$nrOfRegistered<img src='img/runner.png' alt='runner'></span></h4>";
 
-		if ($_SESSION['highlighted'] == $i)
+		if ($_SESSION["highlighted"] == $i)
 		{
 			foreach ($events as $key)
 			{
 				if ($key->eventDate == date("Y-m-d", time()+($i * 86400)))
 				{
 					// Get registered users to event
-					$registeredUsersTable = '<table class="regTable"><tr><th>Anmälda</th><th>Kommentar</th>';
+					$registeredUsersTable = "<table class='regTable'><tr><th>Anmälda</th><th>Kommentar</th>";
 					if($key->bus == 1)
 					{
-						$registeredUsersTable .= '<th colspan="2">Buss</th></tr>';
+						$registeredUsersTable .= "<th colspan='2'>Buss</th></tr>";
 					}
-					$values = array('eventID' => $key->id);
+					$values = array("eventID" => $key->id);
 					$registeredUsers = $eventObject->getRegisteredByValue($values);
 					$registered = false;
 					if($registeredUsers != null)
 					{
 						foreach ($registeredUsers as $user)
 						{
-							$registeredUsersTable .= '<tr class="regTableRow"><td class="regTableName">' . $user->name .
-							'</td><td class="regTableComment">' . substr($user->comment, 0, 140) . '</td>';
+							$registeredUsersTable .= "<tr class='regTableRow'><td class='regTableName'>" . $user->name .
+							"</td><td class='regTableComment'>" . substr($user->comment, 0, 140) . "</td>";
 
 							if($key->bus == 1)
 							{
-								$registeredUsersTable .= '<td class="regTableBus">' . $user->bus . '</td>';
+								$registeredUsersTable .= "<td class='regTableBus'>" . $user->bus . "</td>";
 							}
 
-							$userID = isset($_SESSION['uid']) ? $_SESSION['uid'] : false;
-							if ($user->userID === $userID && !$registered)
+							$userID = isset($_SESSION["uid"]) ? $_SESSION["uid"] : false;
+							if ($user->userID === $userID)
 							{
-								$registeredUsersTable .= '<td class="regTableDel"><a href="?r='.$user->id.'" ><img src="img/cross.png" width="18px" height="18px"></a></td>';
+								$registeredUsersTable .= "<td class='regTableDel'><a href='?r=".$user->id."'><img src='img/cross.png' width='18px' height='18px'></a></td>";
 								$registered = true;
 							}
 							else
 							{
-								$registeredUsersTable .= '<td class="regTableDel"></td>';
+								$registeredUsersTable .= "<td class='regTableDel'></td>";
 							}
 							$registeredUsersTable .= "</tr>";
 						}
 					}
 
 					$registeredUsersTable .= "</table>";
-
 
 					$text .=
 						"<div class='eventPost'>
@@ -233,7 +229,7 @@ function presentEvent($username, $eventObject)
 						$text .= "<input type='text' class='regInput' name='comment' placeholder='Kommentar'>";
 						if($key->bus == 1 )
 						{
-							$text .= "<label class='busLabel' for='bus'>Bussplats</label><input type='checkbox' name='bus' value='Ja' checked><br>";
+							$text .= "<label class='busLabel'>Bussplats</label><input type='checkbox' name='bus' value='Ja' checked><br>";
 						}
 						else
 						{
@@ -248,7 +244,7 @@ function presentEvent($username, $eventObject)
 					{
 						$text .= $registeredUsersTable;
 					}
-					$text .=  '<hr>';
+					$text .=  "<hr>";
 				}
 			}
 		}
@@ -272,7 +268,7 @@ function getExtensionOnUrl()
 {
 	try
 	{
-		preg_match("/\?.*/", $_SERVER['HTTP_REFERER'], $result);
+		preg_match("/\?.*/", $_SERVER["HTTP_REFERER"], $result);
 		$extension = implode($result);
 	}
 	catch(Exception $e)
@@ -295,32 +291,32 @@ function getExtensionOnUrl()
 
 function showLoginLogout($user, $salt_char)
 {
-	if(isset($_COOKIE['rememberme_olacademy']))
+	if(isset($_COOKIE["rememberme_olacademy"]))
 	{
 		$user->getUserByCookie();
 	}
-	else if(isset($_POST['login']) && !( isset($_SESSION['uid']) && isset($_SESSION['username']) ) )
+	else if(isset($_POST["login"]) && !( isset($_SESSION["uid"]) && isset($_SESSION["username"]) ) )
 	{
-		$email = strip_tags($_POST['email']);
+		$email = strip_tags($_POST["email"]);
 
-		if(!$user->login($email,$_POST['passwd']))
+		if(!$user->login($email,$_POST["passwd"]))
 		{
 			populateError("Fel lösenord eller email <a href='user.php?renew=true'> Glömt lösenord ?</a>");
 		}
 		else
 		{
-			header("location: ". $_SERVER['PHP_SELF']);
+			header("location: ". $_SERVER["PHP_SELF"]);
 		}
 	}
-	else if(isset($_POST['Registera']))
+	else if(isset($_POST["Registera"]))
 	{
 		header("location: user.php");
 	}
 
-	if(isset($_SESSION['uid']))
+	if(isset($_SESSION["uid"]))
 	{
-		$form = "<form method='post' class='navbar-form navbar-right'><a href='user.php'>Användare: " . $_SESSION['username'] . "</a>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn btn-primary' name='logout'>Logout</button></form>";
-		if(isset($_POST['logout']))
+		$form = "<form method='post' class='navbar-form navbar-right'><a href='user.php'>Användare: " . $_SESSION["username"] . "</a>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn btn-primary' name='logout'>Logout</button></form>";
+		if(isset($_POST["logout"]))
 		{
 			$user->logout();
 			header("location: index.php");
@@ -352,18 +348,18 @@ function displayErrorMessage($message)
 
 function displayError()
 {
-	if(strlen($_SESSION['error']) > 1)
+	if(strlen($_SESSION["error"]) > 1)
 	{
-		echo $_SESSION['error'];
-		$_SESSION['error'] = "";
+		echo $_SESSION["error"];
+		$_SESSION["error"] = "";
 	}
 }
 
 function populateError($message)
 {
-	if(($_SESSION['error']) == "")
+	if(($_SESSION["error"]) == "")
 	{
-		$_SESSION['error'] = "<pre class='error'>$message</pre>";
+		$_SESSION["error"] = "<pre class='error'>$message</pre>";
 	}
 }
 
@@ -390,6 +386,6 @@ function dump($value)
 
 function getUrlPath()
 {
-	return $_SERVER['PHP_SELF'] . "?" . $_SERVER['QUERY_STRING'];
+	return $_SERVER["PHP_SELF"] . "?" . $_SERVER["QUERY_STRING"];
 }
 ?>

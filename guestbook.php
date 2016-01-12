@@ -3,18 +3,18 @@ $pageId ="guestbook";
 $pageTitle ="- Gästbok";
 include("include/header.php");
 
-$username = isset($_SESSION['username']) ? $_SESSION['username']: "";
+$username = isset($_SESSION["username"]) ? $_SESSION["username"]: "";
 $limit  = 7; //Posts per page
-$offset = isset($_GET['offset']) && is_numeric($_GET['offset']) ? $_GET['offset'] : 0; //Start index
+$offset = isset($_GET["offset"]) && is_numeric($_GET["offset"]) ? $_GET["offset"] : 0; //Start index
 $guestbookObject = new GuestbookObject();
 
 function makePost($guestbookObject)
 {
-	$name = strip_tags($_POST['name']);
-	$text = strip_tags($_POST['text']);
+	$name = strip_tags($_POST["name"]);
+	$text = strip_tags($_POST["text"]);
 	if(empty($name) || empty($text))
 	{
-		$_SESSION['error'] = "<pre class='error'>Fyll i alla fält.</pre>";
+		$_SESSION["error"] = "<pre class='error'>Fyll i alla fält.</pre>";
 	}
 	else
 	{
@@ -23,22 +23,23 @@ function makePost($guestbookObject)
 		$max_name_length = 50;
 		if (strlen($text) > $max_text_length)
 		{
-			$_SESSION['error'] = "<pre class='error'>Text must not exceed " . $max_text_length . " characters.</pre>";
+			$_SESSION["error"] = "<pre class='error'>Text must not exceed " . $max_text_length . " characters.</pre>";
 		}
 		elseif (strlen($name) > $max_name_length)
 		{
-			$_SESSION['error'] = "<pre class='error'>Name must not exceed " . $max_name_length . " characters.</pre>";
+			$_SESSION["error"] = "<pre class='error'>Name must not exceed " . $max_name_length . " characters.</pre>";
 		}
 		else
 		{
 			$params = array('name'=>$name,'text'=>$text);
 			$guestbookObject->insertEntyToDatabase($params);
+			header("location: guestbook.php");
 		}
 	}
 }
 
 
-if (isset($_POST['submit']))
+if (isset($_POST["submit"]))
 {
 	makePost($guestbookObject);
 }
@@ -46,7 +47,7 @@ if (isset($_POST['submit']))
 $postForm = 
 	'<div class="col-sm-4 col-sm-pull-8 elementBox">
 		<h2>Gästbok</h2>
-		<form action="'.$_SERVER['PHP_SELF'].'" method="POST">
+		<form action="'.$_SERVER["PHP_SELF"].'" method="POST">
 			<label>Namn:<br><input type="text" name="name" value="'.$username.'" size="20"/></label><br>
 			<label>Text:<br><textarea name="text" rows="8" cols="40"></textarea></label><br>
 			<label><input type="submit" class="btn btn-primary" name="submit" value="Skicka"/></label><br>
@@ -54,7 +55,7 @@ $postForm =
 	</div>';
 
 
-echo isset($_SESSION['error']) ? $_SESSION['error'] : "";
+echo isset($_SESSION["error"]) ? $_SESSION["error"] : "";
 echo "<div class='row'>";
 	echo "<div class='col-sm-8 col-sm-push-4 elementBox'>";
 		echo presentPost($guestbookObject, $offset, $limit);

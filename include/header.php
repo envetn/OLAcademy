@@ -5,6 +5,7 @@ include_once(INCLUDE_PATH . "/config.php");
 include_once(INCLUDE_PATH . "/src/Objects/EventObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/NewsObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/GuestbookObject.php");
+include_once(INCLUDE_PATH . "/src/Objects/AboutObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/User/User.php");
 include_once(INCLUDE_PATH . "/src/Image/Image.php");
 
@@ -49,6 +50,7 @@ $privilege =  $user->getUserprivilege();
 					<li><a id="news-" href='news.php'>Nyheter</a></li>
 					<li><a id="guestbook-" href='guestbook.php'>Gästbok</a></li>
 					<li><a id="calendar-" href='calendar.php'>Kalender</a></li>
+					<li><a id="about-" href='about.php'>Om</a></li>
 					<?php echo $user->getUserPrivilege() === "2" ? "<li><a id='admin-' href='admin.php'>Admin</a>" : "";?>
 				</ul>
                     <?php echo showLoginLogout($user, $GLOBAL['salt_char']);?>

@@ -15,9 +15,13 @@ if (isset($_POST['btn_addNew']))
 		if ($newsObject->isAllowedToDeleteEntry(""))
 		{
 			$params = validateParameters();
-			$imagePath = $newsObject->uploadImage(true);
-			$params['image'] = $imagePath;
-			$newsObject->insertEntyToDatabase($params, true);
+			$imagePath = $newsObject->uploadImage(false);
+			if($imagePath != null)
+			{
+				$params['image'] = $imagePath;
+			}
+			$newsObject->insertEntyToDatabase($params);
+			header("location: news.php");
 		}
 	}
 }
@@ -67,16 +71,19 @@ function removeNews($newsObject)
 {
 	if (isset($_GET['id']) && is_numeric($_GET['id']))
 	{
-		$id = $_GET['id'];
-		$newsObject->removeSingleEntryById($id);
-		header("Location: news.php");
+		if($newsObject->isAllowedToDeleteEntry())
+		{
+			$id = $_GET['id'];
+			$newsObject->removeSingleEntryById($id);
+			header("Location: news.php");
+		}
 	}
 }
 
 function getEditForm($newsObject)
 {
 	$id = strip_tags($_GET['id']);
-	$condition = array('id' => id);
+	$condition = array('id' => $id);
 
 	$res = $newsObject->fetchSingleEntryByValue($condition);
 	$singleArticle = "";

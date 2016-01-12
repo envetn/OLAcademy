@@ -45,7 +45,7 @@ header
 
 main
 {
-	min-height:700px;
+	min-height:400px;
     overflow: auto;
     background:#fff;
 	border-top-left-radius: 5px;
@@ -121,8 +121,8 @@ background-color:#e7e7e7;
 	border-radius:0;
 	border: 0;
 	font-size: 1.3em;
-	padding-right: 15px;
-	padding-left: 15px;
+	padding-right: 1px;
+	padding-left: 1px;
 }
 
 .navbar-brand

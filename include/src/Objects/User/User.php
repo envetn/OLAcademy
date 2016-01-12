@@ -62,12 +62,12 @@ class User extends DataObject
 
 				if ($this->rowCount() == 1)
 				{
-					$_SESSION['uid'] = $res[0]->id;
-					$_SESSION['username'] = $res[0]->name;
-					$_SESSION['email'] = $res[0]->email;
-					$_SESSION['privilege'] = $res[0]->Privilege;
+					$_SESSION["uid"] = $res[0]->id;
+					$_SESSION["username"] = $res[0]->name;
+					$_SESSION["email"] = $res[0]->email;
+					$_SESSION["privilege"] = $res[0]->Privilege;
 
-					if (isset($_POST['remember_me']))
+					if (isset($_POST["remember_me"]))
 					{
 						$SECRET_KEY = "!+?";
 						$this->setRememberMe($res[0]->name, $SECRET_KEY);
@@ -81,11 +81,11 @@ class User extends DataObject
 		return false;
 	}
 
-	function getUserPrivilege()
+	public function getUserPrivilege()
 	{
-		if (isset($_SESSION['privilege']))
+		if (isset($_SESSION["privilege"]))
 		{
-			return $_SESSION['privilege'];
+			return $_SESSION["privilege"];
 		}
 		return - 1;
 	}
@@ -106,7 +106,7 @@ class User extends DataObject
 		setcookie('rememberme_olacademy', $token, $oneMonth);
 
 		$sql = "UPDATE users SET token=? WHERE id=? AND name=? LIMIT 1";
-		$params = array($shaToken,$_SESSION['uid'],$user);
+		$params = array($shaToken,$_SESSION["uid"],$user);
 		$this->database->ExecuteQuery($sql, $params);
 	}
 
@@ -117,26 +117,26 @@ class User extends DataObject
 	 */
 	function getUserByCookie()
 	{
-		$shaToken = hash_hmac('sha256', $_COOKIE['rememberme_olacademy'], "!+?");
+		$shaToken = hash_hmac('sha256', $_COOKIE["rememberme_olacademy"], "!+?");
 		$sql = 'SELECT id,name FROM users WHERE token=? LIMIT 1';
 		$params = array($shaToken);
 		$res = $this->database->queryAndFetch($sql, $params);
 		if ($this->database->RowCount() == 1)
 		{
-			$_SESSION['uid'] = $res[0]->id;
-			$_SESSION['username'] = $res[0]->name;
+			$_SESSION["uid"] = $res[0]->id;
+			$_SESSION["username"] = $res[0]->name;
 		}
 	}
 
 	function isLoggedIn()
 	{
-		return (isset($_SESSION['username']));
+		return (isset($_SESSION["username"]));
 	}
 
 	function logout()
 	{
 		session_destroy();
-		header("location:" . $_SERVER['PHP_SELF'] . "");
+		header("location:" . $_SERVER["PHP_SELF"] . "");
 		setcookie("rememberme_olacademy", "", time() - (86400 * 31));
 	}
 
@@ -162,21 +162,22 @@ class User extends DataObject
 
 	public function updateUser($name, $email, $newPassword)
 	{
-		$id = $_SESSION['uid'];
+		$id = $_SESSION["uid"];
 		$values = array('name' => $name,'email' => $email);
 		$condition = array('id' => $id);
 
 		if ($newPassword != "")
 		{
 			$password = password_hash($newPassword, PASSWORD_BCRYPT, array('cost'=>12));
-			$values['password'] = $password;
+			$values["password"] = $password;
 		}
 
 		parent::editSingleEntry($values, $condition);
 
-		$_SESSION['success'] = "<pre class=red>Updaterad!</pre>";
-		$_SESSION['username'] = $name;
-	//	header("location: " .$_SERVER['PHP_SELF']."");
+		$_SESSION["success"] = "<pre class=red>Updaterad!</pre>";
+		$_SESSION["username"] = $name;
+	// TODO: Remove this comment when we have a mailserver working
+	// header("location: " .$_SERVER["PHP_SELF"]."");
 	}
 
 	public function forgottenPassword($email)
@@ -207,6 +208,7 @@ class User extends DataObject
 		$message = "Ditt nya lösenord: " . $plainTextPassword;
 		$email = 'olle.ch@hotmail.com';
 
+		// TODO: Remove this when we have a mailserver working
 		echo "Ditt nya lösenord: " . $plainTextPassword;
 		// Send... not working
 		// Need mailserver for this to work

@@ -105,8 +105,6 @@ if (isset($_SESSION['username']))
 
 	if (isset($_POST['spara']))
 	{
-		global $GLOBAL;
-		$salt = $GLOBAL['salt_char'];
 		$email = $_POST['email'];
 
 		if ($user->login($email, $_POST['oldPassword']))
@@ -167,3 +165,4 @@ else
 echo isset($_SESSION['error']) ? $_SESSION['error'] : "";
 echo isset($success) ? $success : "";
 echo $userConf;
+include("include/footer.php");
