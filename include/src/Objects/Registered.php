@@ -62,7 +62,7 @@ class Registered extends DataObject
 
 	public function removeSingleRegistered($id)
 	{
-		$sql = "DELETE FROM registered WHERE id=? LIMIT 1";
+		$sql = "DELETE FROM registered WHERE eventID=?";
 		$params = array($id);
 		$this->database->ExecuteQuery($sql, $params);
 	}

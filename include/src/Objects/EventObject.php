@@ -92,7 +92,7 @@ class EventObject extends DataObject
         WHERE eventDate BETWEEN ? AND ?
         AND reccurance=1";
 		$currentDate = date('Y-m-d', strtotime($this->today . ' -1 day'));
-		$prev_date = date('Y-m-d', strtotime($currentDate . ' -30 day'));
+		$prev_date = date('Y-m-d', strtotime($currentDate . ' -90 day'));
 		$params = array($prev_date,$currentDate);
 
 		$res = $this->database->queryAndFetch($sql, $params);
@@ -131,13 +131,18 @@ class EventObject extends DataObject
 	{
 		// get content of Registered
 		$res = $this->registered->fetchAllEntriesByValue($condition);
-
 		return $res;
 	}
 
 	public function getNumberOfRegisteredByValue($value = array())
 	{
 		$res = $this->registered->getNrOfRegisteredByValue($value);
+		return $res;
+	}
+
+	public function fetchAllRegistered()
+	{
+		$res = $this->registered->fetchAllEntries("eventID");
 		return $res;
 	}
 }

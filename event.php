@@ -1,15 +1,15 @@
 
 <?php
-$pageTitle = " - Träningar";
+$pageTitle ="- Träningar";
 include ("include/header.php");
 $user->getUserprivilege();
 
-if (! isset($_SESSION['Previous_page']))
+if (! isset($_SESSION["Previous_page"]))
 {
 	// How to validate which page you are comming from?
 	// If the user refreshes the page, the HTTP_REFERER will be restored
 	// Also, if user enters url to event manually HTTP_REFERER is null
-	$_SESSION['Previous_page'] = isset($_SERVER['HTTP_REFERER']) ? $_SERVER['HTTP_REFERER'] : 'http://localhost/Webb/Olacademy/calendar.php';
+	$_SESSION["Previous_page"] = isset($_SERVER["HTTP_REFERER"]) ? $_SERVER["HTTP_REFERER"] : 'http://localhost/Webb/Olacademy/calendar.php';
 }
 
 function validateDay($day)
@@ -31,9 +31,9 @@ function validateDay($day)
 function getEventAndValidateGET($eventObject)
 {
 	$singleEvent = "";
-	if (isset($_GET['e']) && is_numeric($_GET['e']))
+	if (isset($_GET["e"]) && is_numeric($_GET["e"]))
 	{
-		$eventId = $_GET['e'];
+		$eventId = $_GET["e"];
 		$values = array('id' => $eventId);
 		$res = $eventObject->fetchSingleEntryByValue($values);
 
@@ -55,9 +55,9 @@ function getEventAndValidateGET($eventObject)
     		</form>";
 		}
 	}
-	else if (isset($_GET['a']) && is_numeric($_GET['a']))
+	else if (isset($_GET["a"]) && is_numeric($_GET["a"]))
 	{
-		$date = isset($_GET['day']) ? $date = validateDay($_GET['day']) : $date = date('Y-m-d');
+		$date = isset($_GET["day"]) ? $date = validateDay($_GET["day"]) : $date = date('Y-m-d');
 
 		$time = date('H:i:s', time() - date('Z'));
 		$singleEvent .= "<form id='form_addNew' method='post' enctype='multipart/form-data'>
@@ -78,14 +78,18 @@ function tryToEditEvent($eventObject)
 	try
 	{
 		$params = validateEventParams();
-		$id = is_numeric($_POST['id']) ? strip_tags($_POST['id']) : - 1;
-		$condition['id'] = $id;
+		if($params != null)
+		{
+			$id = is_numeric($_POST["id"]) ? strip_tags($_POST["id"]) : - 1;
+			$condition["id"] = $id;
+			return $eventObject->editSingleEntry($params, $condition);
+		}
+		return false;
 
-		return $eventObject->editSingleEntry($params, $condition);
 	}
 	catch ( Exception $e )
 	{
-		logError("< " . $_SESSION['uid'] . "  tryToEditEvent > Error: " . $e . "\n");
+		logError("< " . $_SESSION["uid"] . "  tryToEditEvent > Error: " . $e . "\n");
 		return false;
 	}
 }
@@ -95,35 +99,45 @@ function tryToAddEvent($eventObject)
 	try
 	{
 		$params = validateEventParams();
-		return $eventObject->insertEntyToDatabase($params);
+		if($params != null)
+		{
+			return $eventObject->insertEntyToDatabase($params);
+		}
+		return false;
+
 	}
 	catch ( Exception $e )
 	{
-		logError("< " . $_SESSION['uid'] . "  tryToAddEvent > Error: " . $e . "\n");
+		logError("< " . $_SESSION["uid"] . "  tryToAddEvent > Error: " . $e . "\n");
 		return false;
 	}
 }
 
 function validateEventParams()
 {
-	$eventName = strip_tags($_POST['eventName']);
-	$info = strip_tags($_POST['info']);
-	$startTime = strip_tags($_POST['startTime']);
-	$date = strip_tags($_POST['date']);
-	$reccurance = isset($_POST['reccurance']) ? 1 : 0;
-	$bus = isset($_POST['bus']) ? 1 : 0;
+	if(strlen($_POST["eventName"]) > 1 && strlen($_POST["info"]) > 1)
+	{
+		$eventName = strip_tags($_POST["eventName"]);
+		$info = strip_tags($_POST["info"]);
+		$startTime = strip_tags($_POST["startTime"]);
+		$date = strip_tags($_POST["date"]);
+		$reccurance = isset($_POST["reccurance"]) ? 1 : 0;
+		$bus = isset($_POST["bus"]) ? 1 : 0;
 
-	// is this solution pretty?
-	$params = array('eventName'=>$eventName,'info'=>$info,'startTime'=>$startTime, 'eventDate' => $date, 'reccurance' => $reccurance, 'bus' => $bus);
-
-	return $params;
+		$params = array('eventName'=>$eventName,'info'=>$info,'startTime'=>$startTime, 'eventDate' => $date, 'reccurance' => $reccurance, 'bus' => $bus);
+		return $params;
+	}
+	else
+	{
+		return null;
+	}
 }
 
 if ($privilege === "2") // Shall someone else be able to add??
 {
 	$eventObject = new EventObject();
 	$singleEvent = "";
-	if (isset($_POST['btn_edit']))
+	if (isset($_POST["btn_edit"]))
 	{
 		if (tryToEditEvent($eventObject))
 		{
@@ -134,7 +148,7 @@ if ($privilege === "2") // Shall someone else be able to add??
 			$singleEvent .= displayErrorMessage("Kopplingen till databasen försvann");
 		}
 	}
-	else if (isset($_POST['btn_add']))
+	else if (isset($_POST["btn_add"]))
 	{
 		if (tryToAddEvent($eventObject))
 		{
@@ -145,7 +159,7 @@ if ($privilege === "2") // Shall someone else be able to add??
 			$singleEvent .= displayErrorMessage("Kopplingen till databasen försvann");
 		}
 	}
-	$singleEvent .= "<h4 id='infoHead'> <a href='" . $_SESSION['Previous_page'] . "'> Tillbaka</a></h4>";
+	$singleEvent .= "<h4 id='infoHead'> <a href='" . $_SESSION["Previous_page"] . "'> Tillbaka</a></h4>";
 	$singleEvent .= getEventAndValidateGET($eventObject);
 }
 echo "<div class='row clearFix'>";

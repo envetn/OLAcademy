@@ -132,12 +132,12 @@ function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl="") // admin
 function presentEvent($username, $eventObject)
 {
 	$events = $eventObject->getWeeklyEvents();
-
+	$regUsers = $eventObject->fetchAllRegistered();
 	$text = "";
 	for ($i=0;$i<7;$i++)
 	{
-		$values = array('variable' => 'date', 'value' => date("Y-m-d", time()+($i * 86400)));
-		$nrOfRegistered = $eventObject->getNumberOfRegisteredByValue($values); //7 db requests. Optimize?
+		$values = array('date' => date("Y-m-d", time()+($i * 86400)));
+		$nrOfRegistered = $eventObject->getNumberOfRegisteredByValue($values);
 		$weekDay = date("N", time()+($i * 86400));
 		switch ($weekDay)
 		{
@@ -180,31 +180,33 @@ function presentEvent($username, $eventObject)
 						$registeredUsersTable .= "<th colspan='2'>Buss</th></tr>";
 					}
 					$values = array("eventID" => $key->id);
-					$registeredUsers = $eventObject->getRegisteredByValue($values);
 					$registered = false;
-					if($registeredUsers != null)
+
+					if($regUsers != null)
 					{
-						foreach ($registeredUsers as $user)
+						foreach($regUsers as $regUser)
 						{
-							$registeredUsersTable .= "<tr class='regTableRow'><td class='regTableName'>" . $user->name .
-							"</td><td class='regTableComment'>" . substr($user->comment, 0, 140) . "</td>";
+							if($regUser->eventID == $key->id)
+							{
+								$registeredUsersTable .= "<tr class='regTableRow'><td class='regTableName'>" . $regUser->name .
+								"</td><td class='regTableComment'>" . substr($regUser->comment, 0, 140) . "</td>";
+								if($key->bus == 1)
+								{
+									$registeredUsersTable .= "<td class='regTableBus'>" . $regUser->bus . "</td>";
+								}
 
-							if($key->bus == 1)
-							{
-								$registeredUsersTable .= "<td class='regTableBus'>" . $user->bus . "</td>";
+								$userID = isset($_SESSION["uid"]) ? $_SESSION["uid"] : false;
+								if ($regUser->userID === $userID)
+								{
+									$registeredUsersTable .= "<td class='regTableDel'><a href='?r=".$regUser->id."'><img src='img/cross.png' width='18px' height='18px'></a></td>";
+									$registered = true;
+								}
+								else
+								{
+									$registeredUsersTable .= "<td class='regTableDel'></td>";
+								}
+								$registeredUsersTable .= "</tr>";
 							}
-
-							$userID = isset($_SESSION["uid"]) ? $_SESSION["uid"] : false;
-							if ($user->userID === $userID)
-							{
-								$registeredUsersTable .= "<td class='regTableDel'><a href='?r=".$user->id."'><img src='img/cross.png' width='18px' height='18px'></a></td>";
-								$registered = true;
-							}
-							else
-							{
-								$registeredUsersTable .= "<td class='regTableDel'></td>";
-							}
-							$registeredUsersTable .= "</tr>";
 						}
 					}
 
@@ -240,11 +242,21 @@ function presentEvent($username, $eventObject)
 					}
 
 					$text .="</form>";
-					if(count($registeredUsers) > 0)
+					if(count($regUsers) > 0)
 					{
 						$text .= $registeredUsersTable;
 					}
 					$text .=  "<hr>";
+				}
+			}
+		}
+		else
+		{
+			foreach ($events as $key)
+			{
+				if ($key->eventDate == date("Y-m-d", time()+($i * 86400)))
+				{
+					$text .= "<li style='padding-left:5%; margin:0px; list-style-type: none;'><span style='padding-left:2%; margin:0px;' >".$key->eventName ."</span><br/></li>";
 				}
 			}
 		}

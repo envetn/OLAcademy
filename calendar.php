@@ -96,13 +96,9 @@ $month = date('m', strtotime('0 month'));
 $year = date('Y', strtotime('0 year'));
 displayError();
 echo "<div class='row'>";
-	echo "<div class='b'>";
+	echo "<div class='b' style='padding-left:20px;'>";
 		echo draw_calendar($month,$year, $user->isLoggedIn());
 	echo "</div>";
 echo "</div>";
 
-?>
-
-
-
-<?php include("include/footer.php"); ?>
+include("include/footer.php"); ?>

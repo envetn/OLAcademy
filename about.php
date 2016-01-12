@@ -1,6 +1,6 @@
 <?php
 $pageId = "about";
-$pageTitle = " - Om";
+$pageTitle =" - Om";
 include ("include/header.php");
 
 $user = new User();
@@ -26,6 +26,10 @@ function parselist($name)
 			{
 				$hasNext = false;
 			}
+		}
+		else
+		{
+			$hasNext = false;
 		}
 	}
 	return $data;
