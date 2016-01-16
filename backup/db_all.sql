@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 12, 2016 at 04:20 PM
+-- Generation Time: Jan 16, 2016 at 01:55 PM
 -- Server version: 5.5.46-0ubuntu0.14.04.2
 -- PHP Version: 5.6.17-1+deb.sury.org~trusty+2
 
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `about` (
   `additionalInfo` text COLLATE utf8_unicode_ci NOT NULL,
   `externalLinks` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
 
 --
 -- Dumping data for table `about`
@@ -59,23 +59,25 @@ CREATE TABLE IF NOT EXISTS `events` (
   `reccurance` tinyint(1) NOT NULL,
   `bus` tinyint(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=49 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=56 ;
 
 --
 -- Dumping data for table `events`
 --
 
 INSERT INTO `events` (`id`, `eventDate`, `startTime`, `eventName`, `info`, `reccurance`, `bus`) VALUES
-(26, '2015-11-16', '19:00:00', 'Mellan 10km och 20km', '2015-11-16', 0, 0),
-(28, '2016-01-12', '18:30:00', 'Samling efter intervallerna i hallen', '2015-11-16', 1, 0),
-(30, '2016-01-18', '20:00:00', 'Intervaller', 'Info', 1, 1),
-(33, '2016-01-13', '18:00:00', 'Grillning', 'Tag med eget att grilla, finns grill', 1, 0),
-(34, '2016-01-12', '05:20:16', 'Ã…terkommande', 'Detta Ã¤r en Ã¥terkommande trÃ¤ning', 1, 1),
+(28, '2016-01-19', '18:30:00', 'Intervaller 15x15', 'Samling efter intervallerna i hallen', 1, 0),
+(30, '2016-01-18', '20:00:00', 'Intervaller 30x15', 'Info', 1, 1),
+(33, '2016-01-20', '18:00:00', 'Grillning', 'Tag med eget att grilla, finns grill', 1, 0),
+(34, '2016-01-19', '05:20:16', 'Morgonjogg', 'Samling 5 minuter innan i aulan', 1, 1),
 (38, '2015-11-16', '11:00:20', '123123123', '123', 0, 1),
-(40, '2016-01-14', '17:00:00', '123123123', '123', 1, 1),
-(41, '2016-01-15', '17:00:00', 'Fredags trÃ¤ning', 'TrÃ¤ning pÃ¥ en fredag', 1, 0),
-(47, '2016-01-16', '18:00:00', '123', '2015-11-14', 1, 0),
-(48, '2016-01-18', '11:00:20', 'MÃ¥ndags trÃ¤ning', 'trÃ¤niong en MÃ¥ndag', 1, 0);
+(40, '2016-01-21', '17:00:00', 'Backintervaller', 'Intervballer i en backe', 1, 1),
+(41, '2016-01-22', '17:00:00', 'Fredags trÃ¤ning', 'TrÃ¤ning pÃ¥ en fredag', 1, 0),
+(47, '2016-01-16', '18:00:00', 'Fotboll', 'Fotboll utanfÃ¶r stadshuset', 1, 0),
+(50, '2016-01-21', '17:12:12', 'Backint', 'Intervballer i en backe', 1, 1),
+(53, '2016-01-14', '21:22:22', 'asdasd', 'asdasd', 0, 0),
+(54, '2016-01-14', '21:22:22', '3123123', '123123123', 0, 0),
+(55, '2016-01-15', '21:22:22', '123123123', '123123123', 0, 0);
 
 -- --------------------------------------------------------
 
@@ -92,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `added` datetime NOT NULL,
   `image` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=87 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=74 ;
 
 --
 -- Dumping data for table `news`
@@ -156,7 +158,8 @@ INSERT INTO `news` (`id`, `title`, `content`, `author`, `added`, `image`) VALUES
 (61, 'Test title49', 'Test content49', 'lofie49', '2015-10-29 00:00:00', ''),
 (70, '123', '123', 'Lofie', '2015-11-23 20:24:10', ''),
 (71, 'test 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae. Sed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'Lofie', '2015-11-23 20:24:29', ''),
-(72, 'test 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae. Sed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'Lofie', '2015-11-23 20:24:33', '');
+(72, 'test 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae. Sed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'Lofie', '2015-11-23 20:24:33', ''),
+(73, '1231231', '123123 asd as\r\nd a\r\nsd\r\nas\r\nd asd', 'Lofie', '2016-01-14 20:56:08', '');
 
 -- --------------------------------------------------------
 
@@ -171,7 +174,7 @@ CREATE TABLE IF NOT EXISTS `posts` (
   `text` text COLLATE utf8_unicode_ci NOT NULL,
   `added` datetime NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=115 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=116 ;
 
 --
 -- Dumping data for table `posts`
@@ -185,7 +188,8 @@ INSERT INTO `posts` (`id`, `name`, `text`, `added`) VALUES
 (111, 'Lofie', 'asd', '2016-01-11 18:13:47'),
 (112, 'Lofie', 'asd', '2016-01-11 18:13:48'),
 (113, 'Lofie', 'dasdas', '2016-01-11 18:13:49'),
-(114, 'Lofie', 'asdasdasdas', '2016-01-11 18:13:52');
+(114, 'Lofie', 'asdasdasdas', '2016-01-11 18:13:52'),
+(115, 'Lofie', 'asdasd', '2016-01-14 21:04:48');
 
 -- --------------------------------------------------------
 
@@ -203,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `registered` (
   `bus` tinytext COLLATE utf8_unicode_ci NOT NULL,
   `eventID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=77 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=92 ;
 
 --
 -- Dumping data for table `registered`
@@ -212,13 +216,27 @@ CREATE TABLE IF NOT EXISTS `registered` (
 INSERT INTO `registered` (`id`, `userID`, `name`, `date`, `comment`, `bus`, `eventID`) VALUES
 (13, 19, 'lofie', '2015-11-16', '', 'Ja', '26'),
 (14, 19, 'lofie', '2015-11-21', '', 'Nej', '22'),
-(38, 29, 'Lofie', '2015-12-10', '', 'Ja', '40'),
-(39, 29, 'Lofie', '2015-12-11', '', 'Nej', '41'),
 (71, 29, 'Lofie', '2016-01-11', '', 'Ja', '30'),
 (72, 29, 'Lofie', '2016-01-11', '', 'Nej', '48'),
-(73, 29, 'Lofie', '2016-01-12', '', 'Ja', '34'),
-(74, 29, 'Lofie', '2016-01-12', '', 'Nej', '28'),
-(76, 29, 'Lofie', '2016-01-13', 'FrÃ¥n mobilen ', 'Nej', '33');
+(73, 29, 'Lofie', '2016-01-16', '', 'Nej', '47'),
+(74, 29, 'Lofie', '2016-01-15', '', 'Nej', '55'),
+(75, 33, 'Test', '2016-01-14', '', 'Nej', '53'),
+(76, 33, 'Test', '2016-01-14', '', 'Nej', '54'),
+(77, 33, 'Test', '2016-01-15', '', 'Nej', '55'),
+(78, 33, 'Test', '2016-01-16', '', 'Nej', '47'),
+(79, 33, 'Test', '2016-01-21', '', 'Nej', '50'),
+(80, 33, 'Test', '2016-01-18', '', 'Nej', '30'),
+(81, 33, 'Test', '2016-01-19', '', 'Nej', '28'),
+(82, 33, 'Test', '2016-01-19', '', 'Nej', '34'),
+(83, 33, 'Test', '2016-01-20', '', 'Nej', '33'),
+(84, 33, 'Test', '2016-01-21', '', 'Nej', '40'),
+(85, 33, 'Test', '2016-01-21', '', 'Nej', '52'),
+(86, 33, 'Test', '2016-01-22', '', 'Nej', '41'),
+(87, 29, 'Lofie', '2016-01-21', '', 'Nej', '40'),
+(88, 29, 'Lofie', '2016-01-21', '', 'Nej', '50'),
+(89, 29, 'Lofie', '2016-01-21', '', 'Nej', '52'),
+(90, 29, 'Lofie', '2016-01-20', '', 'Nej', '33'),
+(91, 29, 'Lofie', '2016-01-14', '', 'Nej', '53');
 
 -- --------------------------------------------------------
 
@@ -235,17 +253,19 @@ CREATE TABLE IF NOT EXISTS `users` (
   `Privilege` int(11) NOT NULL,
   `regDate` date NOT NULL,
   `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `lastname` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=31 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=34 ;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `password`, `email`, `Privilege`, `regDate`, `token`) VALUES
-(28, 'admin', '$2y$12$d5IemwsuVU90qF0ja.jKUeKF1zxwi7FzBdtyGszHRmdPPPS2qEkv.', 'admin@admin.com', 2, '2015-11-19', ''),
-(29, 'Lofie', '$2y$12$WUwZLD69Q7sR8b1Mf6h.UevSRQDPxNXwrSDVIrbfB/p14EaJ7rUYy', 'lofie@lofie.com', 2, '2015-11-19', '51858eea15509f2c23fe813e5dfd19d979733fedd2fc3168594a28a6a958ac24'),
-(30, 'Adam', '$2y$12$Ix9Oi//nwE.O02hUcvmwROgze.EXwX0q/piLok0UeJld41bJrCw2C', 'adamgeorgsson@gmail.com', 2, '2015-11-21', '');
+INSERT INTO `users` (`id`, `name`, `password`, `email`, `Privilege`, `regDate`, `token`, `lastname`) VALUES
+(28, 'admin', '$2y$12$d5IemwsuVU90qF0ja.jKUeKF1zxwi7FzBdtyGszHRmdPPPS2qEkv.', 'admin@admin.com', 0, '2015-11-19', '', ''),
+(29, 'Lofie', '$2y$12$WUwZLD69Q7sR8b1Mf6h.UevSRQDPxNXwrSDVIrbfB/p14EaJ7rUYy', 'lofie@lofie.com', 2, '2015-11-19', '82c48cbf66b49834811a5bbba52bed38a0b61da13b48c789821c893d8b63e4e7', 'Surn'),
+(30, 'Adam', '$2y$12$Ix9Oi//nwE.O02hUcvmwROgze.EXwX0q/piLok0UeJld41bJrCw2C', 'adamgeorgsson@gmail.com', 2, '2015-11-21', '', ''),
+(33, 'Test', '$2y$12$psEATvnr5L93SGhUcf0Ltum0ASySuCNeNw5O9Fq3CUQubBIfVnEuW', 'test@test.com', 1, '2016-01-16', 'ae1e6f2b33aa9c35a44ed0f1f4f62dac99d0c8f6accbe110baa1191a51090c57', 'Testsson');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
