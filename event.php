@@ -32,7 +32,7 @@ function fetchEventAndValidateGET($eventObject)
 {
 	$singleEvent = "";
 	if (validateIntGET("event"))
-	{
+	{ // class='checkbox'
 		$values = array('id' => $_GET["event"]);
 		$res = $eventObject->fetchSingleEntryByValue($values);
 
@@ -48,8 +48,8 @@ function fetchEventAndValidateGET($eventObject)
     		<input name='info' value='" . $res->info . "' 			type='text'/><br/>
     		<input name='startTime' value='" . $res->startTime . "'  type='time'/><br/>
     		<input name='date' value='" . $res->eventDate . "' 	    	type='datetime-local'/><br/>
-			Buss: <input class='checkbox' type='checkbox' name='bus' value='bus' " . $bus . "/><br>
-    		Återkommande varje vecka: <input class='checkbox' type='checkbox' name='reccurance' value='reccurance' " . $reccurance . "/><br>
+			<label>Buss: </label><input type='checkbox' name='bus' value='bus' " . $bus . " class='checkbox_bus'/><br/>
+    		<label>Återkommande: </label><input class='checkbox_bus' type='checkbox' name='reccurance' value='reccurance' " . $reccurance . "/><br/>
     		<input class='btn btn-primary' type='submit' name='btn_edit' id='btn_edit' value='Spara'/>
     		</form>";
 		}
@@ -64,8 +64,8 @@ function fetchEventAndValidateGET($eventObject)
     		<input name='info' value='' 	 placeholder='Information'		type='text'/><br/>
     		<input name='startTime' value='' placeholder='" . $time . "'  type='time'/><br/>
     		<input name='date' value='" . $date . "' 	    	type='datetime-local'/><br/>
-    		<label> Buss: <input class='checkbox' type='checkbox' name='bus' value='bus' />
-			<label>Återkommande varje vecka: <input type='checkbox' name='reccurance' value='reccurance'></label>
+    		<label>Buss: </label><input type='checkbox' name='bus' value='bus' class='checkbox_bus'/><br/>
+    		<label>Återkommande: </label><input class='checkbox_bus' type='checkbox' name='reccurance' value='reccurance' /><br/>
     		<input class='btn btn-primary' type='submit' name='btn_add' id='btn_edit' value='Spara'/>
     		</form>";
 	}
@@ -132,7 +132,6 @@ function validateEventParams()
 
 if ($privilege === "2")
 {
-
 	$singleEvent = "";
 	if (isset($_POST["btn_edit"]))
 	{

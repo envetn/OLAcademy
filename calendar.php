@@ -131,6 +131,7 @@ echo "<div class='row'>";
 echo "<div class='b' style='padding-left:20px;'>";
 echo draw_calendar($month, $year, $user->isLoggedIn(), $eventObject);
 echo "</div>";
+
 if (validateIntGET("event"))
 {
 	$singleEvent = "<h3></h3>";
@@ -160,7 +161,8 @@ if (validateIntGET("event"))
 		}
 		else
 		{
-			$singleEvent .= "<span class='info'> Du är redan anmäld</span>";
+			$singleEvent .= "<span class='info'> Du är redan anmäld</span>
+							<button type='submit' class='btn btn-primary regInput' name='unRegister' value='Avanmäl'>Avanmäl</button>";
 		}
 		$singleEvent .= "</form>";
 	}

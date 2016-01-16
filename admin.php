@@ -36,11 +36,11 @@ function tryToRemoveEvent($eventObject)
 		try
 		{
 			$id = $_POST['eventId'];
-			return $eventObject->removeSingleEntryById($id);
+			return $eventObject->removeEventAndRegisteredById($id);
 		}
 		catch (Exception $e)
 		{
-			// 			logError("< " . $_SESSION['uid'] . "  tryToRemoveEvent > Error: " . $e . "\n");
+			//logError("< " . $_SESSION['uid'] . "  tryToRemoveEvent > Error: " . $e . "\n");
 			dump($e);
 			return false;
 		}
@@ -73,7 +73,7 @@ function getTableTitleOfPosts($newsObject)
 	$news = "<h3 class='tableHead'>Nyheter</h3><a href='news.php?action=Lägg+till'> < Lägg till > </a><table class='tableContent'>
     <tr class='admin_rowHead'>
         <th class=''>Title</th><th>Av</th><th>Tillagd</th><th>Ta bort</th>
-    <tr>";
+    </tr>";
 	foreach ( $res as $row )
 	{
 		$title = $row->title;
@@ -117,37 +117,45 @@ function getTableEvents($eventObject)
 		$res = $eventObject->getWeeklyEvents();
 	}
 
-	$htmlEvents = "<h3 id='tableHead'>Veckans träningar</h3><a href='event.php?a=1'> < Lägg till > </a><a href='" . getUrlPath() . "&showAll=true'> < Visa alla > </a><table class='tableContent'>
+	$htmlEvents = "<h3 id='tableHead'>Veckans träningar</h3>
+			<a href='event.php?a=1'> < Lägg till > </a>
+			<a href='" . getUrlPath() . "&showAll=true'> < Visa alla > </a>
+			<table class='tableContent'>
      <tr class='admin_rowHead'>
         <th>Event</th><th>Info</th><th>När</th><th>Datum</th><th>Anmälda</th><th>Återkommande</th><th>Buss</th><th>Edit</th>
     </tr>";
 	foreach ( $res as $events )
 	{
+		$name = $events->eventName;
 		$info = $events->info;
 		if (strlen($info) > 40)
 		{
-			$info = substr($info, 0, 40) . "<a href='event.php?s=$events->id'> ... </a>";
+			$info = substr($info, 0, 40) . "<a href='event.php?event=$events->id'> ... </a>";
+		}
+		if (strlen($name) > 40)
+		{
+			$name = substr($name, 0, 40) . "<a href='event.php?event=$events->id'> ... </a>";
 		}
 		$values = array('eventID' => $events->id);
 		$registered = $eventObject->getNumberOfRegisteredByValue($values);
 		$reccurance = $events->reccurance == '1' ? "Ja" : "Nej";
 		$bus = $events->bus == '1' ? "Ja" : "Nej";
-		$htmlEvents .= "<form method='post'>
-							<tr class='admin_rowContent'>
-        					<input type='hidden' name='eventId' value='" . $events->id . "' />
-                            <td><span>" . $events->eventName . "</span></td>
-                            <td><span>" . $info . "</td>
+		$htmlEvents .= "<tr class='admin_rowContent'>
+                            <td><span>" . $name . "</span></td>
+                            <td><span>" . $info . "</span></td>
                             <td><span>" . $events->startTime . "</span></td>
                             <td><span>" . $events->eventDate . "</span></td>
                             <td><span><a href='admin.php?c=3&event=" . $events->id . "'>" . $registered . " - Visa</a></span></td>
                             <td><span>" . $reccurance . "</span></td>
                             <td><span>" . $bus . "</span></td>
-                            <td><span>
-                                <input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeEvent_1' value='" . $events->id . "'/>
-                                <a class='admin_news_remove' href='event.php?e=" . $events->id . "'><img src='img/edit.png' width=18px height=18px></a>
-                            </td></span>
-                        </tr>
-                       </form>";
+                            <td>
+                            	<form method='post' class='admin_form_event'>
+                            	<input type='hidden' name='eventId' value='" . $events->id . "' />
+                            	<input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeEvent_1' value='" . $events->id . "'/>
+                                <a class='admin_news_remove' href='event.php?event=" . $events->id . "'><img src='img/edit.png' width=18px height=18px alt='remove'/></a>
+                                </form>
+                            </td>
+                        </tr>";
 	}
 	return $htmlEvents . "</table>";
 }
@@ -227,18 +235,20 @@ function getTableUsers($user)
 
 function userForm($user)
 {
-	$userTable = "<form method='post'>
-						<tr class='admin_rowContent'>
-                            <input type='hidden' name='userId' value='" . $user->id . "' />
-                            <td><span><a href='user.php?user=id'>" . $user->name . "</a></span></td>
+	//<a href='user.php?user=id'>
+	$userTable = "<tr class='admin_rowContent'>
+                            <td><span>" . $user->name . "</span></td>
                             <td><span>" . $user->email . "</span></td>";
 	$userTable .= generateSelect($user->Privilege);
 	$userTable .= "<td>" . $user->regDate . "</td>
                             <td>
+								<form method='post'>
+								<input type='hidden' name='userId' value='" . $user->id . "' />
 								<input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeUser_1' value='Click me'>
                                 <input type='image' src='img/edit.png'  border='0' width=18px height=18px alt='Submit'  name='editUser_2' value='Click me2'>
+								</form>
                             </td>
-                        </tr></form>";
+                        </tr>";
 	return $userTable;
 }
 
@@ -333,7 +343,7 @@ if ($privilege === "2")
 		}
 		else
 		{
-			$htmlAdmin .= "<h4 id='infoHead'>Det blev något fel, träniongen uppdaterades inte </h4>";
+			$htmlAdmin .= "<h4 id='infoHead'>Det blev något fel.</h4>";
 		}
 	}
 

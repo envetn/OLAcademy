@@ -62,7 +62,7 @@ class EventObject extends DataObject
 	        SELECT id, eventDate, DATE_FORMAT(startTime, '%H:%i') AS startTime, eventName, info, reccurance, bus
 	        FROM events
 	        WHERE eventDate BETWEEN ? AND ?
-			ORDER BY startTime
+			ORDER BY eventDate
 	        ";
 		$params = array($this->today,$this->nextWeek);
 		$result = $this->database->queryAndFetch($sql, $params);
@@ -129,6 +129,11 @@ class EventObject extends DataObject
 	public function unRegisterUserToEvent($id)
 	{
 		$this->registered->removeSingleEntryById($id);
+	}
+
+	public function unRegisterUserToEventByValue($eventId)
+	{
+		$this->registered->removeSingleRegistered($eventId);
 	}
 
 	public function getRegisteredByValue($condition = array())

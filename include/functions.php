@@ -52,7 +52,7 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
     $news = "";
     foreach($res as $row)
     {
-    	$content = $row->content;
+    	$content = $content = \Michelf\Markdown::defaultTransform($row->content);
         if(strlen($content) > 400)
         {
             $content =  substr($content, 0, 400) . " ...";
@@ -60,8 +60,6 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
         $news .=
 				"<div class='newsPost'>
 					<a href='news.php?offset=$offset&amp;p=$row->id'><span class='boxLink'></span></a>
-
-
         			<div class='newsHeader'>
 						<span class='newsTitle'>".$row->title."</span>";
 		if ($showEdit && $newsObject->isAllowedToDeleteEntry("")) // admin, show all
@@ -136,8 +134,6 @@ function presentEvent($username, $eventObject)
 	$text = "";
 	for ($i=0;$i<7;$i++)
 	{
-		$values = array('date' => date("Y-m-d", time()+($i * 86400)));
-		$nrOfRegistered = $eventObject->getNumberOfRegisteredByValue($values);
 		$weekDay = date("N", time()+($i * 86400));
 		switch ($weekDay)
 		{
@@ -163,9 +159,10 @@ function presentEvent($username, $eventObject)
 			$text.= "<h4><a href='?highlighted=$i' >Söndag</a>";
 			break;
 		    default:
-			$text .= "-<br>";
+			$text .= "<br>";
 		}
-		$text .= "<span class='runner'>$nrOfRegistered<img src='img/runner.png' alt='runner'></span></h4>";
+		//$text .= "<span class='runner'>$nrOfRegistered<img src='img/runner.png' alt='runner'></span></h4>";
+		 $text .= "</h4>";
 
 		if ($_SESSION["highlighted"] == $i)
 		{
@@ -235,7 +232,7 @@ function presentEvent($username, $eventObject)
 						}
 						else
 						{
-							$text .= "<br>";
+							$text .= "<br/>";
 						}
 
 						$text .= "<button type='submit' class='btn btn-primary regInput' name='register' value='Anmäl'>Anmäl</button>";
@@ -246,7 +243,7 @@ function presentEvent($username, $eventObject)
 					{
 						$text .= $registeredUsersTable;
 					}
-					$text .=  "<hr>";
+					$text .=  "<hr/>";
 				}
 			}
 		}
@@ -256,7 +253,14 @@ function presentEvent($username, $eventObject)
 			{
 				if ($key->eventDate == date("Y-m-d", time()+($i * 86400)))
 				{
-					$text .= "<li style='padding-left:5%; list-style-type: none;'><span style='padding-left:2%;' >".$key->eventName ."</span><br/></li>";
+					$values = array('date' => date("Y-m-d", time()+($i * 86400)));
+					$nrOfRegistered = $eventObject->getNumberOfRegisteredByValue($values);
+
+					$text .= "<li class='register_preview'>
+								<span class='register_preview_content'>".$key->eventName ." - $nrOfRegistered
+									<img src='img/runner.png' alt='runner'/>
+								</span><br/>
+							</li>";
 				}
 			}
 		}
@@ -373,6 +377,21 @@ function registerUserToEvent($user, $eventObject)
 			}
 		}
 	}
+	else if(isset($_POST["unRegister"]))
+	{
+		if (! $user->isLoggedIn())
+		{
+			populateError("Du måste vara inloggad för att kunna avanmäla dig.");
+		}
+		else
+		{
+			if (validateIntPOST("eventID"))
+			{
+				$eventObject->unRegisterUserToEventByValue($_POST["eventID"]);
+			}
+		}
+	}
+
 }
 
 function displayErrorMessage($message)

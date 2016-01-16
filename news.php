@@ -167,10 +167,10 @@ try
 
 	$singleArticle = validateAction($newsObject);
 
-	if (strlen($singleArticle) < 1 )
+	if (empty($singleArticle))
 	{
 		$res = validateSelectedPage($newsObject);
-		$content = $res->content;
+		$content = \Michelf\Markdown::defaultTransform($res->content); // Need to form text in someway..
 
 		$singleArticle = "<article id='singleArticle'><h3 style=''>" . $res->title . "</h3><hr style='width:80%;'/>";
 		$singleArticle .= "<pre class='newsText'>" . $content . "</pre>";
