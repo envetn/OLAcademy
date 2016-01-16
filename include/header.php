@@ -1,7 +1,6 @@
 <?php
 define('INCLUDE_PATH', __DIR__ . '');
 include_once(INCLUDE_PATH . "/config.php");
-
 include_once(INCLUDE_PATH . "/src/Objects/EventObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/NewsObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/GuestbookObject.php");

@@ -1,8 +1,11 @@
 
 .admin_rowContent td
 {
-    border: 1px solid black;
+    padding:0px;
 	width:23%;
+}
+.admin_rowContent:nth-child(even) {
+    background-color: #ffffb3;
 }
 .admin_rowContent td span
 {

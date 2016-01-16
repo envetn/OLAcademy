@@ -10,7 +10,7 @@ $newsObject = new NewsObject();
 
 if (isset($_POST['btn_addNew']))
 {
-	if ($_POST['title'] != "" && $_POST['content'] != "")
+	if (validateStringPOST("title") && validateStringPOST("content") )
 	{
 		if ($newsObject->isAllowedToDeleteEntry(""))
 		{
@@ -28,30 +28,33 @@ if (isset($_POST['btn_addNew']))
 
 if (isset($_POST['btn_Edit']))
 {
-	if ($_POST['title'] != "" && $_POST['content'] != "")
+	if (validateStringPOST("title") && validateStringPOST("content"))
 	{
 		if ($newsObject->isAllowedToDeleteEntry(""))
 		{
 
 			$params = validateParameters();
 			$id = strip_tags($_POST['id']);
-			$condition['id'] = $id;
+			if(validateIntPOST("id"))
+			{
+				$condition["id"] = $_POST["id"];
 
-			$newsObject->editSingleEntry($params, $condition);
-			header("Location: news.php?p=" . $id);
+				$newsObject->editSingleEntry($params, $condition);
+				header("Location: news.php?p=" . $id);
+			}
 		}
 	}
 }
 
 function validateParameters()
 {
-	$title = strip_tags($_POST['title']);
-	$content = strip_tags($_POST['content']);
+	$title = strip_tags($_POST["title"]);
+	$content = strip_tags($_POST["content"]);
 	$content = makeLinks($content);
 	$date = date("Y-m-d H:i:s");
-	$author = isset($_SESSION['username']) ? $_SESSION['username'] : "";
+	$author = isset($_SESSION["username"]) ? $_SESSION["username"] : "";
 
-	$params = array('title'=>$title,'content'=>$content, 'author' => $author, 'added'=>$date);
+	$params = array("title"=>$title,"content"=>$content, "author" => $author, "added"=>$date);
 	return $params;
 }
 
@@ -69,12 +72,11 @@ function getAddForm()
 
 function removeNews($newsObject)
 {
-	if (isset($_GET['id']) && is_numeric($_GET['id']))
+	if (validateIntGET("id"))
 	{
 		if($newsObject->isAllowedToDeleteEntry())
 		{
-			$id = $_GET['id'];
-			$newsObject->removeSingleEntryById($id);
+			$newsObject->removeSingleEntryById($_GET["id"]);
 			header("Location: news.php");
 		}
 	}
@@ -82,22 +84,27 @@ function removeNews($newsObject)
 
 function getEditForm($newsObject)
 {
-	$id = strip_tags($_GET['id']);
-	$condition = array('id' => $id);
-
-	$res = $newsObject->fetchSingleEntryByValue($condition);
-	$singleArticle = "";
-	if ($res != null)
+	if(validateIntGET("id"))
 	{
-		$singleArticle = "<form id='form_addNew' method='post' enctype='multipart/form-data'>
+		$id = $_GET["id"];
+		$condition = array('id' => $_GET["id"]);
+
+		$res = $newsObject->fetchSingleEntryByValue($condition);
+		$singleArticle = "";
+		if ($res != null)
+		{
+			$singleArticle = "<form id='form_addNew' method='post' enctype='multipart/form-data'>
 	    		<input name='id' value='" . $id . "' type='hidden'/>
 	    		<input name='title' value='" . $res->title . "' type='text'/><br/>
 	    		<textarea name='content' value='' type='text' cols='50' rows='5'>" . $res->content . "</textarea><br/>
 	    		<label/>Av : " . $res->title . "</label><br/>
 	    		<input type='submit' name='btn_Edit' id='btn_addnew' value='Spara'/>
 	    		</form>";
+		}
+		return $singleArticle;
 	}
-	return $singleArticle;
+	return "";
+
 }
 
 function getArticleSideBar($newsObject, $offset, $limit)
@@ -122,10 +129,9 @@ function getArticleSideBar($newsObject, $offset, $limit)
 function validateSelectedPage($newsObject)
 {
 	$values = array();
-	if (isset($_GET['p']) && is_numeric($_GET['p']))
+	if (validateIntGET("p"))
 	{
-		$id = $_GET['p'];
-		$values = array('id' => $id);
+		$values = array("id" => $_GET["p"]);
 	}
 
 	return $newsObject->fetchSingleEntryByValue($values);
@@ -134,7 +140,7 @@ function validateSelectedPage($newsObject)
 function validateAction($newsObject)
 {
 	$singleArticle = "";
-	if (isset($_GET["action"]) && $newsObject->isAllowedToDeleteEntry(""))
+	if (validateStringGET("action") && $newsObject->isAllowedToDeleteEntry(""))
 	{
 
 		$choice = $_GET["action"];

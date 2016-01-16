@@ -143,9 +143,14 @@ abstract class DataObject
 
 	public function removeSingleEntryById($id)
 	{
-		$sql = "DELETE FROM " . $this->table . " WHERE id=? LIMIT 1";
-		$this->database->ExecuteQuery($sql, array($id));
-		return true;
+		if(is_numeric($id))
+		{
+			$sql = "DELETE FROM " . $this->table . " WHERE id=? LIMIT 1";
+			$this->database->ExecuteQuery($sql, array($id));
+			return true;
+		}
+		return false;
+
 	}
 
 	public function rowCount()

@@ -1,8 +1,8 @@
 
 <?php
-$pageTitle ="- Träningar";
+$pageTitle = "- Träningar";
 include ("include/header.php");
-$user->getUserprivilege();
+$eventObject = new EventObject();
 
 if (! isset($_SESSION["Previous_page"]))
 {
@@ -28,13 +28,12 @@ function validateDay($day)
 	return $day;
 }
 
-function getEventAndValidateGET($eventObject)
+function fetchEventAndValidateGET($eventObject)
 {
 	$singleEvent = "";
-	if (isset($_GET["e"]) && is_numeric($_GET["e"]))
+	if (validateIntGET("event"))
 	{
-		$eventId = $_GET["e"];
-		$values = array('id' => $eventId);
+		$values = array('id' => $_GET["event"]);
 		$res = $eventObject->fetchSingleEntryByValue($values);
 
 		if ($res != null)
@@ -55,7 +54,7 @@ function getEventAndValidateGET($eventObject)
     		</form>";
 		}
 	}
-	else if (isset($_GET["a"]) && is_numeric($_GET["a"]))
+	else if (validateIntGET("a"))
 	{
 		$date = isset($_GET["day"]) ? $date = validateDay($_GET["day"]) : $date = date('Y-m-d');
 
@@ -78,16 +77,14 @@ function tryToEditEvent($eventObject)
 	try
 	{
 		$params = validateEventParams();
-		if($params != null)
+		if ($params != null)
 		{
-			$id = is_numeric($_POST["id"]) ? strip_tags($_POST["id"]) : - 1;
-			$condition["id"] = $id;
+			$condition["id"] = validateIntPOST("id") ? $_POST["id"] : - 1;
 			return $eventObject->editSingleEntry($params, $condition);
 		}
 		return false;
-
 	}
-	catch ( Exception $e )
+	catch (Exception $e)
 	{
 		logError("< " . $_SESSION["uid"] . "  tryToEditEvent > Error: " . $e . "\n");
 		return false;
@@ -99,14 +96,13 @@ function tryToAddEvent($eventObject)
 	try
 	{
 		$params = validateEventParams();
-		if($params != null)
+		if ($params != null)
 		{
 			return $eventObject->insertEntyToDatabase($params);
 		}
 		return false;
-
 	}
-	catch ( Exception $e )
+	catch (Exception $e)
 	{
 		logError("< " . $_SESSION["uid"] . "  tryToAddEvent > Error: " . $e . "\n");
 		return false;
@@ -115,7 +111,7 @@ function tryToAddEvent($eventObject)
 
 function validateEventParams()
 {
-	if(strlen($_POST["eventName"]) > 1 && strlen($_POST["info"]) > 1)
+	if (validateStringPOST("eventName") && validateStringPOST("info") && validateStringPOST("startTime"))
 	{
 		$eventName = strip_tags($_POST["eventName"]);
 		$info = strip_tags($_POST["info"]);
@@ -124,8 +120,9 @@ function validateEventParams()
 		$reccurance = isset($_POST["reccurance"]) ? 1 : 0;
 		$bus = isset($_POST["bus"]) ? 1 : 0;
 
-		$params = array('eventName'=>$eventName,'info'=>$info,'startTime'=>$startTime, 'eventDate' => $date, 'reccurance' => $reccurance, 'bus' => $bus);
+		$params = array('eventName' => $eventName, 'info' => $info, 'startTime' => $startTime, 'eventDate' => $date, 'reccurance' => $reccurance, 'bus' => $bus);
 		return $params;
+		$user->getUserprivilege();
 	}
 	else
 	{
@@ -133,9 +130,9 @@ function validateEventParams()
 	}
 }
 
-if ($privilege === "2") // Shall someone else be able to add??
+if ($privilege === "2")
 {
-	$eventObject = new EventObject();
+
 	$singleEvent = "";
 	if (isset($_POST["btn_edit"]))
 	{
@@ -145,7 +142,7 @@ if ($privilege === "2") // Shall someone else be able to add??
 		}
 		else
 		{
-			$singleEvent .= displayErrorMessage("Kopplingen till databasen försvann");
+			populateError("Det blev något fel, försök igen senare");
 		}
 	}
 	else if (isset($_POST["btn_add"]))
@@ -156,19 +153,20 @@ if ($privilege === "2") // Shall someone else be able to add??
 		}
 		else
 		{
-			$singleEvent .= displayErrorMessage("Kopplingen till databasen försvann");
+			populateError("Det blev något fel, försök igen senare");
 		}
 	}
 	$singleEvent .= "<h4 id='infoHead'> <a href='" . $_SESSION["Previous_page"] . "'> Tillbaka</a></h4>";
-	$singleEvent .= getEventAndValidateGET($eventObject);
-}
-echo "<div class='row clearFix'>";
-
-if (isset($singleEvent) && strlen($singleEvent) > 2)
-{
-	echo $singleEvent;
+	$singleEvent .= fetchEventAndValidateGET($eventObject);
 }
 else
 {
-	echo displayErrorMessage("Admin somnade");
+	populateError("Du har inte behörighet att se sidan");
+}
+
+echo "<div class='row clearFix'>";
+displayError();
+if (isset($singleEvent) && strlen($singleEvent) > 2)
+{
+	echo $singleEvent;
 }

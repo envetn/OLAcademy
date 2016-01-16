@@ -7,20 +7,18 @@ $newsObject = new NewsObject();
 
 $privilege = $user->getUserprivilege();
 
-if (isset($_SESSION['Previous_page']))
+if (isset($_SESSION["Previous_page"]))
 {
-	unset($_SESSION['Previous_page']);
+	unset($_SESSION["Previous_page"]);
 }
 
 function tryToEditUser($user)
 {
-	if (isset($_POST['userId']) && is_numeric($_POST['userId']))
+	if (validateIntPOST("userId") && validateIntPOST("privilege") )
 	{
 		try
 		{
-			$userId = $_POST['userId'];
-			$privilege = $_POST['privilege'];
-			return $user->updateUsersPrivilege($privilege, $userId);
+			return $user->updateUsersPrivilege($_POST["privilege"], $_POST["userId"]);
 		}
 		catch (Exception $e)
 		{
@@ -55,8 +53,7 @@ function tryToRemoveUser($user)
 	{
 		try
 		{
-			$id = $_POST['userId'];
-			return $user->removeSingleEntryById($id);
+			return $user->removeSingleEntryById($_POST['userId']);
 		}
 		catch (Exception $e)
 		{
@@ -69,7 +66,7 @@ function tryToRemoveUser($user)
 
 function getTableTitleOfPosts($newsObject)
 {
-	$offset = isset($_GET['offset']) ? $_GET['offset'] : 0;
+	$offset = isset($_GET['offset']) && is_numeric($_GET['offset']) ? $_GET['offset'] : 0;
 	$limit = 20;
 	$res = $newsObject->fetchEntryWithOffset($offset, $limit);
 
@@ -131,7 +128,7 @@ function getTableEvents($eventObject)
 		{
 			$info = substr($info, 0, 40) . "<a href='event.php?s=$events->id'> ... </a>";
 		}
-		$values = array('id' => $events->id);
+		$values = array('eventID' => $events->id);
 		$registered = $eventObject->getNumberOfRegisteredByValue($values);
 		$reccurance = $events->reccurance == '1' ? "Ja" : "Nej";
 		$bus = $events->bus == '1' ? "Ja" : "Nej";
@@ -157,26 +154,28 @@ function getTableEvents($eventObject)
 
 function getTableRegisteredUsers($eventObject)
 {
-	if (isset($_GET['event']) && is_numeric($_GET['event']))
+	if (validateIntGET("event"))
 	{
-
 		$eventId = $_GET['event'];
-		$values = array('id' => $eventId);
+		$values = array('id' => $_GET['event']);
 
 		$event = $eventObject->fetchSingleEntryByValue($values);
 
-		$regValues = array('eventID' => $eventId);
+		$regValues = array('eventId' => $eventId);
 		$registeredUsers = $eventObject->getRegisteredByValue($regValues);
 		if ($event != null)
 		{
 			$registeredUsersTable = "<h3 id='tableHead'>Anmälda till : $event->eventName - $event->eventDate </h3></a>";
 			$registeredUsersTable .= '<table class="tableContent"><th>Anmälda</th><th>Bussplats</th><th>Kommentar</th>';
-
-			foreach ( $registeredUsers as $regUser )
+			if ($registeredUsers != null)
 			{
-				$registeredUsersTable .= "<tr class='admin_rowContent'><td>" . $regUser->name . "</td><td>" . $regUser->bus . "</td><td>" . $regUser->comment . "</td><td>";
-				$registeredUsersTable .= "<a href='?r=$regUser->id' ><img src='img/cross.png' width=18px height=18px></a>";
-				$registeredUsersTable .= "</td></tr>";
+
+				foreach ( $registeredUsers as $regUser )
+				{
+					$registeredUsersTable .= "<tr class='admin_rowContent'><td>" . $regUser->name . "</td><td>" . $regUser->bus . "</td><td>" . $regUser->comment . "</td><td>";
+					$registeredUsersTable .= "<a href='?r=$regUser->id' ><img src='img/cross.png' width=18px height=18px></a>";
+					$registeredUsersTable .= "</td></tr>";
+				}
 			}
 			$registeredUsersTable .= "</table><hr>";
 			return $registeredUsersTable;
@@ -189,7 +188,8 @@ function searchForUser($search, $user)
 {
 	if (strlen($search) > 1)
 	{
-		$res = $user->fetchUserByName($search);
+		$name = strip_tags($search);
+		$res = $user->fetchUserByName($name);
 		if ($res != null)
 		{
 			$result = "<table class='tableContent' id='searchResult'><tr class='admin_rowHead'><th>Namn</th><th>email</th><th>Rättighet</th><th>Registrerad</th><th>Edit</th><tr>";
@@ -209,9 +209,9 @@ function getTableUsers($user)
 {
 	$res = $user->fetchUserEntries();
 	$htmlUsers = "<h3 id='tableHead'>Användare</h3><a href='user.php'> < Lägg till > </a> <form method='get'><input type='hidden' name='c' value='2'/><input type='text' name='search' placeholder='Sök användare'/><button class='btn btn-primary'>Sök </button></form>";
-	if (isset($_GET['search']))
+	if (validateStringGET("search"))
 	{
-		$htmlUsers .= searchForUser($_GET['search'], $user);
+		$htmlUsers .= searchForUser($_GET["search"], $user);
 	}
 	// Maybe not show all users?
 	$htmlUsers .= "<table class='tableContent'>
@@ -265,7 +265,7 @@ function generateSelect($privilege)
 
 function getTablesAndValidateGET($newsObject, $htmlAdmin, $eventObject, $user) // need a better solution than this
 {
-	if (isset($_GET['c']) && is_numeric(($_GET['c'])))
+	if (validateIntGET("c"))
 	{
 		$choice = strip_tags($_GET['c']);
 		switch ($choice)
@@ -303,7 +303,7 @@ if ($privilege === "2")
                </ul></div>";
 	$htmlAdmin = "<div id='content'>";
 
-	if (isset($_POST['removeUser_1_x'])) // Where does x come from?
+	if (validateIntPOST("removeUser_1_x"))
 	{
 		if (tryToRemoveUser($user))
 		{
@@ -314,7 +314,7 @@ if ($privilege === "2")
 			$htmlAdmin .= "<h4 id='infoHead'> ... </h4>";
 		}
 	}
-	else if (isset($_POST['editUser_2_x']))
+	else if (validateIntPOST("editUser_2_x"))
 	{
 		if (tryToEditUser($user))
 		{
@@ -325,7 +325,7 @@ if ($privilege === "2")
 			$htmlAdmin .= "<h4 id='infoHead'>Det blev något fel, användaren uppdaterades inte </h4>";
 		}
 	}
-	else if (isset($_POST['removeEvent_1_x']))
+	else if (validateIntPOST("removeEvent_1_x"))
 	{
 		if (tryToRemoveEvent($eventObject))
 		{
@@ -349,4 +349,4 @@ else
 {
 	header("Location: index.php");
 }
-include("include/footer.php");
+include ("include/footer.php");

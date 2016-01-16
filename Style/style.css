@@ -359,7 +359,7 @@ background-color:#e7e7e7;
     padding: 0;
 }
 
-.error
+.error, .info
 {
 	display: block;
     padding: 9.5px;
@@ -374,6 +374,11 @@ background-color:#e7e7e7;
     border-radius: 4px;
 }
 
+.info
+{
+    color: green;
+    width:50%;
+}
 
 /******Extra****/
 .clearLine {

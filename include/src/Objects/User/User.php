@@ -1,6 +1,7 @@
 <?php
 class User extends DataObject
 {
+
 	function __construct()
 	{
 		parent::__construct("users");
@@ -19,10 +20,9 @@ class User extends DataObject
 
 	function fetchUserByName($name)
 	{
-		$name = strip_tags($name);
-
 		$condition = array('name' => $name);
-		$values = array('id','name','email','Privilege', 'regDate'); // never select password.
+		$values = array('id', 'name','lastname', 'email', 'Privilege', 'regDate'); // never select password.
+
 
 		$res = parent::fetchSingleEntryByValue($condition, $values);
 
@@ -51,12 +51,13 @@ class User extends DataObject
 		$condition = array('email' => $email);
 		$res = parent::fetchSingleEntryByValue($condition);
 
-		if($this->rowCount() == 1)
+		if ($this->rowCount() == 1)
 		{
 			if (password_verify($password, $res->password)) // requires PHP 5.4
 			{
 				$sql = "SELECT id,name,email,Privilege FROM users WHERE email=? LIMIT 1";
 				$params = array($email); // No duplicates of email
+
 
 				$res = $this->database->queryAndFetch($sql, $params);
 
@@ -106,7 +107,7 @@ class User extends DataObject
 		setcookie('rememberme_olacademy', $token, $oneMonth);
 
 		$sql = "UPDATE users SET token=? WHERE id=? AND name=? LIMIT 1";
-		$params = array($shaToken,$_SESSION["uid"],$user);
+		$params = array($shaToken, $_SESSION["uid"], $user);
 		$this->database->ExecuteQuery($sql, $params);
 	}
 
@@ -160,15 +161,15 @@ class User extends DataObject
 				</form>';
 	}
 
-	public function updateUser($name, $email, $newPassword)
+	public function updateUser($name, $email, $lastname, $newPassword)
 	{
 		$id = $_SESSION["uid"];
-		$values = array('name' => $name,'email' => $email);
+		$values = array('name' => $name, 'email' => $email, 'lastname' => $lastname);
 		$condition = array('id' => $id);
 
 		if ($newPassword != "")
 		{
-			$password = password_hash($newPassword, PASSWORD_BCRYPT, array('cost'=>12));
+			$password = password_hash($newPassword, PASSWORD_BCRYPT, array('cost' => 12));
 			$values["password"] = $password;
 		}
 
@@ -176,8 +177,8 @@ class User extends DataObject
 
 		$_SESSION["success"] = "<pre class=red>Updaterad!</pre>";
 		$_SESSION["username"] = $name;
-	// TODO: Remove this comment when we have a mailserver working
-	// header("location: " .$_SERVER["PHP_SELF"]."");
+
+		header("location: " .$_SERVER["PHP_SELF"]."");
 	}
 
 	public function forgottenPassword($email)
@@ -200,6 +201,8 @@ class User extends DataObject
 				$this->sendNewPassword($plainTextPassword);
 			}
 		}
+		// TODO: Remove this comment when we have a mailserver working
+		// header("location: " .$_SERVER["PHP_SELF"]."");
 	}
 
 	private function sendNewPassword($plainTextPassword)
@@ -213,15 +216,16 @@ class User extends DataObject
 		// Send... not working
 		// Need mailserver for this to work
 
-// 		if (mail($email, 'My Subject', $message, $headers))
-// 		{
-// 			echo "mail sent to " . $email;
-// 		}
-// 		else
-// 		{
-// 			// gives /usr/sbin/sendmail: not found
-// 			echo "Something went wrong...";
-// 		}
+
+		// 		if (mail($email, 'My Subject', $message, $headers))
+		// 		{
+		// 			echo "mail sent to " . $email;
+		// 		}
+		// 		else
+		// 		{
+		// 			// gives /usr/sbin/sendmail: not found
+		// 			echo "Something went wrong...";
+		// 		}
 	}
 
 	private function generateRandomPassword()

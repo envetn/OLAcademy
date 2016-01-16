@@ -69,9 +69,13 @@ class EventObject extends DataObject
 		return $result;
 	}
 
-	function getCurrentMonthsEvents()
+	function getCurrentMonthsEvents($orderBy = "")
 	{
 		$sql = " SELECT * FROM events WHERE eventDate BETWEEN ? AND ?";
+		if ($orderBy != "")
+		{
+			$sql .= " ORDER BY " . $orderBy;
+		}
 		$firstDay = (new DateTime('first day of this month'))->format('Y-m-d');
 		$lastDay = (new DateTime('last day of this month'))->format('Y-m-d');
 		$params = array($firstDay,$lastDay);
@@ -142,7 +146,8 @@ class EventObject extends DataObject
 
 	public function fetchAllRegistered()
 	{
-		$res = $this->registered->fetchAllEntries("eventID");
+		$orderBy = "eventID";
+		$res = $this->registered->fetchAllEntries($orderBy);
 		return $res;
 	}
 }

@@ -256,7 +256,7 @@ function presentEvent($username, $eventObject)
 			{
 				if ($key->eventDate == date("Y-m-d", time()+($i * 86400)))
 				{
-					$text .= "<li style='padding-left:5%; margin:0px; list-style-type: none;'><span style='padding-left:2%; margin:0px;' >".$key->eventName ."</span><br/></li>";
+					$text .= "<li style='padding-left:5%; list-style-type: none;'><span style='padding-left:2%;' >".$key->eventName ."</span><br/></li>";
 				}
 			}
 		}
@@ -313,7 +313,7 @@ function showLoginLogout($user, $salt_char)
 
 		if(!$user->login($email,$_POST["passwd"]))
 		{
-			populateError("Fel lösenord eller email <a href='user.php?renew=true'> Glömt lösenord ?</a>");
+			populateError("Fel lösenord eller email <a href='user.php?renew'>Glömt lösenord ?</a>");
 		}
 		else
 		{
@@ -327,7 +327,7 @@ function showLoginLogout($user, $salt_char)
 
 	if(isset($_SESSION["uid"]))
 	{
-		$form = "<form method='post' class='navbar-form navbar-right'><a href='user.php'>Användare: " . $_SESSION["username"] . "</a>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn btn-primary' name='logout'>Logout</button></form>";
+		$form = "<form method='post' class='navbar-form navbar-right'><a href='user.php'>" . $_SESSION["username"] . "</a>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn btn-primary' name='logout'>Logout</button></form>";
 		if(isset($_POST["logout"]))
 		{
 			$user->logout();
@@ -340,6 +340,39 @@ function showLoginLogout($user, $salt_char)
 	}
 
 	return $form;
+}
+function registerUserToEvent($user, $eventObject)
+{
+
+	if (isset($_POST["register"]))
+	{
+		if (! $user->isLoggedIn())
+		{
+			populateError("Du måste vara inloggad för att kunna anmäla dig.");
+		}
+		else
+		{
+
+			if (validateIntPOST("eventID"))
+			{
+				$userId = isset($_SESSION["uid"]) ? $_SESSION["uid"] : false;
+				$username = isset($_SESSION["username"]) ? $_SESSION["username"] : "";
+
+				$eventId = $_POST["eventID"];
+				$bus = isset($_POST["bus"]) ? "Ja" : "Nej";
+				$comment = isset($_POST["comment"]) ? makeLinks($_POST["comment"]) : "";
+
+				$conditions = array('userID' => $userId, 'eventID' => $eventId);
+				$res = $eventObject->getRegisteredByValue($conditions);
+
+				if ($res == null)
+				{
+					$params = array('userID' => $userId, 'name' => $username, 'date' => $_POST["date"], 'comment' => $comment, 'bus' => $bus, 'eventID' => $eventId);
+					$eventObject->registerUserToEvent($params);
+				}
+			}
+		}
+	}
 }
 
 function displayErrorMessage($message)
@@ -394,6 +427,42 @@ function dump($value)
 	echo "<div style='background:white'>";
 	print_r($value);
 	echo "</div>";
+}
+
+function validateIntGET($value)
+{
+	if(isset($_GET[$value]) && is_numeric($_GET[$value]))
+	{
+		return true;
+	}
+	return false;
+}
+
+function validateStringGET($value)
+{
+	if(isset($_GET[$value]) && strlen($_GET[$value]) > 1)
+	{
+		return true;
+	}
+	return false;
+}
+
+function validateIntPOST($value)
+{
+	if(isset($_POST[$value]) && is_numeric($_POST[$value]))
+	{
+		return true;
+	}
+	return false;
+}
+
+function validateStringPOST($value)
+{
+	if(isset($_POST[$value]) && strlen($_POST[$value]) > 1)
+	{
+		return true;
+	}
+	return false;
 }
 
 function getUrlPath()

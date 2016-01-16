@@ -31,8 +31,9 @@ function updateUser($user, $newPassword = "")
 {
 	// validate
 	$name = $_POST['username'];
+	$lastname = $_POST['lastname'];
 	$email = $_POST['email'];
-	$user->updateUser($name, $email, $newPassword);
+	$user->updateUser($name, $email, $lastname,  $newPassword);
 }
 
 function getUserInformation($user)
@@ -45,7 +46,8 @@ function getUserInformation($user)
 	{
 		$form = "
             <form method='post' id='userInformation'>
-             <label>Användarnamn</label><input type='text' value='" . $res->name . "' name='username'/><br/>
+             <label>Namn</label><input type='text' value='" . $res->name . "' name='username'/><br/>
+             <label>Efternamn</label><input type='text' value='" . $res->lastname . "' name='lastname' /><br />
              <label>Email</label><input type='text' value='" . $res->email . "' name='email'/><br/>
              <label>Nyvarande lösenord</label><input type='password' value='' name='oldPassword'/><br/>
 
@@ -65,13 +67,15 @@ function validateCreateUserPost($user)
 {
 	if (isset($_POST['spara']))
 	{
+		dump($_POST);
 		$username = strip_tags(ucfirst($_POST['username']));
+		$lastname = strip_tags(ucfirst($_POST['lastname']));
 
 		$password = $_POST['password'];
 		$passwordRepeat = $_POST['passwordRepeat'];
 
 		$email = strip_tags($_POST['email']);
-		$priv = isset($_POST['Privilege']) ? $_POST['Privilege'] : "0";
+		$priv = isset($_POST['Privilege']) ? $_POST['Privilege'] : "1";
 		$date = date("Y-m-d H:i:s");
 
 		if ($password === $passwordRepeat)
@@ -81,7 +85,7 @@ function validateCreateUserPost($user)
 			if ($res === null)
 			{
 				$password = password_hash($_POST['password'], PASSWORD_BCRYPT, array('cost' => 12));
-				$params = array('name' => $username, 'password' => $password, 'email' => $email, 'Privilege' => $priv, 'regDate' => $date);
+				$params = array('name' => $username, 'password' => $password, 'email' => $email, 'Privilege' => $priv, 'regDate' => $date, 'lastname' => $lastname);
 				$user->insertEntyToDatabase($params);
 
 				$success = "Inserted into database";
@@ -153,7 +157,8 @@ else
 	$userConf = "
 	<div class='row'>
 		<form method='post'  id='userInformation'>
-			<label>Användarnamn</label><input type='text' value='' name='username' /><br />
+			<label>Namn</label><input type='text' value='' name='username' /><br />
+			<label>Efternamn</label><input type='text' value='' name='lastname' /><br />
 			<label>Email</label><input type='text' name='email' /><br />
 			<label>Lösenord</label><input type='password' value='' name='password' /><br />
 				<label>Upprepa lösenord</label><input type='password' value='' name='passwordRepeat' /><br />
