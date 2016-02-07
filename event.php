@@ -1,4 +1,3 @@
-
 <?php
 $pageTitle = "- Träningar";
 include ("include/header.php");
@@ -32,46 +31,54 @@ function fetchEventAndValidateGET($eventObject)
 {
 	$singleEvent = "";
 	if (validateIntGET("event"))
-	{ // class='checkbox'
+	{
 		$values = array('id' => $_GET["event"]);
 		$res = $eventObject->fetchSingleEntryByValue($values);
 
 		if ($res != null)
 		{
-			// could use a function for this..
 			$reccurance = $res->reccurance == '1' ? "checked" : "";
 			$bus = $res->bus == '1' ? "checked" : "";
+			$data = array("eventName" => $res->eventName, "info" => $res->info, "startTime" => $res->startTime,
+					"eventDate" => $res->eventDate, "bus" => $bus, "reccurance" => $reccurance, "button" => "btn_edit");
 
-			$singleEvent .= "<form id='form_addNew' method='post' enctype='multipart/form-data'>
-    		<input name='id' value='" . $res->id . "' 				type='hidden'/>
-    		<input name='eventName' value='" . $res->eventName . "'  type='text'/><br/>
-    		<input name='info' value='" . $res->info . "' 			type='text'/><br/>
-    		<input name='startTime' value='" . $res->startTime . "'  type='time'/><br/>
-    		<input name='date' value='" . $res->eventDate . "' 	    	type='datetime-local'/><br/>
-			<label>Buss: </label><input type='checkbox' name='bus' value='bus' " . $bus . " class='checkbox_bus'/><br/>
-    		<label>Återkommande: </label><input class='checkbox_bus' type='checkbox' name='reccurance' value='reccurance' " . $reccurance . "/><br/>
-    		<input class='btn btn-primary' type='submit' name='btn_edit' id='btn_edit' value='Spara'/>
-    		</form>";
+			$singleEvent .= eventForm($data);
+			$singleEvent .=" <input name='id' value='" . $res->id . "'type='hidden'/>";
 		}
 	}
 	else if (validateIntGET("a"))
 	{
 		$date = isset($_GET["day"]) ? $date = validateDay($_GET["day"]) : $date = date('Y-m-d');
-
 		$time = date('H:i:s', time() - date('Z'));
-		$singleEvent .= "<form id='form_addNew' method='post' enctype='multipart/form-data'>
-    		<input name='eventName' value='' placeholder='Träning' type='text'/><br/>
-    		<input name='info' value='' 	 placeholder='Information'		type='text'/><br/>
-    		<input name='startTime' value='' placeholder='" . $time . "'  type='time'/><br/>
-    		<input name='date' value='" . $date . "' 	    	type='datetime-local'/><br/>
-    		<label>Buss: </label><input type='checkbox' name='bus' value='bus' class='checkbox_bus'/><br/>
-    		<label>Återkommande: </label><input class='checkbox_bus' type='checkbox' name='reccurance' value='reccurance' /><br/>
-    		<input class='btn btn-primary' type='submit' name='btn_add' id='btn_edit' value='Spara'/>
-    		</form>";
+
+		$data = array("startTime" => $time, "eventDate" => $date, "button" => "btn_add" );
+		$singleEvent .= eventForm($data);
 	}
 	return $singleEvent;
 }
 
+function eventForm($data)
+{
+	$form = "<form id='form_addNew' method='post' enctype='multipart/form-data'>";
+	$form .= "<input name='eventName' placeholder='Träning' value='" . is_set($data, "eventName") . "'  type='text'/><br/>";
+	$form .= "<input name='info' placeholder='Information' value='" . is_set($data, "info")  . "'  type='text'/><br/>";
+	$form .= "<input name='startTime' value='" .  is_set($data, "startTime")  . "'  type='time'/><br/>";
+	$form .= "<input name='date' value='" . is_set($data, "eventDate")  . "' type='datetime-local'/><br/>";
+	$form .= "<label>Buss: </label><input type='checkbox' name='bus' value='bus' " . is_set($data, "bus")  . " class='checkbox_bus'/><br/>";
+	$form .= "<label>Återkommande: </label><input class='checkbox_bus' type='checkbox' name='reccurance' value='reccurance' " . is_set($data, "reccurance") . "/><br/>";
+	$form .= "<input class='btn btn-primary' type='submit' name='".is_set($data, "button")."' id='btn_edit' value='Spara'/>";
+
+	return $form;
+}
+
+function is_set($data, $value)
+{
+	if(isset($data[$value]))
+	{
+		return $data[$value];
+	}
+	return "";
+}
 function tryToEditEvent($eventObject)
 {
 	try
@@ -122,7 +129,6 @@ function validateEventParams()
 
 		$params = array('eventName' => $eventName, 'info' => $info, 'startTime' => $startTime, 'eventDate' => $date, 'reccurance' => $reccurance, 'bus' => $bus);
 		return $params;
-		$user->getUserprivilege();
 	}
 	else
 	{
@@ -148,7 +154,7 @@ if ($privilege === "2")
 	{
 		if (tryToAddEvent($eventObject))
 		{
-			$singleEvent .= "<h4 id='infoHead'>Träning sparad </h4>";
+			$singleEvent .= "<h4 id='infoHead'>Träning skapad </h4>";
 		}
 		else
 		{

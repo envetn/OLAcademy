@@ -11,7 +11,7 @@ class User extends DataObject
 	{
 		$sql = "SELECT id,name,email,Privilege,regDate FROM users ORDER BY privilege LIMIT 10";
 		$res = $this->database->queryAndFetch($sql);
-		if ($this->database->RowCount() > 0)
+		if ($this->rowCount() > 0)
 		{
 			return $res;
 		}
@@ -122,7 +122,7 @@ class User extends DataObject
 		$sql = 'SELECT id,name FROM users WHERE token=? LIMIT 1';
 		$params = array($shaToken);
 		$res = $this->database->queryAndFetch($sql, $params);
-		if ($this->database->RowCount() == 1)
+		if ($this->rowCount() == 1)
 		{
 			$_SESSION["uid"] = $res[0]->id;
 			$_SESSION["username"] = $res[0]->name;

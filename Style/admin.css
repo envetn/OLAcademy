@@ -12,6 +12,10 @@
 {
 	padding:2px;
 }
+.admin_rowHead a
+{
+	color: inherit;
+}
 
 /*Bug fix for event buttons not aligning*/
 .admin_form_event input

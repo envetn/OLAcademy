@@ -67,7 +67,6 @@ function validateCreateUserPost($user)
 {
 	if (isset($_POST['spara']))
 	{
-		dump($_POST);
 		$username = strip_tags(ucfirst($_POST['username']));
 		$lastname = strip_tags(ucfirst($_POST['lastname']));
 

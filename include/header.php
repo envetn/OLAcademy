@@ -38,7 +38,7 @@ $privilege =  $user->getUserprivilege();
 					<span class="icon-bar"></span>
 				</button>
 				<a class="navbar-brand" href="index.php">
-					<img  id="bthLogo" src="img/bthLogo.png" alt="BTH logo">
+					<img  id="pageLogo" src="img/pageLogo.png" alt="Page logo">
 				</a>
 			</div>
 

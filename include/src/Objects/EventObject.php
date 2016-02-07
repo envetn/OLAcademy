@@ -1,7 +1,6 @@
 <?php
 include ("DataObject.php");
 include ("Registered.php");
-
 class EventObject extends DataObject
 {
 	private $today;
@@ -10,48 +9,31 @@ class EventObject extends DataObject
 
 	function __construct()
 	{
-		parent::__construct("events");
+		parent::__construct( "events" );
 
-		$this->today = date("Y-m-d");
-		$this->nextWeek = date("Y-m-d", time() + (6 * 24 * 60 * 60));
+		$this->today = date( "Y-m-d" );
+		$this->nextWeek = date( "Y-m-d", time() + (6 * 24 * 60 * 60) );
 		$this->registered = new Registered();
 	}
 
 	public function isAllowedToDeleteEntry($id)
 	{
 		$sql = "SELECT * FROM registered WHERE id=? AND userID=?";
-		$params = array($id,$_SESSION["uid"]);
-		$res = $this->database->queryAndFetch($sql, $params);
+		$params = array($id, $_SESSION["uid"] );
+		$res = $this->database->queryAndFetch( $sql, $params );
 
-		if ($this->rowResult() == 1)
+		if( $this->rowResult() == 1 )
 		{
 			return true;
 		}
 		return false;
 	}
 
-	function rowResult()
-	{
-		return $this->database->RowCount();
-	}
-
-	public function fetchEventByDay($day)
-	{
-		$sql = "SELECT eventName,id FROM events WHERE eventDate=? ORDER BY startTime"; //Prepare SQL code
-		$params = array($day);
-		$res = $this->database->queryAndFetch($sql, $params);
-		if ($this->rowResult() > 0)
-		{
-			return $res;
-		}
-		return null;
-	}
-
 	public function removeEventAndRegisteredById($id)
 	{
-		parent::removeSingleEntryById($id);
+		parent::removeSingleEntryById( $condition = array("id" => $id ) );
 
-		$this->registered->removeSingleRegistered($id);
+		$this->registered->removeSingleRegistered( $id );
 
 		return true;
 	}
@@ -64,57 +46,57 @@ class EventObject extends DataObject
 	        WHERE eventDate BETWEEN ? AND ?
 			ORDER BY eventDate
 	        ";
-		$params = array($this->today,$this->nextWeek);
-		$result = $this->database->queryAndFetch($sql, $params);
+		$params = array($this->today, $this->nextWeek );
+		$result = $this->database->queryAndFetch( $sql, $params );
 		return $result;
 	}
 
-	function getCurrentMonthsEvents($orderBy = "")
+	public function getCurrentMonthsEvents($orderBy = "")
 	{
 		$sql = " SELECT * FROM events WHERE eventDate BETWEEN ? AND ?";
-		if ($orderBy != "")
+		if( $orderBy != "" )
 		{
 			$sql .= " ORDER BY " . $orderBy;
 		}
-		$firstDay = (new DateTime('first day of this month'))->format('Y-m-d');
-		$lastDay = (new DateTime('last day of this month'))->format('Y-m-d');
-		$params = array($firstDay,$lastDay);
-		$result = $this->database->queryAndFetch($sql, $params);
+		$firstDay = (new DateTime( 'first day of this month' ))->format( 'Y-m-d' );
+		$lastDay = (new DateTime( 'last day of this month' ))->format( 'Y-m-d' );
+		$params = array($firstDay, $lastDay );
+		$result = $this->database->queryAndFetch( $sql, $params );
 
-		if ($this->rowResult() > 0)
+		if( $this->rowCount() > 0 )
 		{
 			return $result;
 		}
 		return 0;
 	}
 
-	function updateEvents()
+	public function updateEvents()
 	{
 		$sql = "
         SELECT id,eventDate,reccurance
-        FROM events
-        WHERE eventDate BETWEEN ? AND ?
-        AND reccurance=1";
-		$currentDate = date('Y-m-d', strtotime($this->today . ' -1 day'));
-		$prev_date = date('Y-m-d', strtotime($currentDate . ' -90 day'));
-		$params = array($prev_date,$currentDate);
+				FROM events
+				WHERE eventDate BETWEEN ? AND ?
+				AND reccurance=1";
 
-		$res = $this->database->queryAndFetch($sql, $params);
-		if ($this->rowResult() > 0)
+		$currentDate = date( 'Y-m-d', strtotime( $this->today . ' -1 day' ) );
+		$prev_date = date( 'Y-m-d', strtotime( $currentDate . ' -90 day' ) );
+		$params = array($prev_date, $currentDate );
+
+		$res = $this->database->queryAndFetch( $sql, $params );
+		if( $this->rowCount() > 0 )
 		{
-			foreach ( $res as $event )
+			foreach( $res as $event )
 			{
-				if ($event->reccurance === "1")
+				if( $event->reccurance === "1" )
 				{
 					// Set new date.
-					$newDate = date('Y-m-d', strtotime($event->eventDate . ' + 7 day'));
+					$newDate = date( 'Y-m-d', strtotime( $event->eventDate . ' + 7 day' ) );
 
-					$values = array('eventDate' => $newDate);
-					$condition = array('id' => $event->id);
-					parent::editSingleEntry($values, $condition);
+					$values = array('eventDate' => $newDate );
+					$condition = array('id' => $event->id );
+					parent::editSingleEntry( $values, $condition );
 
-					// Clear all registered from updated event
-					$this->registered->removeSingleRegistered($event->id);
+					$this->registered->removeSingleRegistered( $event->id );
 				}
 			}
 		}
@@ -123,36 +105,35 @@ class EventObject extends DataObject
 	// registered functions
 	public function registerUserToEvent($params)
 	{
-		$this->registered->insertEntyToDatabase($params);
+		$this->registered->insertEntyToDatabase( $params );
 	}
 
 	public function unRegisterUserToEvent($id)
 	{
-		$this->registered->removeSingleEntryById($id);
+		$this->registered->removeSingleEntryById( $condition = array("id" => $id ) );
 	}
 
 	public function unRegisterUserToEventByValue($eventId)
 	{
-		$this->registered->removeSingleRegistered($eventId);
+		$this->registered->removeSingleRegistered( $eventId );
 	}
 
 	public function getRegisteredByValue($condition = array())
 	{
-		// get content of Registered
-		$res = $this->registered->fetchAllEntriesByValue($condition);
+		$res = $this->registered->fetchAllEntriesByValue( $condition );
 		return $res;
 	}
 
-	public function getNumberOfRegisteredByValue($value = array())
+	public function getNumberOfRegisteredByValue($value)
 	{
-		$res = $this->registered->getNrOfRegisteredByValue($value);
+		$res = $this->registered->fetchNumberOfEntriesByValue( $value );
 		return $res;
 	}
 
 	public function fetchAllRegistered()
 	{
 		$orderBy = "eventID";
-		$res = $this->registered->fetchAllEntries($orderBy);
+		$res = $this->registered->fetchAllEntries( $orderBy );
 		return $res;
 	}
 }

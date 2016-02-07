@@ -76,7 +76,7 @@ function removeNews($newsObject)
 	{
 		if($newsObject->isAllowedToDeleteEntry())
 		{
-			$newsObject->removeSingleEntryById($_GET["id"]);
+			$newsObject->removeSingleEntryById($condition = array("id" => $_GET["id"]));
 			header("Location: news.php");
 		}
 	}

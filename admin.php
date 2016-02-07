@@ -18,7 +18,9 @@ function tryToEditUser($user)
 	{
 		try
 		{
-			return $user->updateUsersPrivilege($_POST["privilege"], $_POST["userId"]);
+			$privilege = (int) $_POST["privilege"];
+			$id = (int)$_POST["userId"];
+			return $user->updateUsersPrivilege($privilege, $id);
 		}
 		catch (Exception $e)
 		{
@@ -49,16 +51,15 @@ function tryToRemoveEvent($eventObject)
 
 function tryToRemoveUser($user)
 {
-	if (isset($_POST['userId']) && is_numeric($_POST['userId']))
+	if (validateIntPOST("userId"))
 	{
 		try
 		{
-			return $user->removeSingleEntryById($_POST['userId']);
+			return $user->removeSingleEntryById($condition = array("id" => (int) $_POST["userId"]));
 		}
 		catch (Exception $e)
 		{
-			//logError("< " . $_SESSION['uid'] . "  tryToRemoveUser > Error: " . $e . "\n");
-			dump($e);
+			logError("< " . $_SESSION['uid'] . "  tryToRemoveUser > Error: " . $e . "\n");
 			return false;
 		}
 	}
@@ -89,13 +90,14 @@ function getTableTitleOfPosts($newsObject)
 
 		$news .= "
                     <tr class='admin_rowContent'>
-                        <td><span>" . $title . "</span></td>
+						
+                        <td><a class='admin_news_remove' href='news.php?offset=0&p=" . $row->id . "'><span>" . $title . "</span></a></td>
                         <td><span>" . $row->author . "</span></td>
                        	<td>" . $row->added . "</td>
+                       	
                         <td>
                             <a class='admin_news_remove' href='admin.php?r=" . $row->id . "'><img src='img/cross.png' width=18px height=18px></a>
                             <a class='admin_news_remove' href='news.php?action=edit&id=" . $row->id . "'><img src='img/edit.png' width=18px height=18px></a>
-                            <a class='admin_news_remove' href='news.php?offset=0&p=" . $row->id . "'>Show</a>
                         </td>
                     </tr>";
 	}
@@ -108,9 +110,10 @@ function getTableTitleOfPosts($newsObject)
 
 function getTableEvents($eventObject)
 {
-	if (isset($_GET['showAll']))
+	if (isset($_GET["sort"]) || isset($_GET['showAll']) )
 	{
-		$res = $eventObject->fetchAllEntries("eventDate");
+		$orderby = validateStringGET("sort") ? $_GET["sort"] : "eventDate";
+		$res = $eventObject->fetchAllEntries($orderby);
 	}
 	else
 	{
@@ -119,11 +122,17 @@ function getTableEvents($eventObject)
 
 	$htmlEvents = "<h3 id='tableHead'>Veckans träningar</h3>
 			<a href='event.php?a=1'> < Lägg till > </a>
-			<a href='" . getUrlPath() . "&showAll=true'> < Visa alla > </a>
+			<a href='admin.php?c=1&showAll=true'> < Visa alla > </a>
 			<table class='tableContent'>
-     <tr class='admin_rowHead'>
-        <th>Event</th><th>Info</th><th>När</th><th>Datum</th><th>Anmälda</th><th>Återkommande</th><th>Buss</th><th>Edit</th>
-    </tr>";
+     		<tr class='admin_rowHead'>
+        		<th>Event</th><th>Info</th>
+				<th><a href='admin.php?c=1&sort=startTime'> När &#8595;</a> </th>
+				<th><a href='admin.php?c=1&sort=eventDate'> Datum &#8595;</a> </th>
+				<th>Anmälda</th>
+				<th><a href='admin.php?c=1&sort=reccurance'> Återkommande &#8595;</a></th>
+				<th><a href='admin.php?c=1&sort=bus'> Buss &#8595;</a></th>
+				<th>Edit</th>
+    		</tr>";
 	foreach ( $res as $events )
 	{
 		$name = $events->eventName;
@@ -164,8 +173,8 @@ function getTableRegisteredUsers($eventObject)
 {
 	if (validateIntGET("event"))
 	{
-		$eventId = $_GET['event'];
-		$values = array('id' => $_GET['event']);
+		$eventId = (int) $_GET['event'];
+		$values = array('id' => $eventId);
 
 		$event = $eventObject->fetchSingleEntryByValue($values);
 
