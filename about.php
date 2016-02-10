@@ -54,15 +54,16 @@ if (isset($_GET["edit"]) && $user->getUserPrivilege() === "2")
 {
 	// Show edit fields
 	$content = $about->parseDataForEdit($res);
-	$aboutText = "<h2> Allmän info text</h2><form method='post'>";
+	$aboutText = "<h2>OL-Academy</h2><form method='post'>";
 	$aboutText .= "<textarea rows='8' cols='50' name='generalInfo'>". $content['generalInfo'] ."</textarea><br/><hr/>";
+	$aboutText .= "<h3>Möjligheter</h3>";
 	foreach($content["offerInfo"] as $info)
 	{
 		$aboutText .= $info . "<br/>";
 	}
-	$aboutText .= "<h3>Extra info text</h3>";
+	$aboutText .= "<h3>Träning</h3>";
 	$aboutText .= "<textarea rows='8' cols='50'name='additionalInfo'>". $content['additionalInfo'] ."</textarea><br/><hr/>";
-	$aboutText .= "<h3> Extra info Länkar</h3>";
+	$aboutText .= "<h3>Länkar</h3>";
 
 	foreach($content["externalLinks"] as $info)
 	{
@@ -74,17 +75,17 @@ else
 {
 	// Show about text
 	$content = $about->parseData($res);
-	$aboutText = "<h2> Allmän info text</h2>
+	$aboutText = "<h2>OL-Academy</h2>
 	<pre class='newsText'>
 	" . $content['generalInfo'] . "<br/><hr/>
 
-	<h3> Info om vad som erbjuds</h3>
+	<h3>Möjligheter</h3>
 	" . $content['offerInfo'] . "<br/><hr/>
 
-	<h3> Extra info text</h3>
+	<h3>Träning</h3>
 	" . $content['additionalInfo'] . "<br/><hr/>
 
-	<h3> Extra info Länkar</h3>
+	<h3>Länkar</h3>
 	" . $content['externalLinks'];
 
 	if ($user->getUserPrivilege() === "2")

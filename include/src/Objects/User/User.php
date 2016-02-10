@@ -55,7 +55,7 @@ class User extends DataObject
 		{
 			if (password_verify($password, $res->password)) // requires PHP 5.4
 			{
-				$sql = "SELECT id,name,email,Privilege FROM users WHERE email=? LIMIT 1";
+				$sql = "SELECT id,name,email,Privilege, lastname FROM users WHERE email=? LIMIT 1";
 				$params = array($email); // No duplicates of email
 
 
@@ -65,6 +65,7 @@ class User extends DataObject
 				{
 					$_SESSION["uid"] = $res[0]->id;
 					$_SESSION["username"] = $res[0]->name;
+					$_SESSION["lastname"] = $res[0]->lastname;
 					$_SESSION["email"] = $res[0]->email;
 					$_SESSION["privilege"] = $res[0]->Privilege;
 

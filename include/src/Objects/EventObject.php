@@ -22,7 +22,7 @@ class EventObject extends DataObject
 		$params = array($id, $_SESSION["uid"] );
 		$res = $this->database->queryAndFetch( $sql, $params );
 
-		if( $this->rowResult() == 1 )
+		if( $this->RowCount() == 1 )
 		{
 			return true;
 		}

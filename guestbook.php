@@ -4,6 +4,7 @@ $pageTitle = "- Gästbok";
 include ("include/header.php");
 
 $username = isset($_SESSION["username"]) ? $_SESSION["username"] : "";
+$lastname = isset($_SESSION["lastname"]) ? $_SESSION["lastname"] : "";
 $limit = 7; //Posts per page
 $offset = validateIntGET("offset") ? $_GET["offset"] : 0; //Start index
 $guestbookObject = new GuestbookObject();
@@ -46,7 +47,7 @@ if (isset($_POST["submit"]))
 $postForm = '<div class="col-sm-4 col-sm-pull-8 elementBox">
 		<h2>Gästbok</h2>
 		<form action="' . $_SERVER["PHP_SELF"] . '" method="POST">
-			<label>Namn:<br><input type="text" name="name" value="' . $username . '" size="20"/></label><br>
+			<label>Namn:<br><input type="text" name="name" value="' . $username ." ". $lastname . '" size="20"/></label><br>
 			<label>Text:<br><textarea name="text" rows="8" cols="40"></textarea></label><br>
 			<label><input type="submit" class="btn btn-primary" name="submit" value="Skicka"/></label><br>
 		</form>

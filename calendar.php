@@ -144,7 +144,7 @@ if (validateIntGET("event"))
 							</div>
 							<span class='eventInfo'>" . $res->info . "</span>";
 
-	$singleEvent .= "<form method='POST'>
+	$singleEvent .= "<form method='POST' style='padding:7px;' >
 							<input type='hidden' name='eventID' value=" . $res->id . ">
 							<input type='hidden' name='date' value=" . $res->eventDate . ">";
 

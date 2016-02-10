@@ -361,7 +361,8 @@ function registerUserToEvent($user, $eventObject)
 			{
 				$userId = isset($_SESSION["uid"]) ? $_SESSION["uid"] : false;
 				$username = isset($_SESSION["username"]) ? $_SESSION["username"] : "";
-
+				$lastname = isset($_SESSION["lastname"]) ? $_SESSION["lastname"] : "";
+				$name = $username . " " . $lastname;
 				$eventId = $_POST["eventID"];
 				$bus = isset($_POST["bus"]) ? "Ja" : "Nej";
 				$comment = isset($_POST["comment"]) ? makeLinks($_POST["comment"]) : "";
@@ -371,7 +372,7 @@ function registerUserToEvent($user, $eventObject)
 
 				if ($res == null)
 				{
-					$params = array('userID' => $userId, 'name' => $username, 'date' => $_POST["date"], 'comment' => $comment, 'bus' => $bus, 'eventID' => $eventId);
+					$params = array('userID' => $userId, 'name' => $name, 'date' => $_POST["date"], 'comment' => $comment, 'bus' => $bus, 'eventID' => $eventId);
 					$eventObject->registerUserToEvent($params);
 				}
 			}

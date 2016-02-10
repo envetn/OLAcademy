@@ -56,6 +56,22 @@ footer
 {
 	background-color: #0070B6;
 	color: #fff;
+	padding-left: 25px;
+}
+
+footer a:link
+{
+	color: #fff;
+}
+
+footer a:visited
+{
+	color: #fff;
+}
+
+footer a:hover
+{
+	color: #ccc;
 }
 
 @media (min-width: 768px)
@@ -120,6 +136,11 @@ header#calendar a#calendar-,
 header#about a#about-,
 header#admin a#admin-{
 background-color:#e7e7e7;
+}
+
+.btn
+{
+	margin-top: 2px;
 }
 
 .navbarCustom
@@ -313,7 +334,7 @@ background-color:#e7e7e7;
 
 .regTableName
 {
-	width: 30%;
+	width: 50%;
 	padding: 2px;
 }
 

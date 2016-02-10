@@ -49,14 +49,14 @@ function getUserInformation($user)
              <label>Namn</label><input type='text' value='" . $res->name . "' name='username'/><br/>
              <label>Efternamn</label><input type='text' value='" . $res->lastname . "' name='lastname' /><br />
              <label>Email</label><input type='text' value='" . $res->email . "' name='email'/><br/>
-             <label>Nyvarande lösenord</label><input type='password' value='' name='oldPassword'/><br/>
+             <label>Nuvarande lösenord</label><input type='password' value='' name='oldPassword'/><br/>
 
         	 <div id='changePassword'>
-             <p> Ändra lösenord </p></br>
-             <label>Nytt lösenordet</label><input type='password' value='' name='newPassword'/><br/>
+             <h3> Ändra lösenord </h3>
+             <label>Nytt lösenord</label><input type='password' value='' name='newPassword'/><br/>
              <label>Uprepa nytt lösenord</label><input type='password' name='newPasswordRepeat' value=''/>
             </div>
-        	<input type='submit' value='spara' name='spara' class='btn btn-primary'/>
+        	<input type='submit' value='Spara' name='spara' class='btn btn-primary'/>
             </form>
         ";
 		return $form;
