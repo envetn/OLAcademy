@@ -92,6 +92,15 @@ class User extends DataObject
 		return - 1;
 	}
 
+	public function isAdmin()
+	{
+		if(self::getUserPrivilege() === "2")
+		{
+			return true;
+		}
+		return false;
+	}
+
 	/*
 	 * Set remember me cookie
 	 * Everytime the function is called

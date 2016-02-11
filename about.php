@@ -1,102 +1,57 @@
+<style>
+*/ style breaks if I remove style tag ? */
+</style>
 <?php
 $pageId = "about";
-$pageTitle =" - Om";
+$pageTitle = " - Om";
 include ("include/header.php");
-
 $user = new User();
-$about = new AboutObject();
 
-$res = $about->fetchAllEntries();
-function parselist($name)
+$filename = "include/about.html";
+$fileContent = file_get_contents( $filename );
+
+function putContentToFile($filename)
 {
-	$i = 0;
-	$data = "";
-	$hasNext = true;
-	while($hasNext)
+	if( validateStringPOST( "aboutContent" ) )
 	{
-		if(isset($_POST[$name."_".$i]))
+		$newContent = strip_tags( $_POST["aboutContent"], "<p><ul><li><table><a><span><h3><h2><h1><h4><hr>");
+
+		if( file_put_contents( $filename, $newContent ) )
 		{
-			$data .= $_POST[$name."_".$i];
-			$i++;
-			if(isset($_POST[$name."_".$i]))
-			{
-				$data  .= "@";
-			}
-			else
-			{
-				$hasNext = false;
-			}
-		}
-		else
-		{
-			$hasNext = false;
+			header( "location: about.php" );
 		}
 	}
-	return $data;
 }
 
-if(isset($_POST["generalInfo"])  && $user->getUserPrivilege() === "2")
+if( isset( $_GET["edit"] ) && $user->isAdmin() )
 {
-	//some validation..
-	$generalInfo = $_POST["generalInfo"];
-	$offerInfo = parselist("listInfo");
-
-	$additionalInfo = $_POST["additionalInfo"];
-	$externalLinks = parselist("externalLinks");
-
-	$params = array("generalInfo"=>$generalInfo, "offerInfo"=>$offerInfo, "additionalInfo" => $additionalInfo);
-	$condition = array("id" => 1);
-	$about->editSingleEntry($params, $condition);
-	header("location: about.php");
-}
-
-if (isset($_GET["edit"]) && $user->getUserPrivilege() === "2")
-{
-	// Show edit fields
-	$content = $about->parseDataForEdit($res);
-	$aboutText = "<h2>OL-Academy</h2><form method='post'>";
-	$aboutText .= "<textarea rows='8' cols='50' name='generalInfo'>". $content['generalInfo'] ."</textarea><br/><hr/>";
-	$aboutText .= "<h3>Möjligheter</h3>";
-	foreach($content["offerInfo"] as $info)
-	{
-		$aboutText .= $info . "<br/>";
-	}
-	$aboutText .= "<h3>Träning</h3>";
-	$aboutText .= "<textarea rows='8' cols='50'name='additionalInfo'>". $content['additionalInfo'] ."</textarea><br/><hr/>";
-	$aboutText .= "<h3>Länkar</h3>";
-
-	foreach($content["externalLinks"] as $info)
-	{
-		$aboutText .= $info . "<br/>";
-	}
-	$aboutText .= "<input type='submit' value='submit'></form>";
+	$aboutText = "<form method='post'><textarea id='about_textarea' name='aboutContent' spellcheck='false'>" . $fileContent . "</textarea><input type='submit' name='save' value='save'/></form>";
 }
 else
 {
-	// Show about text
-	$content = $about->parseData($res);
-	$aboutText = "<h2>OL-Academy</h2>
-	<pre class='newsText'>
-	" . $content['generalInfo'] . "<br/><hr/>
-
-	<h3>Möjligheter</h3>
-	" . $content['offerInfo'] . "<br/><hr/>
-
-	<h3>Träning</h3>
-	" . $content['additionalInfo'] . "<br/><hr/>
-
-	<h3>Länkar</h3>
-	" . $content['externalLinks'];
-
-	if ($user->getUserPrivilege() === "2")
+	$aboutText = $fileContent;
+	if( $user->isAdmin() )
 	{
 		$aboutText .= "<br/><hr/><a href='about.php?edit'> Editera innehåll</a>";
 	}
-	$aboutText .= "</pre>";
 }
 
-echo "<div class='row'>";
+if( isset( $_POST["save"] ) && $user->isAdmin() )
+{
+	try
+	{
+		putContentToFile( $filename );
+	}
+	catch(Exception $e)
+	{
+		populateError("Exception : Failed to open stream: Permission denied");
+	}
+
+}
+displayError();
+echo "<div style='clear:both; overflow: hidden;'>";
 echo $aboutText;
 echo "</div>";
 
+echo "<a href='about_old.php'> Previous version</a>";
 include ("include/footer.php");
