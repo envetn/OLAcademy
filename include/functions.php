@@ -253,7 +253,7 @@ function presentEvent($username, $eventObject)
 			{
 				if ($key->eventDate == date("Y-m-d", time()+($i * 86400)))
 				{
-					$values = array('date' => date("Y-m-d", time()+($i * 86400)));
+					$values = array('date' => date("Y-m-d", time()+($i * 86400)), 'eventID' => $key->id);
 					$nrOfRegistered = $eventObject->getNumberOfRegisteredByValue($values);
 
 					$text .= "<li class='register_preview'>
@@ -374,6 +374,7 @@ function registerUserToEvent($user, $eventObject)
 				{
 					$params = array('userID' => $userId, 'name' => $name, 'date' => $_POST["date"], 'comment' => $comment, 'bus' => $bus, 'eventID' => $eventId);
 					$eventObject->registerUserToEvent($params);
+					header("location: ".$_SERVER['PHP_SELF']);
 				}
 			}
 		}

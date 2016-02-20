@@ -10,7 +10,6 @@ include_once(INCLUDE_PATH . "/src/Image/Image.php");
 
 $user = new User();
 $privilege =  $user->getUserprivilege();
-
 ?>
 <!doctype html>
 <html lang='sv'>

@@ -47,8 +47,8 @@ class EventObject extends DataObject
 			ORDER BY eventDate
 	        ";
 		$params = array($this->today, $this->nextWeek );
-		$result = $this->database->queryAndFetch( $sql, $params );
-		return $result;
+		
+		return $this->database->queryAndFetch( $sql, $params );
 	}
 
 	public function getCurrentMonthsEvents($orderBy = "")
