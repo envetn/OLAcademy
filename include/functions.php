@@ -20,11 +20,6 @@ function exceptions_error_handler($severity, $message, $filename, $lineno)
 	}
 }
 
-
-/*
- * Present posts from table
- *
- */
 function presentPost($guestbookObject, $offset, $limit)
 {
 	$result = $guestbookObject-> fetchEntryWithOffset($offset, $limit);
@@ -135,34 +130,34 @@ function presentEvent($username, $eventObject)
 	for ($i=0;$i<7;$i++)
 	{
 		$weekDay = date("N", time()+($i * 86400));
+		$text.= "<h4><a href='?highlighted=$i'>";
 		switch ($weekDay)
 		{
 		    case "1":
-			$text.= "<h4><a href='?highlighted=$i' >Måndag</a>";
+				$text .= "Måndag";
 			break;
 		    case "2":
-			$text.= "<h4><a href='?highlighted=$i' >Tisdag</a>";
+				$text.= "Tisdag";
 			break;
 		    case "3":
-			$text.= "<h4><a href='?highlighted=$i' >Onsdag</a>";
+				$text.= "Onsdag";
 			break;
 		    case "4":
-			$text.= "<h4><a href='?highlighted=$i' >Torsdag</a> ";
+				$text.= "Torsdag";
 			break;
 		    case "5":
-			$text.= "<h4><a href='?highlighted=$i' >Fredag</a>";
+				$text.= "Fredag";
 			break;
 		    case "6":
-			$text.= "<h4><a href='?highlighted=$i' >Lördag</a>";
+				$text.= "Lördag";
 			break;
 		    case "7":
-			$text.= "<h4><a href='?highlighted=$i' >Söndag</a>";
+				$text.= "Söndag";
 			break;
 		    default:
-			$text .= "<br>";
+				$text .= "<br>";
 		}
-		//$text .= "<span class='runner'>$nrOfRegistered<img src='img/runner.png' alt='runner'></span></h4>";
-		 $text .= "</h4>";
+		 $text .= "</a></h4>";
 
 		if ($_SESSION["highlighted"] == $i)
 		{
@@ -216,10 +211,8 @@ function presentEvent($username, $eventObject)
 								<span class='eventTime'>" .$key->startTime. "</span>
 							</div>
 							<span class='eventInfo'>" .$key->info. "</span>
-						</div>";
-
-					$text .=
-						"<form method='POST' action='index.php'>
+						</div>
+						<form method='POST' action='index.php'>
 							<input type='hidden' name='eventID' value=" . $key->id . ">
 							<input type='hidden' name='date' value=" . date("Y-m-d", time()+($i * 86400)) . ">";
 
@@ -374,7 +367,7 @@ function registerUserToEvent($user, $eventObject)
 				{
 					$params = array('userID' => $userId, 'name' => $name, 'date' => $_POST["date"], 'comment' => $comment, 'bus' => $bus, 'eventID' => $eventId);
 					$eventObject->registerUserToEvent($params);
-					header("location: ".$_SERVER['PHP_SELF']);
+					header("location: ".$_SERVER['HTTP_REFERER']);
 				}
 			}
 		}
