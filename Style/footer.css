@@ -1,0 +1,30 @@
+footer
+{
+
+	background-color: #0070B6;
+	color: #fff;
+	padding-bottom: 15px;
+	padding-top: 15px;
+	padding-left: 25px;
+    padding-right: 15px;
+	margin-right: auto;
+    margin-left: auto;
+}
+
+footer a:link, footer a:visited
+{
+	color: #fff;
+}
+
+footer a:hover, footer a:active
+{
+	color: #ccc;
+}
+
+@media (min-width: 1260px)
+{
+    footer
+	{
+        width: 1230px;
+    }
+}

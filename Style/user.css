@@ -1,0 +1,25 @@
+#userInformation
+{
+	padding-left: 2%;
+}
+
+#userInformation label
+{
+	display: inline-block;
+	width: 100px;
+	text-align: left;
+	padding-right: 10%;
+}
+
+#userInformation input
+{
+	margin-bottom: 1%;
+	padding-left: 2px
+}
+
+#changePassword
+{
+	border: 1px solid black;
+	width: 40%;
+	padding: 1%;
+}

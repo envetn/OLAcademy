@@ -1,4 +1,26 @@
+/*individual guestbook style is locatade in index.css*/
+
 .guestbookHeader
 {
 	background-color: #dbf5fc;
+}
+
+.paging
+{
+	width: 80%;
+	margin: auto;
+	text-align: center;
+}
+
+.pageLink
+{
+	margin: 0px 5px;
+}
+
+#pageActive
+{
+	padding: 3px 5px;
+	margin: 0px 3px;
+	color: #fff;
+	background: #0070b6;
 }

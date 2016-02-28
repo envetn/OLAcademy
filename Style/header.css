@@ -1,0 +1,86 @@
+header
+{
+	background-color: #f8f8f8;
+}
+
+.navbar
+{
+	margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+@media (min-width: 1260px)
+{
+    .navbar
+	{
+        width: 1230px;
+    }
+}
+
+/*--know what tab that is in use-- */
+header#index a#index-,
+header#news a#news-,
+header#guestbook a#guestbook-,
+header#calendar a#calendar-,
+header#about a#about-,
+header#admin a#admin-{
+background-color:#e7e7e7;
+}
+
+.navbarCustom
+{
+	border-radius:0;
+	border: 0;
+	font-size: 1.3em;
+	padding-right: 1px;
+	padding-left: 1px;
+}
+
+.navbar-brand
+{
+	padding: 0;
+}
+
+.menu_a
+{
+	padding-left:1%;
+	font-size:1.4em;
+	padding:2%;
+	border:1px solid transparent;
+	color:#FFF;
+}
+
+.menu_a:hover
+{
+	border:1px solid black;
+	display:blocks;
+	background-color: #5F6975;
+	border-radius: 10px;
+}
+
+#login
+{
+	float:right;
+	padding:5px;
+}
+
+#pageLogo
+{
+	float:left;
+	padding:5px;
+	width: 62%;
+}
+
+#title
+{
+	font-size:300%;
+	margin-top:0px;
+	margin-bottom:-10px;
+}
+
+#subtitle
+{
+	margin-top:0px;
+}

@@ -6,6 +6,11 @@
 @import url("admin.css");
 @import url("guestbook.css");
 @import url("about.css");
+@import url("header.css");
+@import url("main.css");
+@import url("footer.css");
+@import url("index.css");
+@import url("user.css");
 
 /*************************************/
 /* Static style for whole page */
@@ -25,367 +30,38 @@ body
     font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
-main, .navbar, footer
-{
-	margin-right: auto;
-    margin-left: auto;
-    padding-left: 15px;
-    padding-right: 15px;
-}
-
-main, footer
-{
-	padding-bottom: 15px;
-	padding-top: 15px;
-}
-
-header
-{
-	background-color: #f8f8f8;
-}
-
-main
-{
-	min-height:400px;
-    overflow: auto;
-    background:#fff;
-	border-top-left-radius: 5px;
-	border-top-right-radius: 5px;
-}
-
-footer
-{
-	background-color: #0070B6;
-	color: #fff;
-	padding-left: 25px;
-}
-
-footer a:link
-{
-	color: #fff;
-}
-
-footer a:visited
-{
-	color: #fff;
-}
-
-footer a:hover
-{
-	color: #ccc;
-}
-
-@media (min-width: 768px)
-{
-    main, footer, .navbar
-	{
-        width: 750px;
-    }
-}
-
-@media (min-width: 992px)
-{
-    main, footer, .navbar
-	{
-        width: 990px;
-    }
-}
-
-@media (min-width: 1260px)
-{
-    main, footer, .navbar
-	{
-        width: 1230px;
-    }
-}
-
-a:link
+a:link, a:visited, a:hover, a:active
 {
     text-decoration: none;
 }
 
-a:visited
+
+h1
 {
-    text-decoration: none;
+    font-size: 36px;
 }
 
-a:hover
-{
-    text-decoration: none;
-}
-
-a:active
-{
-    text-decoration: none;
-}
-
-h1,h2,h3
+h1, h2, h3
 {
 	margin-top:0px;
+	margin-bottom: 10px;
 }
+
 h4
 {
 	margin-top:5px;
 	margin-bottom:5px;
 }
 
-/*--know what tab that is in use-- */
-header#index a#index-,
-header#news a#news-,
-header#guestbook a#guestbook-,
-header#calendar a#calendar-,
-header#about a#about-,
-header#admin a#admin-{
-background-color:#e7e7e7;
+h1, h2, h3, h4, h5, h6
+{
+	margin-bottom: 10px;
+	font-weight: 500;
+    line-height: 1.1;
 }
 
-.btn
-{
-	margin-top: 2px;
-}
 
-.navbarCustom
-{
-	border-radius:0;
-	border: 0;
-	font-size: 1.3em;
-	padding-right: 1px;
-	padding-left: 1px;
-}
 
-.navbar-brand
-{
-	padding: 0;
-}
-
-.menu_a
-{
-	padding-left:1%;
-	font-size:1.4em;
-	padding:2%;
-	border:1px solid transparent;
-	color:#FFF;
-}
-
-.menu_a:hover
-{
-	border:1px solid black;
-	display:blocks;
-	background-color: #5F6975;
-	border-radius: 10px;
-}
-
-.paging
-{
-	width: 80%;
-	margin: auto;
-	text-align: center;
-}
-
-.pageLink
-{
-	margin: 0px 5px;
-}
-
-#pageActive
-{
-	padding: 3px 5px;
-	margin: 0px 3px;
-	color: #fff;
-	background: #0070b6;
-}
-
-  /* edit: fixes overlap error in IE7/8,
-     make sure you have an empty gif
-  background-image: url('empty.gif');*/
-.boxLink
-{
-	position: absolute;
-	z-index: 0;
-	width: 100%;
-	height: 100%;
-}
-
-.boxLink:hover
-{
-	background: #ddd;
-	opacity: 0.2;
-}
-
-.boxLink:active
-{
-	background: #aaa;
-	opacity: 0.2;
-}
-
-.runner
-{
-	position: absolute;
-	left: 5em;
-}
-
-.register_preview
-{
-	padding-left:5%;
-	list-style-type: none;
-}
-
-.register_preview_content
-{
-	padding-left:2%;
-	font-weight: bold;
-}
-#login
-{
-	float:right;
-	padding:5px;
-}
-
-#banner
-{
-	height:85px;
-	font-family:Calibri, Verdana, Sans Serif;
-}
-
-#pageLogo
-{
-	float:left;
-	padding:5px;
-	width: 62%;
-}
-
-#title
-{
-	font-size:300%;
-	margin-top:0px;
-	margin-bottom:-10px;
-}
-
-#subtitle
-{
-	margin-top:0px;
-}
-
-/******News-, Guestbook- nad Eventposts *****/
-.guestbookPost, .newsPost, .eventPost
-{
-	border: 1px solid #AAA;
-	border-radius: 4px;
-	margin: 5px 0px;
-	position: relative;
-}
-
-.guestbookHeader, .newsHeader, .eventHeader
-{
-	padding: 7px 7px 0px 7px;
-	border-bottom: 1px solid #DDD;
-}
-
-.guestbookName, .newsName, .eventName
-{
-	font-weight: bold;
-}
-
-.guestbookDate, .newsAdded, .eventTime
-{
-	margin-right: 3px;
-	font-size: smaller;
-	float: right;
-}
-
-.guestbookText, .newsText, .eventInfo
-{
-	display: block;
-	font-family: Arial, Helvetica, sans-serif;
-    font-size: 15px;
-	font-weight: normal;
-    line-height: 1.2;
-    word-wrap: break-word;
-	white-space: normal;
-	padding: 7px;
-	margin: 0px;
-}
-
-.eventHeader
-{
-	background-color: #b2ffd2;
-}
-.checkbox_bus
-{
-	width:50px;
-	position: absolute;
-	right:360px;
-}
-
-#form_addNew label
-{
-	width:120px;
-}
-
-/******Registered table and form*****/
-.regTable
-{
-	width: 100%;
-}
-
-.regTableRow:nth-child(even)
-{
-	background-color: #ECF1EF;
-}
-
-.regTableName
-{
-	width: 50%;
-	padding: 2px;
-}
-
-.regTableComment
-{
-	word-break:break-all;
-	padding: 2px;
-}
-
-.regTableBus
-{
-	width: 3%;
-	padding: 2px;
-}
-
-.regTableDel
-{
-	width: 1%;
-	padding: 2px;
-}
-
-.busLabel
-{
-	margin-left: 5px;
-	margin-right: 5px;
-}
-
-.regInput
-{
-	margin-top: 5px;
-	margin-bottom: 5px;
-}
-
-/******User page *****/
-.form_addUser
-{
-	border:1px solid black;
-	padding:1%;
-	width:40%;
-	border-bottom-right-radius: 20px;
-	border-top-right-radius: 20px;
-}
-
-.form_addUser label
-{
-	display: inline-block;
-	width:100px;
-	text-align: left;
-}
-.form_addUser, input{margin-bottom:1%; }
 
 /******ERROR*******/
 .youShallNotPassDiv
@@ -427,51 +103,4 @@ background-color:#e7e7e7;
 {
     color: green;
     width:50%;
-}
-
-/******Extra****/
-.clearLine {
-    border: 1px solid red;
-    clear: left;
-}
-
-q{
-	background:#FFFFFF;
-	border: 1px solid #d3e0e9;
-	margin-top: 10px;
-	border-top-right-radius: 4px;
-	border-top-left-radius: 4px;
-	width:100%;
-
-}
-.visible-xs-block
-{
-	display:block!important;
-}
-
-/***** User style ***/
-#userInformation
-{
-	padding-left: 2%;
-}
-
-#userInformation label
-{
-	display: inline-block;
-	width: 100px;
-	text-align: left;
-	padding-right: 10%;
-}
-
-#userInformation input
-{
-	margin-bottom: 1%;
-	padding-left: 2px
-}
-
-#changePassword
-{
-	border: 1px solid black;
-	width: 40%;
-	padding: 1%;
 }
