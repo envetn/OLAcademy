@@ -298,7 +298,7 @@ function getExtensionOnUrl()
  * input value, grant user access.
  */
 
-function showLoginLogout($user, $salt_char)
+function showLoginLogout($user)
 {
 	if(isset($_COOKIE["rememberme_olacademy"]))
 	{

@@ -14,7 +14,6 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : "";
 function validatePasswords($password, $passwordRepeat, $user)
 {
 	global $GLOBAL;
-	$salt = $GLOBAL['salt_char'];
 
 	if ($password === $passwordRepeat)
 	{

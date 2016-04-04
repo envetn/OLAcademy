@@ -71,36 +71,6 @@ abstract class DataObject
         return 0;
     }
 
-    private function validateSelectCount($condition)
-    {
-        $sql = "SELECT COUNT(DISTINCT userID) AS count FROM registered";
-        $params = array();
-
-        if( ! empty( $condition ) )
-        {
-            $nextIterator = $this->createArrayIterator( $condition );
-            $sql .= " WHERE ";
-
-            foreach( $condition as $name => $value )
-            {
-                $next_val = $nextIterator->current();
-                $sql .= $name . self::EQUAL_SIGN . self::QUESTION_MARK;
-                $params[] = $value;
-
-                if( strlen( $next_val ) > 0 )
-                {
-                    $sql .= " AND ";
-                }
-                $nextIterator->next();
-            }
-        }else
-        {
-            $sql .= " ORDER BY id DESC LIMIT 1";
-        }
-        $query = array('sql' => $sql, 'params' => $params );
-        return $query;
-    }
-
     public function insertEntyToDatabase($values)
     {
         $query = $this->validateInputParametersData( $values );
@@ -183,7 +153,8 @@ abstract class DataObject
                 }
                 $nextIterator->next();
             }
-        }else
+        }
+        else
         {
             $sql .= "*";
         }
@@ -219,12 +190,44 @@ abstract class DataObject
                 }
                 $nextIterator->next();
             }
-        }else
+        }
+        else
         {
             $sql .= " ORDER BY id DESC LIMIT 1";
         }
 
         return array("sql" => $sql, "params" => $params );
+    }
+    
+    private function validateSelectCount($condition)
+    {
+        $sql = "SELECT COUNT(DISTINCT userID) AS count FROM registered";
+        $params = array();
+    
+        if( ! empty( $condition ) )
+        {
+            $nextIterator = $this->createArrayIterator( $condition );
+            $sql .= " WHERE ";
+    
+            foreach( $condition as $name => $value )
+            {
+                $next_val = $nextIterator->current();
+                $sql .= $name . self::EQUAL_SIGN . self::QUESTION_MARK;
+                $params[] = $value;
+    
+                if( strlen( $next_val ) > 0 )
+                {
+                    $sql .= " AND ";
+                }
+                $nextIterator->next();
+            }
+        }
+        else
+        {
+            $sql .= " ORDER BY id DESC LIMIT 1";
+        }
+        $query = array('sql' => $sql, 'params' => $params );
+        return $query;
     }
 
     private function validateUpdateParameters($values, $condition)

@@ -208,18 +208,17 @@ class User extends DataObject
 			$values = array('password' => $password);
 			if (parent::editSingleEntry($values, $condition))
 			{
-				$this->sendNewPassword($plainTextPassword);
+				$this->sendNewPassword($plainTextPassword, $email);
 			}
 		}
 		// TODO: Remove this comment when we have a mailserver working
 		// header("location: " .$_SERVER["PHP_SELF"]."");
 	}
 
-	private function sendNewPassword($plainTextPassword)
+	private function sendNewPassword($plainTextPassword, $email)
 	{
 		$headers = "From: ourServer@olacademy.com";
 		$message = "Ditt nya lösenord: " . $plainTextPassword;
-		$email = 'olle.ch@hotmail.com';
 
 		// TODO: Remove this when we have a mailserver working
 		echo "Ditt nya lösenord: " . $plainTextPassword;

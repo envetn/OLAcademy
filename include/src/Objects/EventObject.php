@@ -89,7 +89,7 @@ class EventObject extends DataObject
 			{
 				if( $event->reccurance === "1" )
 				{
-					// Set new date.
+					// append 7 days.
 					$newDate = date( 'Y-m-d', strtotime( $event->eventDate . ' + 7 day' ) );
 
 					$values = array('eventDate' => $newDate );
