@@ -67,45 +67,82 @@ function tryToRemoveUser($user)
 
 function getTableTitleOfPosts($newsObject)
 {
-	$offset = isset($_GET['offset']) && is_numeric($_GET['offset']) ? $_GET['offset'] : 0;
-	$limit = 20;
-	$res = $newsObject->fetchEntryWithOffset($offset, $limit);
+    $offset = isset($_GET['offset']) && is_numeric($_GET['offset']) ? $_GET['offset'] : 0;
+    $limit = 20;
 
-	$news = "<h3 class='tableHead'>Nyheter</h3><a href='news.php?action=Lägg+till'> < Lägg till > </a><table class='tableContent'>
-    <tr class='admin_rowHead'>
-        <th class=''>Title</th><th>Av</th><th>Tillagd</th><th>Ta bort</th>
-    </tr>";
+    $news = "<a href='news.php?action=Lägg+till'> < Lägg till > </a><br/><form method='get'><input type='hidden' name='c' value='0'/><input type='text' name='search' placeholder='Sök Nyhet'/><button class='btn btn-primary'>Sök </button></form>";
+    if (validateStringGET("search"))
+    {
+        $news .= searchForNews($_GET["search"], $newsObject);
+    }
+
+    $orderby = validateStringGET("sort") ?  $_GET["sort"] : "added";
+    $res = $newsObject->fetchEntryWithOffset($offset, $limit, $orderby);
+	
+	$news .= "<table class='tableContent'><tr class='admin_rowHead'>
+	    <th><a href='admin.php?c=0&sort=title'> Title &#8595;</a> </th>
+	    <th><a href='admin.php?c=0&sort=author'> Av &#8595;</a> </th>
+	    <th><a href='admin.php?c=0&sort=added'> Tillagd &#8595;</a> </th>
+	    <th>Ta bort</th></tr>";
 	foreach ( $res as $row )
 	{
-		$title = $row->title;
-		$author = $row->author;
-		if (strlen($title) > 20)
-		{
-			$title = substr($title, 0, 20) . " ...";
-		}
-		if (strlen($title) > 20)
-		{
-			$title = substr($title, 0, 20) . " ...";
-		}
-
-		$news .= "
-                    <tr class='admin_rowContent'>
-						
-                        <td><a class='admin_news_remove' href='news.php?offset=0&p=" . $row->id . "'><span>" . $title . "</span></a></td>
-                        <td><span>" . $row->author . "</span></td>
-                       	<td>" . $row->added . "</td>
-                       	
-                        <td>
-                            <a class='admin_news_remove' href='admin.php?r=" . $row->id . "'><img src='img/cross.png' width=18px height=18px></a>
-                            <a class='admin_news_remove' href='news.php?action=edit&id=" . $row->id . "'><img src='img/edit.png' width=18px height=18px></a>
-                        </td>
-                    </tr>";
+	    $news .= getNewsForm($row);
 	}
 	$news .= "</table>";
 	$nrOfRows = $newsObject->countAllRows();
 	$news .= "<div class='paging_div'>" . paging($limit, $offset, $nrOfRows, 5, "&c=0") . "</div>";
 
 	return $news;
+}
+
+function getNewsForm($row)
+{
+    $title = $row->title;
+    if (strlen($title) > 20)
+    {
+        $title = substr($title, 0, 20) . " ...";
+    }
+    if (strlen($title) > 20)
+    {
+        $title = substr($title, 0, 20) . " ...";
+    }
+    
+    $news = "
+        <tr class='admin_rowContent'>
+            <td><a class='admin_news_remove' href='news.php?offset=0&p=" . $row->id . "'><span>" . $title . "</span></a></td>
+            <td><span>" . $row->author . "</span></td>
+            <td>" . $row->added . "</td>
+            <td>
+                <a class='admin_news_remove' href='admin.php?r=" . $row->id . "'><img src='img/cross.png' width=18px height=18px></a>
+                <a class='admin_news_remove' href='news.php?action=edit&id=" . $row->id . "'><img src='img/edit.png' width=18px height=18px></a>
+            </td>
+        </tr>";
+    return $news;
+}
+
+function searchForNews($search, $newsObject)
+{
+    if (strlen($search) > 1)
+    {
+        $search = strip_tags($search);
+        $condition = array("title" => $search);
+
+        $newsObject->useWildCard();
+        $res = $newsObject->fetchAllEntriesByValue($condition, null, true);
+        if($res != null)
+        {
+            $result = "<table class='tableContent' id='searchResult'><tr class='admin_rowHead'><th class=''>Title</th><th>Av</th><th>Tillagd</th><th>Ta bort</th></tr>";
+            foreach($res as $row)
+            {
+                $result .= getNewsForm($row);
+            }
+
+            return $result . "</table>";
+        }
+        populateError("Nyhet hittades inte");
+        return null;
+    }
+    populateError("Fyll i sökfältet.");
 }
 
 function getTableEvents($eventObject)
@@ -126,7 +163,7 @@ function getTableEvents($eventObject)
 			<table class='tableContent'>
      		<tr class='admin_rowHead'>
         		<th>Event</th><th>Info</th>
-				<th><a href='admin.php?c=1&sort=startTime'> När &#8595;</a> </th>
+				<th><a href='admin.php?c=1&sort=startTime'> När &#8595;</a> </th>F
 				<th><a href='admin.php?c=1&sort=eventDate'> Datum &#8595;</a> </th>
 				<th>Anmälda</th>
 				<th><a href='admin.php?c=1&sort=reccurance'> Återkommande &#8595;</a></th>

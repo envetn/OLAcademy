@@ -5,10 +5,10 @@ include_once(INCLUDE_PATH . "/src/Objects/EventObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/NewsObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/GuestbookObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/AboutObject.php");
-include_once(INCLUDE_PATH . "/src/Objects/User/User.php");
+include_once(INCLUDE_PATH . "/src/Objects/User/UserObject.php");
 include_once(INCLUDE_PATH . "/src/Image/Image.php");
 
-$user = new User();
+$user = new UserObject();
 $privilege =  $user->getUserprivilege();
 ?>
 <!doctype html>

@@ -5,7 +5,6 @@
 $pageId = "about";
 $pageTitle = " - Om";
 include ("include/header.php");
-$user = new User();
 
 $filename = "include/about.html";
 $fileContent = file_get_contents( $filename );
@@ -53,5 +52,4 @@ echo "<div style='clear:both; overflow: hidden;'>";
 echo $aboutText;
 echo "</div>";
 
-echo "<a href='about_old.php'> Previous version</a>";
 include ("include/footer.php");

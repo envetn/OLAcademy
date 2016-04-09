@@ -29,21 +29,27 @@ function validatePasswords($password, $passwordRepeat, $user)
 function updateUser($user, $newPassword = "")
 {
 	// validate
-	$name = $_POST['username'];
-	$lastname = $_POST['lastname'];
-	$email = $_POST['email'];
+	$name = $_POST["username"];
+	$lastname = $_POST["lastname"];
+	$email = $_POST["email"];
 	$user->updateUser($name, $email, $lastname,  $newPassword);
 }
 
 function getUserInformation($user)
 {
-	$id = $_SESSION['uid'];
-	$values = array('id' => $id);
+	$id = $_SESSION["uid"];
+	$values = array("id" => $id);
 	$res = $user->fetchSingleEntryByValue($values);
+
+	$form = "";
+	if($_SESSION["changePassword"])
+	{
+	   $form .= "<p>Info att byta lösen från autogenerade</p>";
+	}
 
 	if ($user->rowCount() == 1)
 	{
-		$form = "
+		$form .= "
             <form method='post' id='userInformation'>
              <label>Namn</label><input type='text' value='" . $res->name . "' name='username'/><br/>
              <label>Efternamn</label><input type='text' value='" . $res->lastname . "' name='lastname' /><br />
@@ -111,23 +117,23 @@ if (isset($_SESSION['username']))
 
 		if ($user->login($email, $_POST['oldPassword']))
 		{
-			if ((isset($_POST['newPassword']) && isset($_POST['newPasswordRepeat'])) && (strlen($_POST['newPassword'])) > 5 && (strlen($_POST['newPasswordRepeat'])) > 5)
+			if (isset($_POST['newPassword']) && strlen($_POST['newPassword']))
 			{
 				$newPassword = $_POST['newPassword'];
 				$newPasswordRepeat = $_POST['newPasswordRepeat'];
 				validatePasswords($newPassword, $newPasswordRepeat, $user);
-				$success = "Lösenord uppdaterat";
+				populateInfo("Lösenord uppdaterat");
 
 			}
 			else
 			{
 				updateUser($user);
-				$success = "Användare uppdaterad";
+				populateInfo("Användare uppdaterad");
 			}
 		}
 		else
 		{
-			$_SESSION['error'] = "<pre class=red>Failed</pre>";
+		    populateError("Nuvarande lösenordet eller email matchade inte");
 		}
 	}
 }
@@ -165,7 +171,8 @@ else
 	</div>
 	";
 }
-echo isset($_SESSION['error']) ? $_SESSION['error'] : "";
-echo isset($success) ? $success : "";
+displayError();
+displayInfo(); // why u no show
+
 echo $userConf;
 include("include/footer.php");

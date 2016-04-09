@@ -1,5 +1,6 @@
 <?php
-class User extends DataObject
+
+class UserObject extends DataObject
 {
 
 	function __construct()
@@ -23,7 +24,6 @@ class User extends DataObject
 		$condition = array('name' => $name);
 		$values = array('id', 'name','lastname', 'email', 'Privilege', 'regDate'); // never select password.
 
-
 		$res = parent::fetchSingleEntryByValue($condition, $values);
 
 		if ($res != null)
@@ -46,7 +46,7 @@ class User extends DataObject
 		return false;
 	}
 
-	function Login($email, $password)
+	function login($email, $password)
 	{
 		$condition = array('email' => $email);
 		$res = parent::fetchSingleEntryByValue($condition);
@@ -55,20 +55,13 @@ class User extends DataObject
 		{
 			if (password_verify($password, $res->password)) // requires PHP 5.4
 			{
-				$sql = "SELECT id,name,email,Privilege, lastname FROM users WHERE email=? LIMIT 1";
+				$sql = "SELECT id,name,email,Privilege, lastname, changePassword FROM users WHERE email=? LIMIT 1";
 				$params = array($email); // No duplicates of email
-
-
 				$res = $this->database->queryAndFetch($sql, $params);
 
 				if ($this->rowCount() == 1)
 				{
-					$_SESSION["uid"] = $res[0]->id;
-					$_SESSION["username"] = $res[0]->name;
-					$_SESSION["lastname"] = $res[0]->lastname;
-					$_SESSION["email"] = $res[0]->email;
-					$_SESSION["privilege"] = $res[0]->Privilege;
-
+				    self::populateSession($res[0]);
 					if (isset($_POST["remember_me"]))
 					{
 						$SECRET_KEY = "!+?";
@@ -94,11 +87,18 @@ class User extends DataObject
 
 	public function isAdmin()
 	{
-		if(self::getUserPrivilege() === "2")
-		{
-			return true;
-		}
-		return false;
+	    return self::getUserPrivilege() === "2";
+	}
+
+	
+	private function populateSession($res)
+	{
+	    $_SESSION["uid"] = $res->id;
+	    $_SESSION["username"] = $res->name;
+	    $_SESSION["lastname"] = $res->lastname;
+	    $_SESSION["email"] = $res->email;
+	    $_SESSION["privilege"] = $res->Privilege;
+	    $_SESSION["changePassword"] = $res->changePassword;
 	}
 
 	/*
@@ -129,13 +129,12 @@ class User extends DataObject
 	function getUserByCookie()
 	{
 		$shaToken = hash_hmac('sha256', $_COOKIE["rememberme_olacademy"], "!+?");
-		$sql = 'SELECT id,name FROM users WHERE token=? LIMIT 1';
+		$sql = "SELECT id,name,email,Privilege, lastname, changePassword FROM users WHERE token=? LIMIT 1";
 		$params = array($shaToken);
 		$res = $this->database->queryAndFetch($sql, $params);
 		if ($this->rowCount() == 1)
 		{
-			$_SESSION["uid"] = $res[0]->id;
-			$_SESSION["username"] = $res[0]->name;
+		    populateSession($res[0]);
 		}
 	}
 
@@ -181,12 +180,13 @@ class User extends DataObject
 		{
 			$password = password_hash($newPassword, PASSWORD_BCRYPT, array('cost' => 12));
 			$values["password"] = $password;
+			$values["changePassword"] = 0;
 		}
 
 		parent::editSingleEntry($values, $condition);
-
-		$_SESSION["success"] = "<pre class=red>Updaterad!</pre>";
-		$_SESSION["username"] = $name;
+		$res = parent::fetchSingleEntryByValue($condition);
+		self::populateSession($res);
+		populateInfo("Updaterad!");
 
 		header("location: " .$_SERVER["PHP_SELF"]."");
 	}
@@ -205,7 +205,7 @@ class User extends DataObject
 			$password = password_hash($plainTextPassword, PASSWORD_BCRYPT, array('cost' => 12));
 
 			// set password to database
-			$values = array('password' => $password);
+			$values = array('password' => $password, "changePassword" => 1);
 			if (parent::editSingleEntry($values, $condition))
 			{
 				$this->sendNewPassword($plainTextPassword, $email);
@@ -239,6 +239,15 @@ class User extends DataObject
 
 	private function generateRandomPassword()
 	{
-		return "qwerty1234";
+		$alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
+		$length = rand(8, 12);
+        $str = '';
+		$max = mb_strlen($alphabet, '8bit') - 1;
+		for ($i = 0; $i < $length; ++$i) 
+		{
+		    // random_int not found -> https://github.com/jasonhinkle/php-gpg/issues/27
+		    $str .= $alphabet[  rand(0, $max)]; 
+		}
+		return $str;
 	}
 }

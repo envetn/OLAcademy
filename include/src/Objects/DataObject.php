@@ -4,8 +4,10 @@ abstract class DataObject
 {
     protected $database;
     private $table;
+    private $useWildCard;
     const SEPERATOR = ',';
     const QUESTION_MARK = '?';
+    const WILDCARD = '%';
     const EQUAL_SIGN = "=";
     const START_PARENTHESES = '(';
     const END_PARENTHESES = ')';
@@ -14,6 +16,7 @@ abstract class DataObject
     {
         global $GLOBAL;
         $this->database = new Database( $GLOBAL["database"] );
+        $wildCard = false;
         $this->table = $table;
     }
 
@@ -22,7 +25,7 @@ abstract class DataObject
         $sql = " SELECT * FROM " . $this->table;
         if( $orderBy != "" )
         {
-            $sql .= " ORDER BY " . $orderBy;
+            $sql .= " ORDER BY " . $orderBy; // why doesn't this work with '?'
         }
         $result = $this->database->queryAndFetch( $sql );
         return $result;
@@ -70,7 +73,7 @@ abstract class DataObject
 
         return 0;
     }
-
+    
     public function insertEntyToDatabase($values)
     {
         $query = $this->validateInputParametersData( $values );
@@ -92,9 +95,9 @@ abstract class DataObject
         return true;
     }
 
-    public function fetchEntryWithOffset($offset, $limit)
+    public function fetchEntryWithOffset($offset, $limit, $orderby ="added")
     {
-        $sql = "SELECT * FROM " . $this->table . " ORDER BY added DESC LIMIT $offset, $limit";
+        $sql = "SELECT * FROM " . $this->table . " ORDER BY $orderby DESC LIMIT $offset, $limit";
         $res = $this->database->queryAndFetch( $sql );
 
         return $res;
@@ -123,6 +126,16 @@ abstract class DataObject
         $result = $this->database->queryAndFetch( $sql );
 
         return $result[0]->rows;
+    }
+    
+    public function useWildCard()
+    {
+        $this->useWildCard = true;
+    }
+    
+    public function unsetWildCard()
+    {
+        $this->useWildCard = false;
     }
 
     private function createArrayIterator($array)
@@ -160,7 +173,7 @@ abstract class DataObject
         }
 
         $sql .= " FROM " . $this->table;
-        $query = $this->validateConditionForSql( $condition );
+        $query = $this->validateConditionForSql( $condition);
         $sql .= $query["sql"];
         $params = $query["params"];
         $query = array('sql' => $sql, 'params' => $params );
@@ -181,7 +194,18 @@ abstract class DataObject
             foreach( $condition as $name => $value )
             {
                 $next_val = $nextIterator->current();
-                $sql .= $name . self::EQUAL_SIGN . self::QUESTION_MARK;
+                if($this->useWildCard)
+                {
+                    $sql .= $name . " LIKE " . self::QUESTION_MARK;
+                    $value .=  self::WILDCARD;
+                    //WHERE name LIKE value%
+                }
+                else
+                {
+                    $sql .= $name . self::EQUAL_SIGN . self::QUESTION_MARK;
+                    // WHERE name=?
+                }
+                
                 $params[] = $value;
 
                 if( strlen( $next_val ) > 0 )

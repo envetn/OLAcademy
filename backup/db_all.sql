@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.0.10deb1
+-- version 4.4.13.1deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jan 16, 2016 at 01:55 PM
--- Server version: 5.5.46-0ubuntu0.14.04.2
--- PHP Version: 5.6.17-1+deb.sury.org~trusty+2
+-- Generation Time: Apr 09, 2016 at 07:31 PM
+-- Server version: 5.6.28-0ubuntu0.15.10.1
+-- PHP Version: 5.6.11-1ubuntu3.1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
+/*!40101 SET NAMES utf8mb4 */;
 
 --
 -- Database: `olacademy`
@@ -28,13 +28,12 @@ SET time_zone = "+00:00";
 
 DROP TABLE IF EXISTS `about`;
 CREATE TABLE IF NOT EXISTS `about` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `generalInfo` text COLLATE utf8_unicode_ci NOT NULL,
   `offerInfo` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `additionalInfo` text COLLATE utf8_unicode_ci NOT NULL,
-  `externalLinks` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=2 ;
+  `externalLinks` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `about`
@@ -51,30 +50,29 @@ INSERT INTO `about` (`id`, `generalInfo`, `offerInfo`, `additionalInfo`, `extern
 
 DROP TABLE IF EXISTS `events`;
 CREATE TABLE IF NOT EXISTS `events` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `eventDate` date NOT NULL,
   `startTime` time NOT NULL,
   `eventName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `info` text COLLATE utf8_unicode_ci NOT NULL,
   `reccurance` tinyint(1) NOT NULL,
-  `bus` tinyint(1) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=56 ;
+  `bus` tinyint(1) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `events`
 --
 
 INSERT INTO `events` (`id`, `eventDate`, `startTime`, `eventName`, `info`, `reccurance`, `bus`) VALUES
-(28, '2016-01-19', '18:30:00', 'Intervaller 15x15', 'Samling efter intervallerna i hallen', 1, 0),
-(30, '2016-01-18', '20:00:00', 'Intervaller 30x15', 'Info', 1, 1),
-(33, '2016-01-20', '18:00:00', 'Grillning', 'Tag med eget att grilla, finns grill', 1, 0),
-(34, '2016-01-19', '05:20:16', 'Morgonjogg', 'Samling 5 minuter innan i aulan', 1, 1),
+(28, '2016-04-12', '18:30:00', 'Intervaller 15x15', 'Samling efter intervallerna i hallen', 1, 0),
+(30, '2016-04-11', '20:00:00', 'Intervaller 30x15', 'Info', 1, 1),
+(33, '2016-04-13', '18:00:00', 'Grillning', 'Tag med eget att grilla, finns grill', 1, 0),
+(34, '2016-04-12', '05:20:16', 'Morgonjogg', 'Samling 5 minuter innan i aulan', 1, 1),
 (38, '2015-11-16', '11:00:20', '123123123', '123', 0, 1),
-(40, '2016-01-21', '17:00:00', 'Backintervaller', 'Intervballer i en backe', 1, 1),
-(41, '2016-01-22', '17:00:00', 'Fredags trÃ¤ning', 'TrÃ¤ning pÃ¥ en fredag', 1, 0),
-(47, '2016-01-16', '18:00:00', 'Fotboll', 'Fotboll utanfÃ¶r stadshuset', 1, 0),
-(50, '2016-01-21', '17:12:12', 'Backint', 'Intervballer i en backe', 1, 1),
+(40, '2016-04-14', '17:00:00', 'Backintervaller', 'Intervballer i en backe', 1, 1),
+(41, '2016-04-15', '17:00:00', 'Fredags trÃ¤ning', 'TrÃ¤ning pÃ¥ en fredag', 1, 0),
+(47, '2016-04-09', '18:00:00', 'Fotboll', 'Fotboll utanfÃ¶r stadshuset', 1, 0),
+(50, '2016-04-14', '17:12:12', 'Backint', 'Intervballer i en backe', 1, 1),
 (53, '2016-01-14', '21:22:22', 'asdasd', 'asdasd', 0, 0),
 (54, '2016-01-14', '21:22:22', '3123123', '123123123', 0, 0),
 (55, '2016-01-15', '21:22:22', '123123123', '123123123', 0, 0);
@@ -87,14 +85,13 @@ INSERT INTO `events` (`id`, `eventDate`, `startTime`, `eventName`, `info`, `recc
 
 DROP TABLE IF EXISTS `news`;
 CREATE TABLE IF NOT EXISTS `news` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `title` varchar(255) CHARACTER SET latin1 NOT NULL,
   `content` text CHARACTER SET latin1 NOT NULL,
   `author` varchar(100) CHARACTER SET latin1 NOT NULL,
   `added` datetime NOT NULL,
-  `image` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=74 ;
+  `image` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `news`
@@ -169,12 +166,11 @@ INSERT INTO `news` (`id`, `title`, `content`, `author`, `added`, `image`) VALUES
 
 DROP TABLE IF EXISTS `posts`;
 CREATE TABLE IF NOT EXISTS `posts` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `text` text COLLATE utf8_unicode_ci NOT NULL,
-  `added` datetime NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=116 ;
+  `added` datetime NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `posts`
@@ -199,15 +195,14 @@ INSERT INTO `posts` (`id`, `name`, `text`, `added`) VALUES
 
 DROP TABLE IF EXISTS `registered`;
 CREATE TABLE IF NOT EXISTS `registered` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `userID` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `date` date NOT NULL,
   `comment` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `bus` tinytext COLLATE utf8_unicode_ci NOT NULL,
-  `eventID` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=92 ;
+  `eventID` varchar(255) COLLATE utf8_unicode_ci NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `registered`
@@ -216,26 +211,13 @@ CREATE TABLE IF NOT EXISTS `registered` (
 INSERT INTO `registered` (`id`, `userID`, `name`, `date`, `comment`, `bus`, `eventID`) VALUES
 (13, 19, 'lofie', '2015-11-16', '', 'Ja', '26'),
 (14, 19, 'lofie', '2015-11-21', '', 'Nej', '22'),
-(71, 29, 'Lofie', '2016-01-11', '', 'Ja', '30'),
 (72, 29, 'Lofie', '2016-01-11', '', 'Nej', '48'),
-(73, 29, 'Lofie', '2016-01-16', '', 'Nej', '47'),
 (74, 29, 'Lofie', '2016-01-15', '', 'Nej', '55'),
 (75, 33, 'Test', '2016-01-14', '', 'Nej', '53'),
 (76, 33, 'Test', '2016-01-14', '', 'Nej', '54'),
 (77, 33, 'Test', '2016-01-15', '', 'Nej', '55'),
-(78, 33, 'Test', '2016-01-16', '', 'Nej', '47'),
-(79, 33, 'Test', '2016-01-21', '', 'Nej', '50'),
-(80, 33, 'Test', '2016-01-18', '', 'Nej', '30'),
-(81, 33, 'Test', '2016-01-19', '', 'Nej', '28'),
-(82, 33, 'Test', '2016-01-19', '', 'Nej', '34'),
-(83, 33, 'Test', '2016-01-20', '', 'Nej', '33'),
-(84, 33, 'Test', '2016-01-21', '', 'Nej', '40'),
 (85, 33, 'Test', '2016-01-21', '', 'Nej', '52'),
-(86, 33, 'Test', '2016-01-22', '', 'Nej', '41'),
-(87, 29, 'Lofie', '2016-01-21', '', 'Nej', '40'),
-(88, 29, 'Lofie', '2016-01-21', '', 'Nej', '50'),
 (89, 29, 'Lofie', '2016-01-21', '', 'Nej', '52'),
-(90, 29, 'Lofie', '2016-01-20', '', 'Nej', '33'),
 (91, 29, 'Lofie', '2016-01-14', '', 'Nej', '53');
 
 -- --------------------------------------------------------
@@ -246,7 +228,7 @@ INSERT INTO `registered` (`id`, `userID`, `name`, `date`, `comment`, `bus`, `eve
 
 DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
@@ -254,19 +236,93 @@ CREATE TABLE IF NOT EXISTS `users` (
   `regDate` date NOT NULL,
   `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `lastname` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=34 ;
+  `changePassword` int(11) NOT NULL DEFAULT '0'
+) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `users`
 --
 
-INSERT INTO `users` (`id`, `name`, `password`, `email`, `Privilege`, `regDate`, `token`, `lastname`) VALUES
-(28, 'admin', '$2y$12$d5IemwsuVU90qF0ja.jKUeKF1zxwi7FzBdtyGszHRmdPPPS2qEkv.', 'admin@admin.com', 0, '2015-11-19', '', ''),
-(29, 'Lofie', '$2y$12$WUwZLD69Q7sR8b1Mf6h.UevSRQDPxNXwrSDVIrbfB/p14EaJ7rUYy', 'lofie@lofie.com', 2, '2015-11-19', '82c48cbf66b49834811a5bbba52bed38a0b61da13b48c789821c893d8b63e4e7', 'Surn'),
-(30, 'Adam', '$2y$12$Ix9Oi//nwE.O02hUcvmwROgze.EXwX0q/piLok0UeJld41bJrCw2C', 'adamgeorgsson@gmail.com', 2, '2015-11-21', '', ''),
-(33, 'Test', '$2y$12$psEATvnr5L93SGhUcf0Ltum0ASySuCNeNw5O9Fq3CUQubBIfVnEuW', 'test@test.com', 1, '2016-01-16', 'ae1e6f2b33aa9c35a44ed0f1f4f62dac99d0c8f6accbe110baa1191a51090c57', 'Testsson');
+INSERT INTO `users` (`id`, `name`, `password`, `email`, `Privilege`, `regDate`, `token`, `lastname`, `changePassword`) VALUES
+(28, 'admin', '$2y$12$d5IemwsuVU90qF0ja.jKUeKF1zxwi7FzBdtyGszHRmdPPPS2qEkv.', 'admin@admin.com', 0, '2015-11-19', '', '', 0),
+(29, 'Lofie', '$2y$12$G2uR1jYnxka5jEujF8omYODeZvFknjnj.kVV5e5p8dEqH8GV5PtAa', 'lofie@lofie.com', 2, '2015-11-19', '2e9b94b8d14dee23806baebf8f77535833400208e1c9d2a0fe4cc6d6fd1b4e85', 'Surn', 0),
+(30, 'Adam', '$2y$12$Ix9Oi//nwE.O02hUcvmwROgze.EXwX0q/piLok0UeJld41bJrCw2C', 'adamgeorgsson@gmail.com', 2, '2015-11-21', '', '', 0),
+(33, 'Test', '$2y$12$psEATvnr5L93SGhUcf0Ltum0ASySuCNeNw5O9Fq3CUQubBIfVnEuW', 'test@test.com', 1, '2016-01-16', 'ae1e6f2b33aa9c35a44ed0f1f4f62dac99d0c8f6accbe110baa1191a51090c57', 'Testsson', 0);
 
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `about`
+--
+ALTER TABLE `about`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `events`
+--
+ALTER TABLE `events`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `news`
+--
+ALTER TABLE `news`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `posts`
+--
+ALTER TABLE `posts`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `registered`
+--
+ALTER TABLE `registered`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `about`
+--
+ALTER TABLE `about`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+--
+-- AUTO_INCREMENT for table `events`
+--
+ALTER TABLE `events`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=56;
+--
+-- AUTO_INCREMENT for table `news`
+--
+ALTER TABLE `news`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=74;
+--
+-- AUTO_INCREMENT for table `posts`
+--
+ALTER TABLE `posts`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=116;
+--
+-- AUTO_INCREMENT for table `registered`
+--
+ALTER TABLE `registered`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=92;
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=34;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

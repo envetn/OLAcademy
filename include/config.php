@@ -13,6 +13,6 @@ $GLOBAL['database']['driver_option']	= array(PDO::MYSQL_ATTR_INIT_COMMAND => "SE
 $GLOBAL['pageTitle']				    = "OL-Academy";
 
 $_SESSION['error'] = "";
-$_SESSION['success'] = "";
+$_SESSION['info'] = "";
 
 ?>

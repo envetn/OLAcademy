@@ -314,7 +314,11 @@ function showLoginLogout($user)
 		}
 		else
 		{
-			header("location: ". $_SERVER["PHP_SELF"]);
+		    if($_SESSION["changePassword"] == 1)
+		    {
+		        header("location: user.php");
+		    }
+			//header("location: ". $_SERVER["PHP_SELF"]);
 		}
 	}
 	else if(isset($_POST["Registera"]))
@@ -420,6 +424,23 @@ function populateError($message)
 	{
 		$_SESSION["error"] = "<pre class='error'>$message</pre>";
 	}
+}
+
+function populateInfo($message)
+{
+    if(($_SESSION["info"]) == "")
+    {
+        $_SESSION["info"] = "<pre class='info'>$message</pre>";
+    }
+}
+
+function displayInfo()
+{
+    if(strlen($_SESSION["info"]) > 1)
+    {
+        echo $_SESSION["info"];
+        $_SESSION["info"] = "";
+    }
 }
 
 function logError($message)
