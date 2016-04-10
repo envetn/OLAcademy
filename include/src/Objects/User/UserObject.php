@@ -152,7 +152,7 @@ class UserObject extends DataObject
 
 	function getLoginForm()
 	{
-		return '<form id="signin" class="navbar-form navbar-right" method="post">
+		$old = '<form id="signin" class="navbar-form navbar-right" method="post">
 					<div class="input-group">
 						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
 						<input id="email" type="email" class="form-control" name="email" value="" placeholder="Användarnamn">
@@ -168,6 +168,34 @@ class UserObject extends DataObject
 					<button type="submit" class="btn btn-primary" name="Registera">Registera</button>
 	                 <input type="checkbox" name="remember_me" value="remember_me" id="remember_me"/>
 				</form>';
+		
+		$homeMade = '<form class="loginForm" method="post">
+						<div class="loginGroup">
+							<span class="inputGroup">
+								<span class="loginIcon"><img src="img/user.png" alt="user" /></span><input id="email" type="email" class="loginField" name="email" value="" placeholder="Användarnamn">
+							</span>
+							
+							<span class="inputGroup">
+								<span class="loginIcon"><img src="img/lock.png" alt="pwd" /></span><input id="password" type="password" class="loginField" name="passwd" value="" placeholder="Lösenord">
+							</span>
+						</div>
+						
+						<div class="loginGroup">
+							
+							
+							<span class="inputGroup">
+								<button type="submit" class="btn btn-primary" id="btn_login" name="login">Login</button>
+								<button type="submit" class="btn btn-primary" name="Registera">Registera</button>
+							<span class="inputGroup">
+							
+							<span class="inputGroup">
+								<input type="checkbox" name="remember_me" value="remember_me" id="remember_me"/>
+								<span style="font-size:13px;">Kom ihåg mig</span>
+							<span class="inputGroup">
+							
+						</div>
+					</form>';
+		return $homeMade;
 	}
 
 	public function updateUser($name, $email, $lastname, $newPassword)
