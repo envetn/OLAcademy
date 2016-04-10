@@ -1,6 +1,5 @@
 <?php
 include ('include/header.php');
-
 /*
  * if(logged in)
  * show editable information
@@ -8,22 +7,18 @@ include ('include/header.php');
  * Possible to create new user
  */
 
+define("MIN_PASSWD_LENGTH", 6);
+
 $privilege = $user->getUserprivilege();
 $username = isset($_SESSION['username']) ? $_SESSION['username'] : "";
 
-function validatePasswords($password, $passwordRepeat, $user)
+function isPasswordsValid($password, $passwordRepeat)
 {
-	global $GLOBAL;
-
-	if ($password === $passwordRepeat)
+	if (strlen($password) > MIN_PASSWD_LENGTH && $password === $passwordRepeat)
 	{
-		// update user with new pw
-		updateUser($user, $password);
+		return true;
 	}
-	else
-	{
-		$_SESSION['error'] = "<pre class=red>Lösenorden matchade inte</pre>";
-	}
+	return false;
 }
 
 function updateUser($user, $newPassword = "")
@@ -117,23 +112,30 @@ if (isset($_SESSION['username']))
 
 		if ($user->login($email, $_POST['oldPassword']))
 		{
-			if (isset($_POST['newPassword']) && strlen($_POST['newPassword']))
+			if (validateStringPOST("newPassword") && validateStringPOST("newPasswordRepeat"))
 			{
-				$newPassword = $_POST['newPassword'];
-				$newPasswordRepeat = $_POST['newPasswordRepeat'];
-				validatePasswords($newPassword, $newPasswordRepeat, $user);
-				populateInfo("Lösenord uppdaterat");
+			    $newPassword = $_POST['newPassword'];
+			    $newPasswordRepeat = $_POST['newPasswordRepeat'];
 
+			    if(isPasswordsValid($newPassword, $newPasswordRepeat))
+			    {
+			        updateUser($user, $newPasswordRepeat);
+			        populateInfo("Användar info och/eller Lösenord uppdaterat");
+			    }
+			    else 
+			    {
+			        populateError("Nya lösenorden matchade inte. Notera att lösenordet måste vara minst " . MIN_PASSWD_LENGTH . " tecken långt");
+			    }
 			}
-			else
+			else 
 			{
-				updateUser($user);
-				populateInfo("Användare uppdaterad");
+			    updateUser($user);
+			    populateInfo("Användare uppdaterad");
 			}
 		}
 		else
 		{
-		    populateError("Nuvarande lösenordet eller email matchade inte");
+		    populateError("Fel lösenord");
 		}
 	}
 }
@@ -171,8 +173,23 @@ else
 	</div>
 	";
 }
+
+/**
+ * Temp fix for error where SESSION['info'] is cleared when using redirect (header(location: ...)
+ * 
+ * When use is successfully updated send redirect with extra parameter 'm'
+ * 
+ * Only print Message if SESSION['error'] is empty
+ */
+if(validateIntGET("m"))
+{
+    if($_GET["m"] == 1 && empty($_SESSION["error"]))
+    {
+        populateInfo("Användare uppdaterad");
+    }
+}
 displayError();
-displayInfo(); // why u no show
+displayInfo();
 
 echo $userConf;
 include("include/footer.php");

@@ -216,7 +216,7 @@ class UserObject extends DataObject
 		self::populateSession($res);
 		populateInfo("Updaterad!");
 
-		header("location: " .$_SERVER["PHP_SELF"]."");
+		header("location: " .$_SERVER["PHP_SELF"] . "?m=1");
 	}
 
 	public function forgottenPassword($email)
