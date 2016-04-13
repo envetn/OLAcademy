@@ -51,12 +51,12 @@ function getUserInformation($user)
              <label>Email</label><input type='text' value='" . $res->email . "' name='email'/><br/>
              <label>Nuvarande lösenord</label><input type='password' value='' name='oldPassword'/><br/>
 
-        	 <div id='changePassword'>
+			 <hr>
              <h3> Ändra lösenord </h3>
-             <label>Nytt lösenord</label><input type='password' value='' name='newPassword'/><br/>
+             <label>Nytt lösenord</label><input type='password' value='' name='newPassword'/><br>
              <label>Uprepa nytt lösenord</label><input type='password' name='newPasswordRepeat' value=''/>
-            </div>
-        	<input type='submit' value='Spara' name='spara' class='btn btn-primary'/>
+			 <hr>
+        	<input type='submit' value='Spara' name='spara' class='btn btn-primary'>
             </form>
         ";
 		return $form;
@@ -168,7 +168,7 @@ else
 			<label>Email</label><input type='text' name='email' /><br />
 			<label>Lösenord</label><input type='password' value='' name='password' /><br />
 				<label>Upprepa lösenord</label><input type='password' value='' name='passwordRepeat' /><br />
-			<input type='submit' value='spara' name='spara' class='btn btn-primary'/>
+			<input type='submit' value='Spara' name='spara' class='btn btn-primary'/>
 		</form>
 	</div>
 	";

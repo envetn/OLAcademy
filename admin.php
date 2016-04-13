@@ -304,15 +304,15 @@ function generateSelect($privilege)
 	switch ($privilege)
 	{
 		case 2 :
-			$html .= "<option value='2' selected='selected' > Admin </option> <option value='1'> Användare </option><option value='0' > Cockatrice </option>";
+			$html .= "<option value='2' selected='selected' > Admin </option> <option value='1'> Användare </option><option value='0' > Student </option>";
 			break;
 
 		case 1 :
-			$html .= "<option value='2' > Admin </option> <option value='1' selected='selected' > Användare </option><option value='0' > Cockatrice </option>";
+			$html .= "<option value='2' > Admin </option> <option value='1' selected='selected' > Användare </option><option value='0' > Student </option>";
 			break;
 
 		case 0 :
-			$html .= "<option value='2' > Admin </option> <option value='1'> Användare </option><option value='0' selected='selected'  > Cockatrice </option>";
+			$html .= "<option value='2' > Admin </option> <option value='1'> Användare </option><option value='0' selected='selected'  > Student </option>";
 			break;
 	}
 	$html .= " 	</select> </td>";
@@ -339,13 +339,13 @@ function getTablesAndValidateGET($newsObject, $htmlAdmin, $eventObject, $user) /
 				$htmlAdmin = getTableRegisteredUsers($eventObject);
 				break;
 			default :
-				$htmlAdmin = "<h4 id='infoHead'> Välj från menun till höger </h4>";
+				$htmlAdmin = "<h4 id='infoHead'> Välj från menyn till vänster </h4>";
 				break;
 		}
 	}
 	else
 	{
-		$htmlAdmin = "<h4 id='infoHead'> Välj från menun till höger </h4>";
+		$htmlAdmin = "<h4 id='infoHead'> Välj från menyn till vänster </h4>";
 	}
 	return $htmlAdmin . "</div>";
 }

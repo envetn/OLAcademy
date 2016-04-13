@@ -1,6 +1,3 @@
-<style>
-*/ style breaks if I remove style tag ? */
-</style>
 <?php
 $pageId = "about";
 $pageTitle = " - Om";
@@ -13,7 +10,7 @@ function putContentToFile($filename)
 {
 	if( validateStringPOST( "aboutContent" ) )
 	{
-		$newContent = strip_tags( $_POST["aboutContent"], "<p><ul><li><table><a><span><h3><h2><h1><h4><hr>");
+		$newContent = strip_tags( $_POST["aboutContent"], "<p><ul><li><table><a><span><h3><h2><h1><h4><hr><br>");
 
 		if( file_put_contents( $filename, $newContent ) )
 		{
@@ -24,7 +21,7 @@ function putContentToFile($filename)
 
 if( isset( $_GET["edit"] ) && $user->isAdmin() )
 {
-	$aboutText = "<form method='post'><textarea id='about_textarea' name='aboutContent' spellcheck='false'>" . $fileContent . "</textarea><input type='submit' name='save' value='save'/></form>";
+	$aboutText = "<form method='post'><textarea id='about_textarea' name='aboutContent' spellcheck='false'>" . $fileContent . "</textarea><input type='submit' name='save' value='Spara'/></form>";
 }
 else
 {

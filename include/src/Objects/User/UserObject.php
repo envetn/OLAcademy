@@ -169,7 +169,7 @@ class UserObject extends DataObject
 	                 <input type="checkbox" name="remember_me" value="remember_me" id="remember_me"/>
 				</form>';
 		
-		$homeMade = '<form class="loginForm" method="post">
+		return '<form class="loginForm" method="post">
 						<div class="loginGroup">
 							<span class="inputGroup">
 								<span class="loginIcon"><img src="img/user.png" alt="user" /></span><input id="email" type="email" class="loginField" name="email" value="" placeholder="Användarnamn">
@@ -195,7 +195,6 @@ class UserObject extends DataObject
 							
 						</div>
 					</form>';
-		return $homeMade;
 	}
 
 	public function updateUser($name, $email, $lastname, $newPassword)
