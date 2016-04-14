@@ -134,7 +134,7 @@ class UserObject extends DataObject
 		$res = $this->database->queryAndFetch($sql, $params);
 		if ($this->rowCount() == 1)
 		{
-		    populateSession($res[0]);
+		    self::populateSession($res[0]);
 		}
 	}
 

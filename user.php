@@ -14,7 +14,7 @@ $username = isset($_SESSION['username']) ? $_SESSION['username'] : "";
 
 function isPasswordsValid($password, $passwordRepeat)
 {
-	if (strlen($password) > MIN_PASSWD_LENGTH && $password === $passwordRepeat)
+	if (strlen($password) >= MIN_PASSWD_LENGTH && $password === $passwordRepeat)
 	{
 		return true;
 	}
