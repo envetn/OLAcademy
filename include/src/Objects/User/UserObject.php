@@ -244,24 +244,24 @@ class UserObject extends DataObject
 
 	private function sendNewPassword($plainTextPassword, $email)
 	{
-		$headers = "From: ourServer@olacademy.com";
-		$message = "Ditt nya lösenord: " . $plainTextPassword;
+		ini_set("SMTP", "mailout.one.com");
+		ini_set("sendmail_from", "info@olacademy.com");
 
-		// TODO: Remove this when we have a mailserver working
-		echo "Ditt nya lösenord: " . $plainTextPassword;
-		// Send... not working
-		// Need mailserver for this to work
-
-
-		// 		if (mail($email, 'My Subject', $message, $headers))
-		// 		{
-		// 			echo "mail sent to " . $email;
-		// 		}
-		// 		else
-		// 		{
-		// 			// gives /usr/sbin/sendmail: not found
-		// 			echo "Something went wrong...";
-		// 		}
+		$to = $email;
+		$subject = "Återställning av lösenord";
+		$name = "OL-Academy";
+		$message = "Ditt nya lösenord: " . $plainTextPassword . 
+		"Se till att ändra lösenordet snarast."; 
+		
+		$headers  = "MIME-Version: 1.0\r\n";
+		$headers .= "Content-type: text/html; charset=utf-8\r\n";
+		$headers .= "Content-Transfer-Encoding: 8bit\r\n";
+		$headers .= "From: $name\r\nReply-To: $name\r\nReturn-Path: $name\r\n";
+			
+		if (mail ($to, $subject, $message, $headers))
+			echo "Nytt lösenord skickat till " . $email . " " . $plainTextPassword;
+		else
+			echo "Något gick fel.";
 	}
 
 	private function generateRandomPassword()
