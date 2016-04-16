@@ -151,28 +151,11 @@ class UserObject extends DataObject
 	}
 
 	function getLoginForm()
-	{
-		$old = '<form id="signin" class="navbar-form navbar-right" method="post">
-					<div class="input-group">
-						<span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-						<input id="email" type="email" class="form-control" name="email" value="" placeholder="Användarnamn">
-					</div>
-
-					<div class="input-group">
-						<span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-						<input id="password" type="password" class="form-control" name="passwd" value="" placeholder="Lösenord">
-
-					</div>
-
-					<button type="submit" class="btn btn-primary" id="btn_login" name="login">Login</button>
-					<button type="submit" class="btn btn-primary" name="Registera">Registera</button>
-	                 <input type="checkbox" name="remember_me" value="remember_me" id="remember_me"/>
-				</form>';
-		
+	{	
 		return '<form class="loginForm" method="post">
 						<div class="loginGroup">
 							<span class="inputGroup">
-								<span class="loginIcon"><img src="img/user.png" alt="user" /></span><input id="email" type="email" class="loginField" name="email" value="" placeholder="Användarnamn">
+								<span class="loginIcon"><img src="img/user.png" alt="user" /></span><input id="email" type="email" class="loginField" name="email" value="" placeholder="E-post">
 							</span>
 							
 							<span class="inputGroup">
@@ -249,19 +232,15 @@ class UserObject extends DataObject
 
 		$to = $email;
 		$subject = "Återställning av lösenord";
-		$name = "OL-Academy";
+		$name = "OL-Academy <info@olacademy.com>";
 		$message = "Ditt nya lösenord: " . $plainTextPassword . 
-		"Se till att ändra lösenordet snarast."; 
-		
-		$headers  = "MIME-Version: 1.0\r\n";
-		$headers .= "Content-type: text/html; charset=utf-8\r\n";
-		$headers .= "Content-Transfer-Encoding: 8bit\r\n";
-		$headers .= "From: $name\r\nReply-To: $name\r\nReturn-Path: $name\r\n";
+		"\r\nSe till att ändra lösenordet snarast."; 
+		$headers = "From: $name\r\nReply-To: $name\r\nReturn-Path: $name\r\n";
 			
 		if (mail ($to, $subject, $message, $headers))
-			echo "Nytt lösenord skickat till " . $email . " " . $plainTextPassword;
+			populateInfo("Nytt lösenord skickat till $email");
 		else
-			echo "Något gick fel.";
+			populateError("Något gick fel. Har du angivit rätt E-post?");
 	}
 
 	private function generateRandomPassword()

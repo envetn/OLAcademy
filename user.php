@@ -87,16 +87,16 @@ function validateCreateUserPost($user)
 				$params = array('name' => $username, 'password' => $password, 'email' => $email, 'Privilege' => $priv, 'regDate' => $date, 'lastname' => $lastname);
 				$user->insertEntyToDatabase($params);
 
-				$success = "Inserted into database";
+				populateInfo("Ditt konto har skapats.");
 			}
 			else
 			{
-				$_SESSION['error'] = "<pre class=red>Användare med den emailen finns redan</pre>";
+				populateError("Användare med den emailen finns redan.");
 			}
 		}
 		else
 		{
-			$_SESSION['error'] = "<pre class=red>Lösenorden matchade inte</pre>";
+			populateError("Lösenorden matchade inte.");
 		}
 	}
 }
