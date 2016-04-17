@@ -90,6 +90,10 @@ class UserObject extends DataObject
 	    return self::getUserPrivilege() === "2";
 	}
 
+	public function isStudent()
+	{
+	    return self::getUserPrivilege() >= "1";
+	}
 	
 	private function populateSession($res)
 	{
@@ -237,10 +241,11 @@ class UserObject extends DataObject
 		"\r\nSe till att ändra lösenordet snarast."; 
 		$headers = "From: $name\r\nReply-To: $name\r\nReturn-Path: $name\r\n";
 			
-		if (mail ($to, $subject, $message, $headers))
+			echo $plainTextPassword;
+		/*if (mail ($to, $subject, $message, $headers))
 			populateInfo("Nytt lösenord skickat till $email");
 		else
-			populateError("Något gick fel. Har du angivit rätt E-post?");
+			populateError("Något gick fel. Har du angivit rätt E-post?");*/
 	}
 
 	private function generateRandomPassword()

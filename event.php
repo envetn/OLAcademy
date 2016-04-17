@@ -59,14 +59,14 @@ function fetchEventAndValidateGET($eventObject)
 
 function generateEventForm($data)
 {
-	$form = "<form id='form_addNew' method='post' enctype='multipart/form-data'>";
-	$form .= "<input name='eventName' placeholder='Träning' value='" . is_set( $data, "eventName" ) . "'  type='text'/><br/>";
-	$form .= "<input name='info' placeholder='Information' value='" . is_set( $data, "info" ) . "'  type='text'/><br/>";
-	$form .= "<input name='startTime' value='" . is_set( $data, "startTime" ) . "'  type='time'/><br/>";
-	$form .= "<input name='date' value='" . is_set( $data, "eventDate" ) . "' type='datetime-local'/><br/>";
-	$form .= "<label>Buss: </label><input type='checkbox' name='bus' value='bus' " . is_set( $data, "bus" ) . " class='checkbox_bus'/><br/>";
-	$form .= "<label>Återkommande: </label><input class='checkbox_bus' type='checkbox' name='reccurance' value='reccurance' " . is_set( $data, "reccurance" ) . "/><br/>";
-	$form .= "<input class='btn btn-primary' type='submit' name='btn_event' id='btn_edit' value='" . is_set( $data, "action" ) . "'/>";
+	$form = "<div class='form_addEvent'><form method='post' enctype='multipart/form-data'>";
+	$form .= "<input name='eventName' placeholder='Träning' value='" . is_set( $data, "eventName" ) . "'  type='text' class='addEventInput'/>";
+	$form .= "<textarea name='info' placeholder='Information' value='" . is_set( $data, "info" ) . "'  type='textarea' class='addEventInput'></textarea>";
+	$form .= "<input name='startTime' value='" . is_set( $data, "startTime" ) . "'  type='time' class='addEventInput'/>";
+	$form .= "<input name='date' value='" . is_set( $data, "eventDate" ) . "' type='date' class='addEventInput'/>";
+	$form .= "<label>Buss: </label><input type='checkbox' name='bus' value='bus' " . is_set( $data, "bus" ) . "/><br>";
+	$form .= "<label>Återkommande: </label><input class='' type='checkbox' name='reccurance' value='reccurance' " . is_set( $data, "reccurance" ) . "/><br>";
+	$form .= "<input class='btn btn-primary' type='submit' name='btn_event' id='btn_edit' value='" . is_set( $data, "action" ) . "'/><br></div>";
 
 	return $form;
 }
@@ -127,24 +127,23 @@ function validateEventAction($eventObject)
 		}
 		else
 		{
-			populateError( "Det blev något fel, försök igen senare" );
+			populateError( "Det blev något fel, har du fyllt i formuläret rätt?" );
 		}
 	}
 }
 
-if( $user->isAdmin() )
+$singleEvent = "";
+if( $user->isStudent() )
 {
-	$singleEvent = "";
-
 	$singleEvent .= validateEventAction( $eventObject );
 	$singleEvent .= "<h4 id='infoHead'> <a href='" . $_SESSION["Previous_page"] . "'> Tillbaka</a></h4>";
 	$singleEvent .= fetchEventAndValidateGET( $eventObject );
-	echo $singleEvent;
 }
 else
 {
 	populateError( "Du har inte behörighet att se sidan" );
 }
-
-echo "<div class='row clearFix'>";
 displayError();
+echo $singleEvent;
+
+include ("include/footer.php");

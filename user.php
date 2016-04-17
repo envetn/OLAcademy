@@ -39,7 +39,7 @@ function getUserInformation($user)
 	$form = "";
 	if($_SESSION["changePassword"])
 	{
-	   $form .= "<p>Info att byta lösen från autogenerade</p>";
+		populateError("Se till att ändra ditt lösenord snarast.");
 	}
 
 	if ($user->rowCount() == 1)

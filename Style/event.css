@@ -1,0 +1,27 @@
+.form_addEvent
+{
+	width: 50%;
+	margin: auto;
+	margin-top: 5%;
+
+	padding: 5px;
+}
+
+.addEventInput 
+{
+	display: block;
+	width: 100%;
+	margin-top: 5px;
+}
+
+.form_addEvent label
+{
+	display: inline-block;
+	width: 120px;
+	text-align: left;
+}
+
+.form_addEvent .btn
+{
+	width: 100%;
+}
