@@ -21,7 +21,7 @@ function putContentToFile($filename)
 
 if( isset( $_GET["edit"] ) && $user->isAdmin() )
 {
-	$aboutText = "<form method='post'><textarea id='about_textarea' name='aboutContent' spellcheck='false'>" . $fileContent . "</textarea><input type='submit' name='save' value='Spara'/></form>";
+	$aboutText = "<form method='post'><textarea id='about_textarea' name='aboutContent' spellcheck='false' rows='20'>" . $fileContent . "</textarea><input class='btn btn-primary' type='submit' name='save' value='Spara'/></form>";
 }
 else
 {

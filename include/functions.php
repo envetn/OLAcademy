@@ -310,7 +310,7 @@ function showLoginLogout($user)
 
 		if(!$user->login($email,$_POST["passwd"]))
 		{
-			populateError("Fel lösenord eller email <a href='user.php?renew'>Glömt lösenord ?</a>");
+			populateError("Fel lösenord eller email <a href='user.php?renew'>Glömt lösenord?</a>");
 		}
 		else
 		{
