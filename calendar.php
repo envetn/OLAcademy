@@ -126,9 +126,11 @@ function draw_calendar($month, $year, $userLoggedIn, $eventObject)
 		// Need to refactor this method..
 		$current_date = date( 'Y-m-d', mktime( 0, 0, 0, $month, $list_day, $year ) );
 
-		$eventResult = getEventByDate( $events, $current_date );
-
-		$calendar .= fetchRegisteredAtEvent( $eventResult, $eventObject );
+		if($events != null)
+		{
+		      $eventResult = getEventByDate( $events, $current_date );
+    		  $calendar .= fetchRegisteredAtEvent( $eventResult, $eventObject );
+		}
 
 		$calendar .= "</div></td>";
 
