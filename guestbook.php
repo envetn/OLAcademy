@@ -37,7 +37,7 @@ function isCaptchaValid()
 
 function makePost($guestbookObject)
 {
-    if(isCaptchaValid())
+    if(isCaptchaValid() || $user->isLoggedIn())
     {
         if (validateStringPOST("name") && validateStringPOST("text"))
         {
@@ -68,7 +68,7 @@ function makePost($guestbookObject)
     }
     else
     {
-        populateError("Fel captcha .. sak?");
+        populateError("Fel kontrollkod");
     }
 }
 
@@ -77,20 +77,27 @@ if (isset($_POST["submit"]))
 	makePost($guestbookObject);
 }
 
-    $postForm = '<div class="col-sm-4 col-sm-pull-8 elementBox">
-		<h2>Gästbok</h2>
-		<form action="' . $_SERVER["PHP_SELF"] . '" method="POST">
-			<label>Namn:<br><input type="text" name="name" value="' . $username ." ". $lastname . '" size="20"/></label><br>
-			<label>Text:<br><textarea name="text" rows="8" cols="40">'. printIfContent() . '</textarea></label><br>
-			<label>
-			    <input type="hidden" value='.$captchaFirst.' name="captchaFirst"/>
-			    <input type="hidden" value='.$captchaSecond.' name="captchaSecond"/>
-			    ' . $captchaFirst . ' + ' . $captchaSecond . ' = 
-			</label><br/>
-			<input type="text" name="captcha" size="5"/><br/>
-			<label><input type="submit" class="btn btn-primary" name="submit" value="Skicka"/></label><br>
-		</form>
-	</div>';
+if (!$user->isLoggedIn())
+{
+	$captcha = '<label>
+		    <input type="hidden" value='.$captchaFirst.' name="captchaFirst"/>
+		    <input type="hidden" value='.$captchaSecond.' name="captchaSecond"/>
+		    ' . $captchaFirst . ' + ' . $captchaSecond . ' = 
+		</label>
+		<input type="text" name="captcha" size="5"/><br/>';
+}
+else $captcha = '';
+
+$postForm = '<div class="col-sm-4 col-sm-pull-8 elementBox">
+	<h2>Gästbok</h2>
+	<form action="' . $_SERVER["PHP_SELF"] . '" method="POST">
+		<label>Namn:<br><input type="text" name="name" value="' . $username ." ". $lastname . '" size="20"/></label><br>
+		<label>Text:<br><textarea name="text" rows="8" cols="40">'. printIfContent() . '</textarea></label><br>
+		' . $captcha . '
+		
+		<label><input type="submit" class="btn btn-primary" name="submit" value="Skicka"/></label><br>
+	</form>
+</div>';
 
 displayError();
 echo "<div class='row'>";

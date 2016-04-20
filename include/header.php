@@ -24,6 +24,7 @@ $privilege =  $user->getUserprivilege();
 
 	<link rel="stylesheet" type="text/css" href="Style/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="Style/style.css">
+	<link rel="icon" type="image/png" href="img/pageLogo.png"/>
 </head>
 
 <body>
