@@ -35,9 +35,9 @@ function isCaptchaValid()
     return false;
 }
 
-function makePost($guestbookObject)
+function makePost($guestbookObject, $logged_in)
 {
-    if(isCaptchaValid() || $user->isLoggedIn())
+    if(isCaptchaValid() || $logged_in)
     {
         if (validateStringPOST("name") && validateStringPOST("text"))
         {
@@ -74,7 +74,7 @@ function makePost($guestbookObject)
 
 if (isset($_POST["submit"]))
 {
-	makePost($guestbookObject);
+	makePost($guestbookObject, $user->isLoggedIn());
 }
 
 if (!$user->isLoggedIn())
