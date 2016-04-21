@@ -24,8 +24,6 @@ function tryToEditUser($user)
 		}
 		catch (Exception $e)
 		{
-			//logError("< " . $_SESSION['uid'] . "  tryToEditUser > Error: " . $e . "\n");
-			dump($e);
 			return false;
 		}
 	}
@@ -42,8 +40,6 @@ function tryToRemoveEvent($eventObject)
 		}
 		catch (Exception $e)
 		{
-			//logError("< " . $_SESSION['uid'] . "  tryToRemoveEvent > Error: " . $e . "\n");
-			dump($e);
 			return false;
 		}
 	}
@@ -59,7 +55,6 @@ function tryToRemoveUser($user)
 		}
 		catch (Exception $e)
 		{
-			logError("< " . $_SESSION['uid'] . "  tryToRemoveUser > Error: " . $e . "\n");
 			return false;
 		}
 	}
@@ -284,11 +279,11 @@ function userForm($user)
 	//<a href='user.php?user=id'>
 	$userTable = "<tr class='admin_rowContent'>
                             <td><span>" . $user->name . "</span></td>
-                            <td><span>" . $user->email . "</span></td>";
+                            <td><span>" . $user->email . "</span></td>
+                            <form method='post'>";
 	$userTable .= generateSelect($user->Privilege);
 	$userTable .= "<td>" . $user->regDate . "</td>
                             <td>
-								<form method='post'>
 								<input type='hidden' name='userId' value='" . $user->id . "' />
 								<input type='image' src='img/cross.png' border='0' width=18px height=18px alt='Submit'  name='removeUser_1' value='Click me'>
                                 <input type='image' src='img/edit.png'  border='0' width=18px height=18px alt='Submit'  name='editUser_2' value='Click me2'>
@@ -304,16 +299,19 @@ function generateSelect($privilege)
 	switch ($privilege)
 	{
 		case 2 :
-			$html .= "<option value='2' selected='selected' > Admin </option> <option value='1'> Användare </option><option value='0' > Student </option>";
+			$html .= "<option value='2' selected='selected' > Admin </option> <option value='1'> Användare </option><option value='0' > Student </option><option value='-1'> Blockad</option>";
 			break;
 
 		case 1 :
-			$html .= "<option value='2' > Admin </option> <option value='1' selected='selected' > Användare </option><option value='0' > Student </option>";
+			$html .= "<option value='2' > Admin </option> <option value='1' selected='selected' > Användare </option><option value='0' > Student </option><option value='-1'> Blockad</option>";
 			break;
 
 		case 0 :
-			$html .= "<option value='2' > Admin </option> <option value='1'> Användare </option><option value='0' selected='selected'  > Student </option>";
+			$html .= "<option value='2' > Admin </option> <option value='1'> Användare </option><option value='0' selected='selected'  > Student </option><option value='-1'> Blockad</option>";
 			break;
+        case -1 :
+		    $html .= "<option value='2' > Admin </option> <option value='1'> Användare </option><option value='0'  > Student </option><option value='-1' selected='selected' > Blockad</option>";
+            break;
 	}
 	$html .= " 	</select> </td>";
 	return $html;

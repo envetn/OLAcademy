@@ -61,7 +61,7 @@ function generateEventForm($data)
 {
 	$form = "<div class='form_addEvent'><form method='post' enctype='multipart/form-data'>";
 	$form .= "<input name='eventName' placeholder='Träning' value='" . is_set( $data, "eventName" ) . "'  type='text' class='addEventInput'/>";
-	$form .= "<textarea name='info' placeholder='Information' value='" . is_set( $data, "info" ) . "'  type='textarea' class='addEventInput'></textarea>";
+	$form .= "<textarea name='info' placeholder='Information' type='textarea' class='addEventInput'>" . is_set( $data, "info" ) . "</textarea>";
 	$form .= "<input name='startTime' value='" . is_set( $data, "startTime" ) . "'  type='time' class='addEventInput'/>";
 	$form .= "<input name='date' value='" . is_set( $data, "eventDate" ) . "' type='date' class='addEventInput'/>";
 	$form .= "<label>Buss: </label><input type='checkbox' name='bus' value='bus' " . is_set( $data, "bus" ) . "/><br>";

@@ -3,36 +3,20 @@ $pageId = "guestbook";
 $pageTitle = "- Gästbok";
 include ("include/header.php");
 
-$username = isset($_SESSION["username"]) ? $_SESSION["username"] : "";
+$username = isset($_SESSION["username"]) ? $_SESSION["username"] : printIfContent("name");
 $lastname = isset($_SESSION["lastname"]) ? $_SESSION["lastname"] : "";
 $limit = 7; //Posts per page
 $offset = validateIntGET("offset") ? $_GET["offset"] : 0; //Start index
 $guestbookObject = new GuestbookObject();
 
-$captchaFirst = rand(0,10);
-$captchaSecond = rand(0,10);
 
-function printIfContent()
+function printIfContent($value)
 {
-    if(validateStringPOST("text"))
+    if(validateStringPOST($value))
     {
-        return $_POST["text"];
+        return $_POST[$value];
     }
     return "";
-}
-
-function isCaptchaValid()
-{
-    if(validateIntPOST("captcha"))
-    {
-        $captcha = strip_tags($_POST["captcha"]);
-        $sumOfCaptcha = $_POST["captchaFirst"] + $_POST["captchaSecond"];
-        if($captcha == $sumOfCaptcha)
-        {
-            return true;
-        }
-    }
-    return false;
 }
 
 function makePost($guestbookObject, $logged_in)
@@ -76,33 +60,35 @@ if (isset($_POST["submit"]))
 {
 	makePost($guestbookObject, $user->isLoggedIn());
 }
-
-if (!$user->isLoggedIn())
+else if($user->isAdmin() && validateIntGET("r"))
 {
-	$captcha = '<label>
-		    <input type="hidden" value='.$captchaFirst.' name="captchaFirst"/>
-		    <input type="hidden" value='.$captchaSecond.' name="captchaSecond"/>
-		    ' . $captchaFirst . ' + ' . $captchaSecond . ' = 
-		</label>
-		<input type="text" name="captcha" size="5"/><br/>';
+    $condition = array("id" => $_GET["r"]);
+    if(!$guestbookObject->removeSingleEntryById($condition))
+    {
+        populateError("Misslyckades ta bort inlägg med id:" . $condition["id"]);
+    }
+    else
+    {
+        populateInfo("Tog bort inlägg med id: " . $condition["id"]);
+    }
 }
-else $captcha = '';
+$captcha = !$user->isLoggedIn() ? getCaptchaForm() : "";
 
 $postForm = '<div class="col-sm-4 col-sm-pull-8 elementBox">
 	<h2>Gästbok</h2>
 	<form action="' . $_SERVER["PHP_SELF"] . '" method="POST">
-		<label>Namn:<br><input type="text" name="name" value="' . $username ." ". $lastname . '" size="20"/></label><br>
-		<label>Text:<br><textarea name="text" rows="8" cols="40">'. printIfContent() . '</textarea></label><br>
+		<label>Namn:<br><input type="text" name="name" value="' .  $username ." ". $lastname . '" size="20"/></label><br>
+		<label>Text:<br><textarea name="text" rows="8" cols="40">'. printIfContent("text") . '</textarea></label><br>
 		' . $captcha . '
-		
 		<label><input type="submit" class="btn btn-primary" name="submit" value="Skicka"/></label><br>
 	</form>
 </div>';
 
 displayError();
+displayInfo();
 echo "<div class='row'>";
 echo "<div class='col-sm-8 col-sm-push-4 elementBox'>";
-echo presentPost($guestbookObject, $offset, $limit);
+echo presentPost($guestbookObject, $offset, $limit, $user->isAdmin());
 $nrOfRows = $guestbookObject->countAllRows();
 echo "<div class='paging'>" . paging($limit, $offset, $nrOfRows, $numbers = 5) . "</div>";
 echo "</div>";

@@ -67,37 +67,44 @@ function validateCreateUserPost($user)
 {
 	if (isset($_POST['spara']))
 	{
-		$username = strip_tags(ucfirst($_POST['username']));
-		$lastname = strip_tags(ucfirst($_POST['lastname']));
-
-		$password = $_POST['password'];
-		$passwordRepeat = $_POST['passwordRepeat'];
-
-		$email = strip_tags($_POST['email']);
-		$priv = isset($_POST['Privilege']) ? $_POST['Privilege'] : "1";
-		$date = date("Y-m-d H:i:s");
-
-		if ($password === $passwordRepeat)
-		{
-			$values = array('email' => $email);
-			$res = $user->fetchSingleEntryByValue($values);
-			if ($res === null)
-			{
-				$password = password_hash($_POST['password'], PASSWORD_BCRYPT, array('cost' => 12));
-				$params = array('name' => $username, 'password' => $password, 'email' => $email, 'Privilege' => $priv, 'regDate' => $date, 'lastname' => $lastname);
-				$user->insertEntyToDatabase($params);
-
-				populateInfo("Ditt konto har skapats.");
-			}
-			else
-			{
-				populateError("Användare med den emailen finns redan.");
-			}
-		}
-		else
-		{
-			populateError("Lösenorden matchade inte.");
-		}
+	    if(isCaptchaValid())
+	    {
+            $username = strip_tags(ucfirst($_POST['username']));
+            $lastname = strip_tags(ucfirst($_POST['lastname']));
+    
+    		$password = $_POST['password'];
+    		$passwordRepeat = $_POST['passwordRepeat'];
+    
+    		$email = strip_tags($_POST['email']);
+    		$priv = "1";
+    		$date = date("Y-m-d H:i:s");
+    
+    		if ($password === $passwordRepeat)
+    		{
+    			$values = array('email' => $email);
+    			$res = $user->fetchSingleEntryByValue($values);
+    			if ($res === null)
+    			{
+    				$password = password_hash($_POST['password'], PASSWORD_BCRYPT, array('cost' => 12));
+    				$params = array('name' => $username, 'password' => $password, 'email' => $email, 'Privilege' => $priv, 'regDate' => $date, 'lastname' => $lastname);
+    				$user->insertEntyToDatabase($params);
+    
+    				populateInfo("Ditt konto har skapats.");
+    			}
+    			else
+    			{
+    				populateError("Användare med den emailen finns redan.");
+    			}
+    		}
+    		else
+    		{
+    			populateError("Lösenorden matchade inte.");
+    		}
+	    }
+	    else
+	    {
+	        populateError("Fel kontrollkod");
+	    }
 	}
 }
 
@@ -158,7 +165,11 @@ else if (isset($_GET['renew']))
 }
 else
 {
+    
+    $captchaFirst = rand(0,10);
+    $captchaSecond = rand(0,10);
 	//show createUser
+	
 	validateCreateUserPost($user);
 	$userConf = "
 	<div class='row'>
@@ -168,6 +179,7 @@ else
 			<label>Email</label><input type='text' name='email' /><br />
 			<label>Lösenord</label><input type='password' value='' name='password' /><br />
 				<label>Upprepa lösenord</label><input type='password' value='' name='passwordRepeat' /><br />
+	       ". getCaptchaForm() ."
 			<input type='submit' value='Spara' name='spara' class='btn btn-primary'/>
 		</form>
 	</div>

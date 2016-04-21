@@ -20,7 +20,7 @@ function exceptions_error_handler($severity, $message, $filename, $lineno)
 	}
 }
 
-function presentPost($guestbookObject, $offset, $limit)
+function presentPost($guestbookObject, $offset, $limit, $isAdmin)
 {
 	$result = $guestbookObject-> fetchEntryWithOffset($offset, $limit);
 	$post = "";
@@ -32,10 +32,14 @@ function presentPost($guestbookObject, $offset, $limit)
 				"<div class='guestbookPost'>
 					<div class='guestbookHeader'>
 						<span class='guestbookName'>" . $row->name . "</span>
-						<span class='guestbookDate'>" . $row->added . "</span>
-					</div>
-					<pre class='guestbookText'>" . $text . "</pre>
-				</div>";
+						<span class='guestbookDate'>" . $row->added . "</span>";
+					if($isAdmin)
+					{
+					    $post .= "<a href='guestbook.php?r=".$row->id."'> <img src='img/cross.png' width=18px height=18px style='float:right'/></a>";
+					}
+        $post .= "</div>
+				  <pre class='guestbookText'>" . $text . "</pre>
+				  </div>";
 	}
 	return $post;
 }
@@ -462,6 +466,32 @@ function dump($value)
 	echo "<div style='background:white'>";
 	print_r($value);
 	echo "</div>";
+}
+
+function isCaptchaValid()
+{
+    if(validateIntPOST("captcha"))
+    {
+        $captcha = strip_tags($_POST["captcha"]);
+        $sumOfCaptcha = $_POST["captchaFirst"] + $_POST["captchaSecond"];
+        if($captcha == $sumOfCaptcha)
+        {
+            return true;
+        }
+    }
+    return false;
+}
+
+function getCaptchaForm()
+{
+    $captchaFirst = rand(0,10);
+    $captchaSecond = rand(0,10);
+    return '<label>
+			    <input type="hidden" value='.$captchaFirst.' name="captchaFirst"/>
+			    <input type="hidden" value='.$captchaSecond.' name="captchaSecond"/>
+			    ' . $captchaFirst . ' + ' . $captchaSecond . ' = 
+			</label><br/>
+			<input type="text" name="captcha" size="5"/><br/>';
 }
 
 function validateIntGET($value)
