@@ -130,7 +130,7 @@ class UserObject extends DataObject
 	 * Use sha256 hash and try to find
 	 * a match in db.
 	 */
-	function getUserByCookie()
+	public function getUserByCookie()
 	{
 		$shaToken = hash_hmac('sha256', $_COOKIE["rememberme_olacademy"], "!+?");
 		$sql = "SELECT id,name,email,Privilege, lastname, changePassword FROM users WHERE token=? LIMIT 1";
@@ -142,19 +142,19 @@ class UserObject extends DataObject
 		}
 	}
 
-	function isLoggedIn()
+	public function isLoggedIn()
 	{
 		return (isset($_SESSION["username"]));
 	}
 
-	function logout()
+	public function logout()
 	{
 		session_destroy();
 		header("location:" . $_SERVER["PHP_SELF"] . "");
 		setcookie("rememberme_olacademy", "", time() - (86400 * 31));
 	}
 
-	function getLoginForm()
+	public function getLoginForm()
 	{	
 		return '<form class="loginForm" method="post">
 						<div class="loginGroup">
@@ -168,13 +168,10 @@ class UserObject extends DataObject
 						</div>
 						
 						<div class="loginGroup">
-							
-							
 							<span class="inputGroup">
 								<button type="submit" class="btn btn-primary" id="btn_login" name="login">Login</button>
 								<button type="submit" class="btn btn-primary" name="Registera">Registera</button>
 							<span class="inputGroup">
-							
 							<span class="inputGroup">
 								<input type="checkbox" name="remember_me" value="remember_me" id="remember_me"/>
 								<span style="font-size:13px;">Kom ihåg mig</span>

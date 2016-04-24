@@ -10,15 +10,6 @@ $offset = validateIntGET("offset") ? $_GET["offset"] : 0; //Start index
 $guestbookObject = new GuestbookObject();
 
 
-function printIfContent($value)
-{
-    if(validateStringPOST($value))
-    {
-        return $_POST[$value];
-    }
-    return "";
-}
-
 function makePost($guestbookObject, $logged_in)
 {
     if(isCaptchaValid() || $logged_in)
@@ -80,7 +71,7 @@ $postForm = '<div class="col-sm-4 col-sm-pull-8 elementBox">
 		<label>Namn:<br><input type="text" name="name" value="' .  $username ." ". $lastname . '" size="20"/></label><br>
 		<label>Text:<br><textarea name="text" rows="8" cols="40">'. printIfContent("text") . '</textarea></label><br>
 		' . $captcha . '
-		<label><input type="submit" class="btn btn-primary" name="submit" value="Skicka"/></label><br>
+		<label><input type="submit" class="btn btn-primary" name="submit" value="Skicka" onclick="return validate();"/></label><br>
 	</form>
 </div>';
 
@@ -91,9 +82,6 @@ echo "<div class='col-sm-8 col-sm-push-4 elementBox'>";
 echo presentPost($guestbookObject, $offset, $limit, $user->isAdmin());
 $nrOfRows = $guestbookObject->countAllRows();
 echo "<div class='paging'>" . paging($limit, $offset, $nrOfRows, $numbers = 5) . "</div>";
-echo "</div>";
-echo $postForm;
-echo "</div>";
+echo "</div>" . $postForm . "</div>";
 
 include ("include/footer.php");
-?>

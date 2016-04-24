@@ -470,28 +470,32 @@ function dump($value)
 
 function isCaptchaValid()
 {
-    if(validateIntPOST("captcha"))
+    if (empty($_SESSION['captcha_code']) || $_SESSION['captcha_code'] != $_POST['captcha_code'])//strcasecmp($_SESSION['captcha_code'], $_POST['captcha_code']) != 0)
     {
-        $captcha = strip_tags($_POST["captcha"]);
-        $sumOfCaptcha = $_POST["captchaFirst"] + $_POST["captchaSecond"];
-        if($captcha == $sumOfCaptcha)
-        {
-            return true;
-        }
+        return false;
     }
-    return false;
+    else
+    {
+        return true;
+    }
 }
 
 function getCaptchaForm()
 {
-    $captchaFirst = rand(0,10);
-    $captchaSecond = rand(0,10);
-    return '<label>
-			    <input type="hidden" value='.$captchaFirst.' name="captchaFirst"/>
-			    <input type="hidden" value='.$captchaSecond.' name="captchaSecond"/>
-			    ' . $captchaFirst . ' + ' . $captchaSecond . ' = 
-			</label><br/>
-			<input type="text" name="captcha" size="5"/><br/>';
+    return '
+        <td><img src="Captcha.php?rand="'.rand().'" id="captchaimg" ><br>
+        <label for="message">Captcha :</label> <br> <input
+        id="captcha_code" name="captcha_code" type="text"> <br> Generera ny bild <a href="javascript: refreshCaptcha();"> Refresh</a>
+        </td><br/>';
+}
+
+function printIfContent($value)
+{
+    if(validateStringPOST($value))
+    {
+        return $_POST[$value];
+    }
+    return "";
 }
 
 function validateIntGET($value)

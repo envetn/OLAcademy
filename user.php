@@ -65,7 +65,7 @@ function getUserInformation($user)
 
 function validateCreateUserPost($user)
 {
-	if (isset($_POST['spara']))
+	if (isset($_POST['submit']))
 	{
 	    if(isCaptchaValid())
 	    {
@@ -169,18 +169,19 @@ else
     $captchaFirst = rand(0,10);
     $captchaSecond = rand(0,10);
 	//show createUser
-	
-	validateCreateUserPost($user);
+
+    validateCreateUserPost($user);
 	$userConf = "
 	<div class='row'>
 		<form method='post'  id='userInformation'>
-			<label>Namn</label><input type='text' value='' name='username' /><br />
-			<label>Efternamn</label><input type='text' value='' name='lastname' /><br />
-			<label>Email</label><input type='text' name='email' /><br />
+			<label>Namn</label><input type='text' value='".printIfContent("username")."' name='username' /><br />
+			<label>Efternamn</label><input type='text' value='".printIfContent("lastname")."' name='lastname' /><br />
+			<label>Email</label><input type='text' value='".printIfContent("email")."' name='email' /><br />
 			<label>Lösenord</label><input type='password' value='' name='password' /><br />
 				<label>Upprepa lösenord</label><input type='password' value='' name='passwordRepeat' /><br />
 	       ". getCaptchaForm() ."
-			<input type='submit' value='Spara' name='spara' class='btn btn-primary'/>
+			<input type='submit' name='submit' value='Skicka' class='btn btn-primary'/>
+	           
 		</form>
 	</div>
 	";

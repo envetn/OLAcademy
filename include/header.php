@@ -7,9 +7,9 @@ include_once(INCLUDE_PATH . "/src/Objects/GuestbookObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/AboutObject.php");
 include_once(INCLUDE_PATH . "/src/Objects/User/UserObject.php");
 include_once(INCLUDE_PATH . "/src/Image/Image.php");
-
 $user = new UserObject();
 $privilege =  $user->getUserprivilege();
+
 ?>
 <!doctype html>
 <html lang='sv'>
@@ -21,6 +21,12 @@ $privilege =  $user->getUserprivilege();
 	<!--<script src="//code.jquery.com/jquery.min.js"></script>-->
 	<script src="jquery/jquery.min.js"></script>
 	<script src="Style/bootstrap/js/bootstrap.min.js"></script>
+	<script type='text/javascript'>
+	function refreshCaptcha(){
+	var img = document.images['captchaimg'];
+	img.src = img.src.substring(0,img.src.lastIndexOf("?"))+"?rand="+Math.random()*1000;
+	}
+</script>
 
 	<link rel="stylesheet" type="text/css" href="Style/bootstrap/css/bootstrap.min.css">
 	<link rel="stylesheet" type="text/css" href="Style/style.css">
