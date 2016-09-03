@@ -470,7 +470,8 @@ function dump($value)
 
 function isCaptchaValid()
 {
-    if (empty($_SESSION['captcha_code']) || $_SESSION['captcha_code'] != $_POST['captcha_code'])//strcasecmp($_SESSION['captcha_code'], $_POST['captcha_code']) != 0)
+    //if (empty($_SESSION['captcha_code']) || $_SESSION['captcha_code'] != $_POST['captcha_code'])//strcasecmp($_SESSION['captcha_code'], $_POST['captcha_code']) != 0)
+    if ($_POST['captcha_code'] != 4)
     {
         return false;
     }
@@ -482,11 +483,15 @@ function isCaptchaValid()
 
 function getCaptchaForm()
 {
-    return '
+    /*return '
         <td><img src="Captcha.php?rand="'.rand().'" id="captchaimg" ><br>
         <label for="message">Captcha :</label> <br> <input
         id="captcha_code" name="captcha_code" type="text"> <br> Generera ny bild <a href="javascript: refreshCaptcha();"> Refresh</a>
-        </td><br/>';
+        </td><br/>';*/
+    return '
+    <div class="gb_fields"><label for ="captcha_code">2 + 2 = &nbsp;</label><input id="catpcha_code" name="captcha_code" type="text"></div>
+
+    ';
 }
 
 function printIfContent($value)

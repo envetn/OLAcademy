@@ -68,10 +68,10 @@ $captcha = !$user->isLoggedIn() ? getCaptchaForm() : "";
 $postForm = '<div class="col-sm-4 col-sm-pull-8 elementBox">
 	<h2>Gästbok</h2>
 	<form action="' . $_SERVER["PHP_SELF"] . '" method="POST">
-		<label>Namn:<br><input type="text" name="name" value="' .  $username ." ". $lastname . '" size="20"/></label><br>
-		<label>Text:<br><textarea name="text" rows="8" cols="40">'. printIfContent("text") . '</textarea></label><br>
+		<div class="gb_fields"><label>Namn:</label><br><input type="text" name="name" value="' .  $username ." ". $lastname . '" size="20"/></div>
+		<div class="gb_fields"><label>Text:</label><br><textarea name="text" rows="8" cols="40">'. printIfContent("text") . '</textarea></div>
 		' . $captcha . '
-		<label><input type="submit" class="btn btn-primary" name="submit" value="Skicka" onclick="return validate();"/></label><br>
+		<div class="gb_fields"><input type="submit" class="btn btn-primary" name="submit" value="Skicka" onclick="return validate();"/></div>
 	</form>
 </div>';
 
