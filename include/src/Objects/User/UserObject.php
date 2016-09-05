@@ -238,11 +238,10 @@ class UserObject extends DataObject
 		"\r\nSe till att ändra lösenordet snarast."; 
 		$headers = "From: $name\r\nReply-To: $name\r\nReturn-Path: $name\r\n";
 			
-			echo $plainTextPassword;
-		/*if (mail ($to, $subject, $message, $headers))
+		if (mail ($to, $subject, $message, $headers))
 			populateInfo("Nytt lösenord skickat till $email");
 		else
-			populateError("Något gick fel. Har du angivit rätt E-post?");*/
+			populateError("Något gick fel. Har du angivit rätt E-post?");
 	}
 
 	private function generateRandomPassword()
