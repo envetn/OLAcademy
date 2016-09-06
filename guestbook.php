@@ -44,6 +44,12 @@ function makePost($guestbookObject, $logged_in)
     else
     {
         populateError("Fel kontrollkod");
+	
+	//log to file for debugging
+	$myfile = fopen("logfile.txt", "a");
+	$dateip = date("Y-m-d H:i:s",time()) . "        " . $_SERVER['REMOTE_ADDR'] . "\n";
+	fwrite($myfile, $dateip);
+	fclose($myfile);
     }
 }
 
