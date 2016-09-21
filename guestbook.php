@@ -12,6 +12,9 @@ $guestbookObject = new GuestbookObject();
 
 function makePost($guestbookObject, $logged_in)
 {
+    //log to file for debugging
+    $myfile = fopen("logfile.txt", "a");
+    $dateIp = date("Y-m-d H:i:s",time()) . "        " . $_SERVER['REMOTE_ADDR'];
     if(isCaptchaValid() || $logged_in)
     {
         if (validateStringPOST("name") && validateStringPOST("text"))
@@ -23,34 +26,37 @@ function makePost($guestbookObject, $logged_in)
             $max_name_length = 50;
             if (strlen($text) > $max_text_length)
             {
+                $dateIp .= "  - Failed - faulty text length\n";
                 populateError("Text must not exceed " . $max_text_length . " characters.");
             }
             elseif (strlen($name) > $max_name_length)
             {
+                $dateIp .= "  - Failed - faulty name length\n";
                 populateError("Name must not exceed " . $max_name_length . " characters.");
             }
             else
             {
                 $params = array('name' => $name, 'text' => $text);
                 $guestbookObject->insertEntyToDatabase($params);
+                
+                $dateIp .= "  - Success\n";
                 header("location: guestbook.php");
             }
         }
         else if (empty($name) || empty($text))
         {
+            $dateIp .= "  - Failed - field empty\n";
             populateError("Fyll i alla fält.");
         }
     }
     else
     {
         populateError("Fel kontrollkod");
-	
-	//log to file for debugging
-	$myfile = fopen("logfile.txt", "a");
-	$dateip = date("Y-m-d H:i:s",time()) . "        " . $_SERVER['REMOTE_ADDR'] . "\n";
-	fwrite($myfile, $dateip);
-	fclose($myfile);
+        $dateIp .= "  - Failed - wrong control code\n";
     }
+    
+    fwrite($myfile, $dateIp);
+    fclose($myfile);
 }
 
 if (isset($_POST["submit"]))
