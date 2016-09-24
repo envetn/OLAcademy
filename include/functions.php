@@ -394,7 +394,11 @@ function registerUserToEvent($user, $eventObject)
 			}
 		}
 	}
-
+	else if(isset($_POST["Edit"]))
+	{
+	    $eventId = $_POST["eventID"];
+	    header("location: event.php?event=" . $eventId);
+	}
 }
 
 function displayErrorMessage($message)

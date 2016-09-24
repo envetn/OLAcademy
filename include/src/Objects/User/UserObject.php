@@ -33,6 +33,19 @@ class UserObject extends DataObject
 		return null;
 	}
 
+	function fetchUsernameById($id)
+	{
+	    $condition = array('id' => $id);
+	    $values = array('name','lastname'); // never select password.
+	    $res = parent::fetchSingleEntryByValue($condition, $values);
+
+	    if ($res != null)
+	    {
+	        return $res->name . " " . $res->lastname;
+	    }
+	    return "Okänd";
+	}
+
 	function updateUsersPrivilege($privilege, $id)
 	{
 		if (is_numeric($privilege) && is_numeric($id))
@@ -68,11 +81,9 @@ class UserObject extends DataObject
 						$this->setRememberMe($res[0]->name, $SECRET_KEY);
 					}
 				}
-
 				return true;
 			}
 		}
-
 		return false;
 	}
 
@@ -93,6 +104,15 @@ class UserObject extends DataObject
 	public function isStudent()
 	{
 	    return self::getUserPrivilege() >= "1";
+	}
+	
+	public function isAllowedToEditEvent($createdBy)
+	{
+	    if(self::getUserPrivilege() === "2" || $createdBy == $_SESSION["uid"])
+	    {
+	       return true;    
+	    }
+	    return false;
 	}
 	
 	private function populateSession($res)

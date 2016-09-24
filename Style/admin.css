@@ -10,7 +10,14 @@
 
 .admin_rowHead th
 {
-	padding:2px;
+	padding:1px;
+	width:4%;
+}
+
+.admin_rowHead #thText
+{
+	padding:1px;
+	width:12%;
 }
 .admin_rowHead a
 {

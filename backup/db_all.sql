@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Apr 09, 2016 at 07:31 PM
--- Server version: 5.6.28-0ubuntu0.15.10.1
--- PHP Version: 5.6.11-1ubuntu3.1
+-- Generation Time: Sep 24, 2016 at 03:11 PM
+-- Server version: 5.6.31-0ubuntu0.15.10.1
+-- PHP Version: 5.6.11-1ubuntu3.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -19,6 +19,8 @@ SET time_zone = "+00:00";
 --
 -- Database: `olacademy`
 --
+CREATE DATABASE IF NOT EXISTS `olacademy` DEFAULT CHARACTER SET latin1 COLLATE latin1_swedish_ci;
+USE `olacademy`;
 
 -- --------------------------------------------------------
 
@@ -26,7 +28,6 @@ SET time_zone = "+00:00";
 -- Table structure for table `about`
 --
 
-DROP TABLE IF EXISTS `about`;
 CREATE TABLE IF NOT EXISTS `about` (
   `id` int(11) NOT NULL,
   `generalInfo` text COLLATE utf8_unicode_ci NOT NULL,
@@ -48,7 +49,6 @@ INSERT INTO `about` (`id`, `generalInfo`, `offerInfo`, `additionalInfo`, `extern
 -- Table structure for table `events`
 --
 
-DROP TABLE IF EXISTS `events`;
 CREATE TABLE IF NOT EXISTS `events` (
   `id` int(11) NOT NULL,
   `eventDate` date NOT NULL,
@@ -56,26 +56,31 @@ CREATE TABLE IF NOT EXISTS `events` (
   `eventName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `info` text COLLATE utf8_unicode_ci NOT NULL,
   `reccurance` tinyint(1) NOT NULL,
-  `bus` tinyint(1) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=56 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+  `bus` tinyint(1) NOT NULL,
+  `createdBy` int(11) NOT NULL
+) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `events`
 --
 
-INSERT INTO `events` (`id`, `eventDate`, `startTime`, `eventName`, `info`, `reccurance`, `bus`) VALUES
-(28, '2016-04-12', '18:30:00', 'Intervaller 15x15', 'Samling efter intervallerna i hallen', 1, 0),
-(30, '2016-04-11', '20:00:00', 'Intervaller 30x15', 'Info', 1, 1),
-(33, '2016-04-13', '18:00:00', 'Grillning', 'Tag med eget att grilla, finns grill', 1, 0),
-(34, '2016-04-12', '05:20:16', 'Morgonjogg', 'Samling 5 minuter innan i aulan', 1, 1),
-(38, '2015-11-16', '11:00:20', '123123123', '123', 0, 1),
-(40, '2016-04-14', '17:00:00', 'Backintervaller', 'Intervballer i en backe', 1, 1),
-(41, '2016-04-15', '17:00:00', 'Fredags trÃ¤ning', 'TrÃ¤ning pÃ¥ en fredag', 1, 0),
-(47, '2016-04-09', '18:00:00', 'Fotboll', 'Fotboll utanfÃ¶r stadshuset', 1, 0),
-(50, '2016-04-14', '17:12:12', 'Backint', 'Intervballer i en backe', 1, 1),
-(53, '2016-01-14', '21:22:22', 'asdasd', 'asdasd', 0, 0),
-(54, '2016-01-14', '21:22:22', '3123123', '123123123', 0, 0),
-(55, '2016-01-15', '21:22:22', '123123123', '123123123', 0, 0);
+INSERT INTO `events` (`id`, `eventDate`, `startTime`, `eventName`, `info`, `reccurance`, `bus`, `createdBy`) VALUES
+(56, '2016-09-24', '11:59:03', '123', '123123', 1, 0, 0),
+(57, '2016-09-26', '12:04:52', '123123123 ', '123 12312 312 3123 123 12', 1, 1, 34),
+(58, '2016-09-30', '12:38:49', 'Intervaller, lÃ¶pteknik och styrka', 'Fredagsmys med Martin pÃ¥ VÃ¤stra Mark.', 1, 0, 34);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `ip_block`
+--
+
+CREATE TABLE IF NOT EXISTS `ip_block` (
+  `id` int(11) NOT NULL,
+  `ipAddress` varchar(100) NOT NULL,
+  `blockedUntill` date NOT NULL,
+  `nameUsed` varchar(100) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -83,7 +88,6 @@ INSERT INTO `events` (`id`, `eventDate`, `startTime`, `eventName`, `info`, `recc
 -- Table structure for table `news`
 --
 
-DROP TABLE IF EXISTS `news`;
 CREATE TABLE IF NOT EXISTS `news` (
   `id` int(11) NOT NULL,
   `title` varchar(255) CHARACTER SET latin1 NOT NULL,
@@ -91,7 +95,7 @@ CREATE TABLE IF NOT EXISTS `news` (
   `author` varchar(100) CHARACTER SET latin1 NOT NULL,
   `added` datetime NOT NULL,
   `image` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=74 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=75 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `news`
@@ -156,7 +160,8 @@ INSERT INTO `news` (`id`, `title`, `content`, `author`, `added`, `image`) VALUES
 (70, '123', '123', 'Lofie', '2015-11-23 20:24:10', ''),
 (71, 'test 1', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae. Sed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'Lofie', '2015-11-23 20:24:29', ''),
 (72, 'test 2', 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Maecenas ullamcorper mi vel maximus rutrum. Proin condimentum porta pellentesque. Sed mattis massa id placerat aliquet. Etiam ultrices nulla semper ante elementum, nec congue mi venenatis. Aenean imperdiet maximus erat sed dictum. Donec mollis leo ut odio feugiat iaculis. Aliquam sed sodales purus. Nunc in maximus tellus. Donec vestibulum lorem risus, at aliquam enim rhoncus vitae. Sed gravida justo suscipit, scelerisque lacus nec, semper ante. Ut euismod congue enim eu faucibus. Duis justo nulla, aliquam a sagittis vel, tristique ac felis. In consectetur mollis sapien a convallis. Nulla a elit nulla. Praesent molestie nec neque et molestie. Donec nec accumsan enim. Nam vulputate tellus nulla, ac accumsan sem lacinia non. Proin aliquam ante ac eros venenatis sagittis. ', 'Lofie', '2015-11-23 20:24:33', ''),
-(73, '1231231', '123123 asd as\r\nd a\r\nsd\r\nas\r\nd asd', 'Lofie', '2016-01-14 20:56:08', '');
+(73, '1231231', '123123 asd as\r\nd a  \r\n\r\n\r\nsd\r\nas\r\nd asd', 'Nisse', '2016-09-12 21:32:38', ''),
+(74, 'Nya sidan', 'VÃ¤lkomna till OL-Academys nya cyberspace!\r\nDen gamla sidan bÃ¶rjade bli vÃ¤ldigt fÃ¶rÃ¥ldrad och det var svÃ¥rt att underhÃ¥lla den. Det var dags fÃ¶r en ny hemsida med vissa nya features och nÃ¥gra borttagna. Vi har analyserat vad hemsidan anvÃ¤ndes till och funktioner som kartarkiv och rss-flÃ¶de prioriterades bort medan Ã¶kad anvÃ¤ndarvÃ¤nlighet rÃ¶rande anmÃ¤lan till trÃ¤ningar lyftes fram.\r\n\r\nFÃ¶rsta gÃ¥ngen man ska anmÃ¤la sig kommer man behÃ¶va skapa ett konto men nÃ¤r man vÃ¤l har gjort det kan man vÃ¤lja att fÃ¶rbli inloggad om man kryssar i "kom ihÃ¥g mig" under inloggning. FÃ¶rdelen med att ha ett personligt konto Ã¤r att man slipper fylla i namn och kontrollkod under anmÃ¤lningen. Det enda som krÃ¤vs nu Ã¤r att man trycker pÃ¥ anmÃ¤lningsknappen och eventuell extra kommentar.\r\n\r\nEn annan ny grej Ã¤r att alla ska kunna skapa egna trÃ¤ningar. Om du tÃ¤nker dra ut pÃ¥ ett lÃ¥ngpass kan du vÃ¤l lika gÃ¤rna lÃ¥ta andra fÃ¥ veta genom att lÃ¤gga upp en trÃ¤ning hÃ¤r sÃ¥ kanske du fÃ¥r sÃ¤llskap!\r\n\r\nOm du hittar nÃ¥gra buggar eller har synpunkter pÃ¥ den nya hemsidan fÃ¥r du gÃ¤rna hÃ¶ra av dig till info@olacademy.com eller prata med Adam. Vi som har skapat sidan heter Olof Christensson, Adam Georgsson och Fredrik Berntsson.', 'Nisse', '2016-09-24 14:54:20', '');
 
 -- --------------------------------------------------------
 
@@ -164,13 +169,12 @@ INSERT INTO `news` (`id`, `title`, `content`, `author`, `added`, `image`) VALUES
 -- Table structure for table `posts`
 --
 
-DROP TABLE IF EXISTS `posts`;
 CREATE TABLE IF NOT EXISTS `posts` (
   `id` int(11) NOT NULL,
   `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `text` text COLLATE utf8_unicode_ci NOT NULL,
   `added` datetime NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=116 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=119 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `posts`
@@ -185,7 +189,10 @@ INSERT INTO `posts` (`id`, `name`, `text`, `added`) VALUES
 (112, 'Lofie', 'asd', '2016-01-11 18:13:48'),
 (113, 'Lofie', 'dasdas', '2016-01-11 18:13:49'),
 (114, 'Lofie', 'asdasdasdas', '2016-01-11 18:13:52'),
-(115, 'Lofie', 'asdasd', '2016-01-14 21:04:48');
+(115, 'Lofie', 'asdasd', '2016-01-14 21:04:48'),
+(116, ' 123          ', '123', '2016-09-21 22:12:04'),
+(117, ' 123123123 ', '123123123', '2016-09-21 22:14:11'),
+(118, ' 123  ', '123', '2016-09-21 22:26:58');
 
 -- --------------------------------------------------------
 
@@ -193,7 +200,6 @@ INSERT INTO `posts` (`id`, `name`, `text`, `added`) VALUES
 -- Table structure for table `registered`
 --
 
-DROP TABLE IF EXISTS `registered`;
 CREATE TABLE IF NOT EXISTS `registered` (
   `id` int(11) NOT NULL,
   `userID` int(11) NOT NULL,
@@ -202,23 +208,7 @@ CREATE TABLE IF NOT EXISTS `registered` (
   `comment` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `bus` tinytext COLLATE utf8_unicode_ci NOT NULL,
   `eventID` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=92 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
---
--- Dumping data for table `registered`
---
-
-INSERT INTO `registered` (`id`, `userID`, `name`, `date`, `comment`, `bus`, `eventID`) VALUES
-(13, 19, 'lofie', '2015-11-16', '', 'Ja', '26'),
-(14, 19, 'lofie', '2015-11-21', '', 'Nej', '22'),
-(72, 29, 'Lofie', '2016-01-11', '', 'Nej', '48'),
-(74, 29, 'Lofie', '2016-01-15', '', 'Nej', '55'),
-(75, 33, 'Test', '2016-01-14', '', 'Nej', '53'),
-(76, 33, 'Test', '2016-01-14', '', 'Nej', '54'),
-(77, 33, 'Test', '2016-01-15', '', 'Nej', '55'),
-(85, 33, 'Test', '2016-01-21', '', 'Nej', '52'),
-(89, 29, 'Lofie', '2016-01-21', '', 'Nej', '52'),
-(91, 29, 'Lofie', '2016-01-14', '', 'Nej', '53');
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -226,7 +216,6 @@ INSERT INTO `registered` (`id`, `userID`, `name`, `date`, `comment`, `bus`, `eve
 -- Table structure for table `users`
 --
 
-DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -237,7 +226,7 @@ CREATE TABLE IF NOT EXISTS `users` (
   `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `lastname` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `changePassword` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `users`
@@ -245,9 +234,11 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `name`, `password`, `email`, `Privilege`, `regDate`, `token`, `lastname`, `changePassword`) VALUES
 (28, 'admin', '$2y$12$d5IemwsuVU90qF0ja.jKUeKF1zxwi7FzBdtyGszHRmdPPPS2qEkv.', 'admin@admin.com', 0, '2015-11-19', '', '', 0),
-(29, 'Lofie', '$2y$12$G2uR1jYnxka5jEujF8omYODeZvFknjnj.kVV5e5p8dEqH8GV5PtAa', 'lofie@lofie.com', 2, '2015-11-19', '2e9b94b8d14dee23806baebf8f77535833400208e1c9d2a0fe4cc6d6fd1b4e85', 'Surn', 0),
 (30, 'Adam', '$2y$12$Ix9Oi//nwE.O02hUcvmwROgze.EXwX0q/piLok0UeJld41bJrCw2C', 'adamgeorgsson@gmail.com', 2, '2015-11-21', '', '', 0),
-(33, 'Test', '$2y$12$psEATvnr5L93SGhUcf0Ltum0ASySuCNeNw5O9Fq3CUQubBIfVnEuW', 'test@test.com', 1, '2016-01-16', 'ae1e6f2b33aa9c35a44ed0f1f4f62dac99d0c8f6accbe110baa1191a51090c57', 'Testsson', 0);
+(33, 'Test', '$2y$12$psEATvnr5L93SGhUcf0Ltum0ASySuCNeNw5O9Fq3CUQubBIfVnEuW', 'test@test.com', 1, '2016-01-16', 'ae1e6f2b33aa9c35a44ed0f1f4f62dac99d0c8f6accbe110baa1191a51090c57', 'Testsson', 0),
+(34, 'Nisse', '$2y$12$7T..PkzrcCz.UNt4sGPdIeX0NWs2X4.EATdJFXR0duKvH3Fo2mYrq', 'nisse@hult.com', 2, '2016-09-10', 'fee018b3996ac1b9e9d3ec89d4a471fc363714ff45bb79bb22a6f85b70be7d75', 'Hult', 0),
+(35, 'Olof', '$2y$12$FKHVC8gR2JOrc2IimZVW0eIy7ihE3x.JYKFUsMC1A25tFHO8nqvni', 'olle.ch@hotmail.com', 1, '2016-09-12', '', 'Christensson', 0),
+(36, '123', '$2y$12$kNHb9LIdL73sn/Ef6TormeHLLDPVVeFcNZxBWRd..E/4RULNzb9/6', '123@123.com', 1, '2016-09-12', '', '123', 0);
 
 --
 -- Indexes for dumped tables
@@ -263,6 +254,12 @@ ALTER TABLE `about`
 -- Indexes for table `events`
 --
 ALTER TABLE `events`
+  ADD PRIMARY KEY (`id`);
+
+--
+-- Indexes for table `ip_block`
+--
+ALTER TABLE `ip_block`
   ADD PRIMARY KEY (`id`);
 
 --
@@ -302,27 +299,32 @@ ALTER TABLE `about`
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=56;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=59;
+--
+-- AUTO_INCREMENT for table `ip_block`
+--
+ALTER TABLE `ip_block`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=74;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=75;
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=116;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=119;
 --
 -- AUTO_INCREMENT for table `registered`
 --
 ALTER TABLE `registered`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=92;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=37;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

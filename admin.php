@@ -157,8 +157,9 @@ function getTableEvents($eventObject)
 			<a href='admin.php?c=1&showAll=true'> < Visa alla > </a>
 			<table class='tableContent'>
      		<tr class='admin_rowHead'>
-        		<th>Event</th><th>Info</th>
-				<th><a href='admin.php?c=1&sort=startTime'> När &#8595;</a> </th>F
+        		<th>Event</th>
+	           <th id='thText'>Info</th>
+				<th><a href='admin.php?c=1&sort=startTime'> När &#8595;</a> </th>
 				<th><a href='admin.php?c=1&sort=eventDate'> Datum &#8595;</a> </th>
 				<th>Anmälda</th>
 				<th><a href='admin.php?c=1&sort=reccurance'> Återkommande &#8595;</a></th>

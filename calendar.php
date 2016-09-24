@@ -9,22 +9,24 @@ function showSingleCalendarEvent($user, $eventObject)
 	if( validateIntGET( "event" ) )
 	{
 		$condition["id"] = $_GET["event"];
-		$res = $eventObject->fetchSingleEntryByValue( $condition );
+		$event = $eventObject->fetchSingleEntryByValue( $condition );
+		$createdBy = $user->fetchUsernameById($event->createdBy);
+		
 		$singleEvent = "<div class='eventPost' id='calendarRegisterEvent'>
 							<div class='eventHeader'>
-								<span class='eventName'>" . $res->eventName . "</span>
-								<span class='eventTime'>" . $res->startTime . "</span>
+								<span class='eventName'>" . $event->eventName . "</span>
+								<span class='eventTime'>" . $event->startTime . "</span>
 							</div>
-							<span class='eventInfo'>" . $res->info . "</span>
+							<span class='eventInfo'>" . $event->info . "<br>Av: " .$createdBy. " </span>
 							<form method='POST' style='padding:7px;' >
-								<input type='hidden' name='eventID' value=" . $res->id . ">
-								<input type='hidden' name='date' value=" . $res->eventDate . ">";
+								<input type='hidden' name='eventID' value=" . $event->id . ">
+								<input type='hidden' name='date' value=" . $event->eventDate . ">";
 
 		if( $user->isLoggedIn() )
 		{
 			$userId = isset( $_SESSION["uid"] ) ? $_SESSION["uid"] : false;
 			$regCondition["userID"] = $userId;
-			$regCondition["eventID"] = $res->id;
+			$regCondition["eventID"] = $event->id;
 
 			$res = $eventObject->getRegisteredByValue( $regCondition );
 			if( $res == null )
@@ -33,9 +35,15 @@ function showSingleCalendarEvent($user, $eventObject)
 			}
 			else
 			{
-				$singleEvent .= "<span class='info'> Du är redan anmäld</span>
+			    $singleEvent .= "<span class='info'> Du är redan anmäld</span>
 							<button type='submit' class='btn btn-primary regInput' name='unRegister' value='Avanmäl'>Avanmäl</button>";
 			}
+
+			if($user->isAllowedToEditEvent($event->createdBy))
+			{
+			    $singleEvent .= "<button type='submit' style='float:right' class='btn btn-primary regInput' name='Edit' value='Edit'>Editera</button>";
+			}
+
 			$singleEvent .= "</form>";
 		}
 		else

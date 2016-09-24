@@ -27,7 +27,7 @@ function validateDay($day)
 	return $day;
 }
 
-function fetchEventAndValidateGET($eventObject)
+function fetchEventAndValidateGET($eventObject, $user)
 {
 	$singleEvent = "";
 	if( validateIntGET( "event" ) )
@@ -35,14 +35,14 @@ function fetchEventAndValidateGET($eventObject)
 		$values = array("id" => $_GET["event"] );
 		$res = $eventObject->fetchSingleEntryByValue( $values );
 
-		if( $res != null )
+		if($res != null && $user->isAllowedToEditEvent($res->createdBy))
 		{
 			$reccurance = $res->reccurance == '1' ? "checked" : "";
 			$bus = $res->bus == '1' ? "checked" : "";
 			$data = array("eventName" => $res->eventName, "info" => $res->info, "startTime" => $res->startTime, "eventDate" => $res->eventDate, "bus" => $bus,
 					"reccurance" => $reccurance, "button" => "btn_edit", "action" => "Updatera" );
 
-			$singleEvent .= generateEventForm( $data );
+			$singleEvent = generateEventForm( $data );
 			$singleEvent .= " <input name='id' value='" . $res->id . "'type='hidden'/>";
 		}
 	}
@@ -52,7 +52,7 @@ function fetchEventAndValidateGET($eventObject)
 		$time = date( 'H:i:s', time() - date( 'Z' ) );
 
 		$data = array("startTime" => $time, "eventDate" => $date, "button" => "btn_add", "action" => "Spara" );
-		$singleEvent .= generateEventForm( $data );
+		$singleEvent = generateEventForm( $data );
 	}
 	return $singleEvent;
 }
@@ -90,8 +90,9 @@ function validateEventParams()
 		$date = strip_tags( $_POST["date"] );
 		$reccurance = isset( $_POST["reccurance"] ) ? 1 : 0;
 		$bus = isset( $_POST["bus"] ) ? 1 : 0;
+		$userId =  $_SESSION["uid"];
 
-		$params = array('eventName' => $eventName, 'info' => $info, 'startTime' => $startTime, 'eventDate' => $date, 'reccurance' => $reccurance, 'bus' => $bus );
+		$params = array('eventName' => $eventName, 'info' => $info, 'startTime' => $startTime, 'eventDate' => $date, 'reccurance' => $reccurance, 'bus' => $bus, 'createdBy' => $userId );
 		return $params;
 	}
 	else
@@ -137,7 +138,7 @@ if( $user->isStudent() )
 {
 	$singleEvent .= validateEventAction( $eventObject );
 	$singleEvent .= "<h4 id='infoHead'> <a href='" . $_SESSION["Previous_page"] . "'> Tillbaka</a></h4>";
-	$singleEvent .= fetchEventAndValidateGET( $eventObject );
+	$singleEvent .= fetchEventAndValidateGET( $eventObject, $user );
 }
 else
 {
