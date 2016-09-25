@@ -10,7 +10,7 @@ class UserObject extends DataObject
 
 	function fetchUserEntries()
 	{
-		$sql = "SELECT id,name,email,Privilege,regDate FROM users ORDER BY privilege LIMIT 10";
+		$sql = "SELECT id,name,email,Privilege,regDate FROM users ORDER BY privilege";
 		$res = $this->database->queryAndFetch($sql);
 		if ($this->rowCount() > 0)
 		{
@@ -242,8 +242,6 @@ class UserObject extends DataObject
 				$this->sendNewPassword($plainTextPassword, $email);
 			}
 		}
-		// TODO: Remove this comment when we have a mailserver working
-		// header("location: " .$_SERVER["PHP_SELF"]."");
 	}
 
 	private function sendNewPassword($plainTextPassword, $email)

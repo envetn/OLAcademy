@@ -1,8 +1,8 @@
-ErrorDocument 404 /Eclipse/Olacademy/Error/fileNotFound.php
-ErrorDocument 403 /Eclipse/Olacademy/Error/fileNotFound.php
-ErrorDocument 402 /Eclipse/Olacademy/Error/fileNotFound.php
-ErrorDocument 401 /Eclipse/Olacademy/Error/fileNotFound.php
-ErrorDocument 400 /Eclipse/Olacademy/Error/fileNotFound.php
+ErrorDocument 404 /Error/fileNotFound.php
+ErrorDocument 403 /Error/fileNotFound.php
+ErrorDocument 402 /Error/fileNotFound.php
+ErrorDocument 401 /Error/fileNotFound.php
+ErrorDocument 400 /Error/fileNotFound.php
 
 IndexIgnore *
 <IfModule mod_rewrite.c>
@@ -14,3 +14,5 @@ IndexIgnore *
 	
 	RewriteRule ^(.*)$ index.php/$1
 </IfModule>
+
+Header add "disablevcache" "true"
