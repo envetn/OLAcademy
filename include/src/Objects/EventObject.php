@@ -51,15 +51,16 @@ class EventObject extends DataObject
 		return $this->database->queryAndFetch( $sql, $params );
 	}
 
-	public function getCurrentMonthsEvents($orderBy = "")
+	public function getEventByGivenMonth($month, $orderBy="eventDate")
 	{
 		$sql = " SELECT * FROM events WHERE eventDate BETWEEN ? AND ?";
 		if( $orderBy != "" )
 		{
 			$sql .= " ORDER BY " . $orderBy;
 		}
-		$firstDay = (new DateTime( 'first day of this month' ))->format( 'Y-m-d' );
-		$lastDay = (new DateTime( 'last day of this month' ))->format( 'Y-m-d' );
+
+		$firstDay = date("Y-m-d", mktime(0, 0, 0, $month, 1 ,date("Y")));
+		$lastDay = date("Y-m-d", mktime(0, 0, 0, $month+1, 0 ,date("Y")));
 		$params = array($firstDay, $lastDay );
 		$result = $this->database->queryAndFetch( $sql, $params );
 
@@ -135,6 +136,23 @@ class EventObject extends DataObject
 		$orderBy = "eventID";
 		$res = $this->registered->fetchAllEntries( $orderBy );
 		return $res;
+	}
+
+	public function fetchAllRegisteredGivenMonth($month)
+	{
+		$sql = " SELECT userID,eventID FROM registered WHERE date BETWEEN ? AND ?";
+
+		$firstDay = date("Y-m-d", mktime(0, 0, 0, $month, 1 ,date("Y")));
+		$lastDay = date("Y-m-d", mktime(0, 0, 0, $month+1, 0 ,date("Y")));
+
+		$params = array($firstDay, $lastDay );
+		$result = $this->database->queryAndFetch( $sql, $params );
+
+		if( $this->rowCount() > 0 )
+		{
+			return $result;
+		}
+		return array();
 	}
 }
 
