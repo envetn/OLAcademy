@@ -1,22 +1,51 @@
 @CHARSET "ISO-8859-1";
 
-.day-number
+#calendar
+{
+	width: 100%;
+	display: table;
+	border-collapse: collapse;
+}
+
+.week_day
+{
+	display: table-cell;
+	height: 30px;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.week
+{
+	display: table-row;
+}
+
+.day
 {
 	position: relative;
-	min-height:100px;
-	min-width:160px;
-
+	display: table-cell;
+	border: 1px solid #aaa;
+	height: 100px;
+	width: 10%;
+	padding: 3px;
 }
 
-.calendar-day
+.day:hover
 {
-	clear:both;
-	border: 1px solid black;
+	background: #DBF5FC;
 }
 
-.calendar-day :hover
+.prev_month_days
 {
-	background:#FFA;
+	border-top-color: #eee;
+	border-left-color: #eee;
+	border-right: 0;
+}
+
+.next_month_days
+{
+	border-bottom-color: #eee;
+	border-right-color: #eee;
 }
 
 .event_p
@@ -24,17 +53,22 @@
 	font-size:14px;
 	margin:0px; padding:0px;
 }
+
 .eventAdd_btn
 {
-	/*Align to bottom right corner*/
 	position: absolute;
-	bottom: 0;
-	right: 0;
+	bottom: 2px;
+	right: 2px;
+}
+
+.switch_month
+{
+	margin: 10px;
+	font-size: 1.4em;
 }
 
 #calendarRegisterEvent
 {
 	width:50%;
-	margin: 0 auto;	
+	margin: 10px auto 0 auto;	
 }
- 

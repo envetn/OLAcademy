@@ -1,18 +1,7 @@
-ErrorDocument 404 /Error/fileNotFound.php
-ErrorDocument 403 /Error/fileNotFound.php
-ErrorDocument 402 /Error/fileNotFound.php
-ErrorDocument 401 /Error/fileNotFound.php
-ErrorDocument 400 /Error/fileNotFound.php
-
-IndexIgnore *
-<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase \forum\
-	
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	
-	RewriteRule ^(.*)$ index.php/$1
-</IfModule>
+ErrorDocument 404 /Error/filenotfound.php
+ErrorDocument 403 /Error/filenotfound.php
+ErrorDocument 402 /Error/filenotfound.php
+ErrorDocument 401 /Error/filenotfound.php
+ErrorDocument 400 /Error/filenotfound.php
 
 Header add "disablevcache" "true"

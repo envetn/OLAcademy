@@ -28,14 +28,13 @@ body
 	background:url("../img/bg.JPG");
 	margin:1%;
 	margin:auto;
-    font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-family: "Open Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 a:link, a:visited, a:hover, a:active
 {
     text-decoration: none;
 }
-
 
 h1
 {
@@ -61,7 +60,15 @@ h1, h2, h3, h4, h5, h6
     line-height: 1.1;
 }
 
+.right
+{
+	float: right;
+}
 
+.left
+{
+	float: left;
+}
 
 
 /******ERROR*******/

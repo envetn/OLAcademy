@@ -79,9 +79,7 @@ abstract class DataObject
         $query = $this->validateInputParametersData( $values );
         $sql = $query["sql"];
         $params = $query["params"];
-        $this->database->ExecuteQuery( $sql, $params );
-
-        return true;
+        return $this->database->ExecuteQuery( $sql, $params);
     }
 
     public function editSingleEntry($values, $condition)

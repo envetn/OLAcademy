@@ -87,9 +87,10 @@ function validateCreateUserPost($user)
     			{
     				$password = password_hash($_POST['password'], PASSWORD_BCRYPT, array('cost' => 12));
     				$params = array('name' => $username, 'password' => $password, 'email' => $email, 'Privilege' => $priv, 'regDate' => $date, 'lastname' => $lastname);
-    				$user->insertEntyToDatabase($params);
-    
-    				populateInfo("Ditt konto har skapats.");
+    				if($user->insertEntyToDatabase($params))
+    					populateInfo("Ditt konto har skapats.");
+    				else
+    					populateError("Databasfel");
     			}
     			else
     			{

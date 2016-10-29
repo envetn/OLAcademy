@@ -78,13 +78,13 @@
 
 .regTableName
 {
-	width: 50%;
+	width: 35%;
 	padding: 2px;
 }
 
 .regTableComment
 {
-	word-break:break-all;
+
 	padding: 2px;
 }
 

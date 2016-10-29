@@ -86,6 +86,7 @@ function validateEventParams()
 	{
 		$eventName = strip_tags( $_POST["eventName"] );
 		$info = strip_tags( $_POST["info"] );
+		$info = makeLinks($info);
 		$startTime = strip_tags( $_POST["startTime"] );
 		$date = strip_tags( $_POST["date"] );
 		$reccurance = isset( $_POST["reccurance"] ) ? 1 : 0;

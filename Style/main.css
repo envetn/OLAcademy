@@ -1,13 +1,13 @@
 main
 {
 	min-height:400px;
-    overflow: auto;
-    background:#fff;
+	overflow: auto;
+	background:#fff;
 	border-top-left-radius: 5px;
 	border-top-right-radius: 5px;
 	padding: 15px;
 	margin-right: auto;
-    margin-left: auto;
+	margin-left: auto;
 }
 
 @media (min-width: 1260px)

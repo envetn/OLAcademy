@@ -1,14 +1,17 @@
 header
 {
 	background-color: #f8f8f8;
+	width: 100%;
+	margin-bottom: 15px;
 }
 
 .navbar
 {
 	margin-right: auto;
-    margin-left: auto;
-    padding-left: 15px;
-    padding-right: 15px;
+	margin-left: auto;
+	margin-bottom: 0;
+	padding-left: 15px;
+	padding-right: 15px;
 }
 
 .navbar-form
