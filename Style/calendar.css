@@ -13,6 +13,7 @@
 	height: 30px;
 	text-align: center;
 	vertical-align: middle;
+	font-weight: bold;
 }
 
 .week
@@ -37,15 +38,17 @@
 
 .prev_month_days
 {
-	border-top-color: #eee;
-	border-left-color: #eee;
+	border-top-color: #ddd;
+	border-left-color: #ddd;
 	border-right: 0;
+	color: #bbb;
 }
 
 .next_month_days
 {
-	border-bottom-color: #eee;
-	border-right-color: #eee;
+	border-bottom-color: #ddd;
+	border-right-color: #ddd;
+	color: #bbb;
 }
 
 .event_p

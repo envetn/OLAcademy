@@ -80,9 +80,9 @@ function fetchRegisteredAtEvent($eventResult, $registered, $month, $ear)
 	foreach($eventResult as $row)
 	{
 		$nrOfRegistered = 0;
-		foreach($registered as $dickbutt)
+		foreach($registered as $person)
 		{
-			if($row->id == $dickbutt->eventID)
+			if($row->id == $person->eventID)
 			{
 				$nrOfRegistered ++;
 			}
@@ -120,8 +120,6 @@ function draw_calendar($month, $year, $userLoggedIn, $eventObject)
 	$prev_days = $days_in_prev_month - $running_day + 2;
 	$day_counter = 0;
 	
-	echo "<br/>" . $days_in_month;
-
 	$calendar = "<div id='calendar'>";
 	
 	/* print week days */
@@ -152,10 +150,6 @@ function draw_calendar($month, $year, $userLoggedIn, $eventObject)
 		}
 		$day_number = "<span class='day_number'>$list_day</span>";
 		
-		/**
-		 * QUERY THE DATABASE FOR AN ENTRY FOR THIS DAY !! IF MATCHES FOUND, PRINT THEM !! *
-		 */
-		// Need to refactor this method..
 		$calender_event = "";
 		if($events != null)
 		{
