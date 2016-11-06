@@ -44,7 +44,7 @@ class EventObject extends DataObject
 	        SELECT id, eventDate, DATE_FORMAT(startTime, '%H:%i') AS startTime, eventName, info, reccurance, bus
 	        FROM events
 	        WHERE eventDate BETWEEN ? AND ?
-			ORDER BY eventDate
+			ORDER BY eventDate, startTime
 	        ";
 		$params = array($this->today, $this->nextWeek );
 		
