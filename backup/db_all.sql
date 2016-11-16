@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.4.13.1deb1
+-- version 4.2.12deb2+deb8u2
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Sep 24, 2016 at 03:11 PM
--- Server version: 5.6.31-0ubuntu0.15.10.1
--- PHP Version: 5.6.11-1ubuntu3.4
+-- Generation Time: Nov 16, 2016 at 08:03 PM
+-- Server version: 5.5.53-0+deb8u1
+-- PHP Version: 5.6.27-0+deb8u1
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -14,7 +14,7 @@ SET time_zone = "+00:00";
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
+/*!40101 SET NAMES utf8 */;
 
 --
 -- Database: `olacademy`
@@ -28,8 +28,9 @@ USE `olacademy`;
 -- Table structure for table `about`
 --
 
+DROP TABLE IF EXISTS `about`;
 CREATE TABLE IF NOT EXISTS `about` (
-  `id` int(11) NOT NULL,
+`id` int(11) NOT NULL,
   `generalInfo` text COLLATE utf8_unicode_ci NOT NULL,
   `offerInfo` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `additionalInfo` text COLLATE utf8_unicode_ci NOT NULL,
@@ -49,8 +50,9 @@ INSERT INTO `about` (`id`, `generalInfo`, `offerInfo`, `additionalInfo`, `extern
 -- Table structure for table `events`
 --
 
+DROP TABLE IF EXISTS `events`;
 CREATE TABLE IF NOT EXISTS `events` (
-  `id` int(11) NOT NULL,
+`id` int(11) NOT NULL,
   `eventDate` date NOT NULL,
   `startTime` time NOT NULL,
   `eventName` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
@@ -58,16 +60,18 @@ CREATE TABLE IF NOT EXISTS `events` (
   `reccurance` tinyint(1) NOT NULL,
   `bus` tinyint(1) NOT NULL,
   `createdBy` int(11) NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=59 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=61 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `events`
 --
 
 INSERT INTO `events` (`id`, `eventDate`, `startTime`, `eventName`, `info`, `reccurance`, `bus`, `createdBy`) VALUES
-(56, '2016-09-24', '11:59:03', '123', '123123', 1, 0, 0),
-(57, '2016-09-26', '12:04:52', '123123123 ', '123 12312 312 3123 123 12', 1, 1, 34),
-(58, '2016-09-30', '12:38:49', 'Intervaller, lÃ¶pteknik och styrka', 'Fredagsmys med Martin pÃ¥ VÃ¤stra Mark.', 1, 0, 34);
+(56, '2016-11-19', '11:59:03', '123', '123123', 1, 0, 0),
+(57, '2016-11-21', '12:04:52', '123123123 ', '123 12312 312 3123 123 12', 1, 1, 34),
+(58, '2016-11-18', '12:38:49', 'Intervaller, lÃ¶pteknik och styrka', 'Fredagsmys med Martin pÃ¥ VÃ¤stra Mark.', 1, 0, 34),
+(59, '2016-11-18', '07:36:56', 'tes', 'hohohohho', 1, 0, 37),
+(60, '2016-11-15', '14:54:17', 'Intz', 'kom', 0, 0, 37);
 
 -- --------------------------------------------------------
 
@@ -75,8 +79,9 @@ INSERT INTO `events` (`id`, `eventDate`, `startTime`, `eventName`, `info`, `recc
 -- Table structure for table `ip_block`
 --
 
+DROP TABLE IF EXISTS `ip_block`;
 CREATE TABLE IF NOT EXISTS `ip_block` (
-  `id` int(11) NOT NULL,
+`id` int(11) NOT NULL,
   `ipAddress` varchar(100) NOT NULL,
   `blockedUntill` date NOT NULL,
   `nameUsed` varchar(100) NOT NULL
@@ -88,8 +93,9 @@ CREATE TABLE IF NOT EXISTS `ip_block` (
 -- Table structure for table `news`
 --
 
+DROP TABLE IF EXISTS `news`;
 CREATE TABLE IF NOT EXISTS `news` (
-  `id` int(11) NOT NULL,
+`id` int(11) NOT NULL,
   `title` varchar(255) CHARACTER SET latin1 NOT NULL,
   `content` text CHARACTER SET latin1 NOT NULL,
   `author` varchar(100) CHARACTER SET latin1 NOT NULL,
@@ -169,8 +175,9 @@ INSERT INTO `news` (`id`, `title`, `content`, `author`, `added`, `image`) VALUES
 -- Table structure for table `posts`
 --
 
+DROP TABLE IF EXISTS `posts`;
 CREATE TABLE IF NOT EXISTS `posts` (
-  `id` int(11) NOT NULL,
+`id` int(11) NOT NULL,
   `name` varchar(50) COLLATE utf8_unicode_ci NOT NULL,
   `text` text COLLATE utf8_unicode_ci NOT NULL,
   `added` datetime NOT NULL
@@ -200,15 +207,25 @@ INSERT INTO `posts` (`id`, `name`, `text`, `added`) VALUES
 -- Table structure for table `registered`
 --
 
+DROP TABLE IF EXISTS `registered`;
 CREATE TABLE IF NOT EXISTS `registered` (
-  `id` int(11) NOT NULL,
+`id` int(11) NOT NULL,
   `userID` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `date` date NOT NULL,
   `comment` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `bus` tinytext COLLATE utf8_unicode_ci NOT NULL,
   `eventID` varchar(255) COLLATE utf8_unicode_ci NOT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=70 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumping data for table `registered`
+--
+
+INSERT INTO `registered` (`id`, `userID`, `name`, `date`, `comment`, `bus`, `eventID`) VALUES
+(1, 37, 'Adam Georgsson', '2016-11-18', '', 'Nej', '58'),
+(68, 1, 'Test', '2016-11-18', '', '', '58'),
+(69, 37, 'Adam Georgsson', '2016-11-18', '', 'Nej', '59');
 
 -- --------------------------------------------------------
 
@@ -216,17 +233,18 @@ CREATE TABLE IF NOT EXISTS `registered` (
 -- Table structure for table `users`
 --
 
+DROP TABLE IF EXISTS `users`;
 CREATE TABLE IF NOT EXISTS `users` (
-  `id` int(11) NOT NULL,
+`id` int(11) NOT NULL,
   `name` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `password` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
   `email` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `Privilege` int(11) NOT NULL,
   `regDate` date NOT NULL,
-  `token` varchar(255) COLLATE utf8_unicode_ci NOT NULL,
+  `token` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
   `lastname` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
   `changePassword` int(11) NOT NULL DEFAULT '0'
-) ENGINE=InnoDB AUTO_INCREMENT=37 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=38 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumping data for table `users`
@@ -234,11 +252,11 @@ CREATE TABLE IF NOT EXISTS `users` (
 
 INSERT INTO `users` (`id`, `name`, `password`, `email`, `Privilege`, `regDate`, `token`, `lastname`, `changePassword`) VALUES
 (28, 'admin', '$2y$12$d5IemwsuVU90qF0ja.jKUeKF1zxwi7FzBdtyGszHRmdPPPS2qEkv.', 'admin@admin.com', 0, '2015-11-19', '', '', 0),
-(30, 'Adam', '$2y$12$Ix9Oi//nwE.O02hUcvmwROgze.EXwX0q/piLok0UeJld41bJrCw2C', 'adamgeorgsson@gmail.com', 2, '2015-11-21', '', '', 0),
 (33, 'Test', '$2y$12$psEATvnr5L93SGhUcf0Ltum0ASySuCNeNw5O9Fq3CUQubBIfVnEuW', 'test@test.com', 1, '2016-01-16', 'ae1e6f2b33aa9c35a44ed0f1f4f62dac99d0c8f6accbe110baa1191a51090c57', 'Testsson', 0),
 (34, 'Nisse', '$2y$12$7T..PkzrcCz.UNt4sGPdIeX0NWs2X4.EATdJFXR0duKvH3Fo2mYrq', 'nisse@hult.com', 2, '2016-09-10', 'fee018b3996ac1b9e9d3ec89d4a471fc363714ff45bb79bb22a6f85b70be7d75', 'Hult', 0),
 (35, 'Olof', '$2y$12$FKHVC8gR2JOrc2IimZVW0eIy7ihE3x.JYKFUsMC1A25tFHO8nqvni', 'olle.ch@hotmail.com', 1, '2016-09-12', '', 'Christensson', 0),
-(36, '123', '$2y$12$kNHb9LIdL73sn/Ef6TormeHLLDPVVeFcNZxBWRd..E/4RULNzb9/6', '123@123.com', 1, '2016-09-12', '', '123', 0);
+(36, '123', '$2y$12$kNHb9LIdL73sn/Ef6TormeHLLDPVVeFcNZxBWRd..E/4RULNzb9/6', '123@123.com', 1, '2016-09-12', '', '123', 0),
+(37, 'Adam', '$2y$12$nkSMzlNE.mXtAdb2HamRy.hdua/LyRg3y7mUKzMUAGHmsvkNDog5S', 'adamgeorgsson@gmail.com', 2, '2016-11-14', '087a8091148f1bc3923ae9dd70f9c437c5f5f69b177c9603cffc905cb2b824a2', 'Georgsson', 0);
 
 --
 -- Indexes for dumped tables
@@ -248,43 +266,43 @@ INSERT INTO `users` (`id`, `name`, `password`, `email`, `Privilege`, `regDate`, 
 -- Indexes for table `about`
 --
 ALTER TABLE `about`
-  ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `events`
 --
 ALTER TABLE `events`
-  ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `ip_block`
 --
 ALTER TABLE `ip_block`
-  ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `news`
 --
 ALTER TABLE `news`
-  ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `posts`
 --
 ALTER TABLE `posts`
-  ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `registered`
 --
 ALTER TABLE `registered`
-  ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
 --
 ALTER TABLE `users`
-  ADD PRIMARY KEY (`id`);
+ ADD PRIMARY KEY (`id`);
 
 --
 -- AUTO_INCREMENT for dumped tables
@@ -294,37 +312,37 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `about`
 --
 ALTER TABLE `about`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `events`
 --
 ALTER TABLE `events`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=59;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=61;
 --
 -- AUTO_INCREMENT for table `ip_block`
 --
 ALTER TABLE `ip_block`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `news`
 --
 ALTER TABLE `news`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=75;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=75;
 --
 -- AUTO_INCREMENT for table `posts`
 --
 ALTER TABLE `posts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=119;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=119;
 --
 -- AUTO_INCREMENT for table `registered`
 --
 ALTER TABLE `registered`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=70;
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=37;
+MODIFY `id` int(11) NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=38;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

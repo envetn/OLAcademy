@@ -19,7 +19,7 @@ elseif (isset($_SESSION["highlighted"]))
 }
 else
 {
-	$_SESSION["highlighted"] = 0;
+	$_SESSION["highlighted"] = date("N", time());
 }
 
 registerUserToEvent($user, $eventObject);

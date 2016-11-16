@@ -142,9 +142,9 @@ function searchForNews($search, $newsObject)
 
 function getTableEvents($eventObject)
 {
-	if (isset($_GET["sort"]) || isset($_GET['showAll']) )
+	if (true)//(isset($_GET["sort"]) || isset($_GET['showAll']) )
 	{
-		$orderby = validateStringGET("sort") ? $_GET["sort"] : "eventDate";
+		$orderby = validateStringGET("sort") ? $_GET["sort"] : "eventDate DESC";
 		$res = $eventObject->fetchAllEntries($orderby);
 	}
 	else

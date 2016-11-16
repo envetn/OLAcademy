@@ -47,8 +47,18 @@ class EventObject extends DataObject
 			ORDER BY eventDate, startTime
 	        ";
 		$params = array($this->today, $this->nextWeek );
-		
-		return $this->database->queryAndFetch( $sql, $params );
+		$result = $this->database->queryAndFetch( $sql, $params );
+        
+        $weekArray = array_fill_keys(range(1, 7), array());
+		if( $this->rowCount() > 0 )
+		{
+            foreach($result as $key)
+            {
+                $weekday = date("N", strtotime($key->eventDate));
+                $weekArray[$weekday][] = $key;
+            }
+        }
+		return $weekArray;
 	}
 
 	public function getEventByGivenMonth($month, $orderBy="eventDate")
@@ -137,6 +147,28 @@ class EventObject extends DataObject
 		$res = $this->registered->fetchAllEntries( $orderBy );
 		return $res;
 	}
+
+    public function fetchAllRegisteredNext7Days()
+    {
+		$sql = " SELECT * FROM registered WHERE date BETWEEN ? AND ?";
+
+		$firstDay = date("Y-m-d", time());
+		$lastDay = date("Y-m-d", time() + 6 * 86400);
+
+		$params = array($firstDay, $lastDay );
+		$result = $this->database->queryAndFetch( $sql, $params );
+
+        $weekArray = array_fill_keys(range(1, 7), array());
+		if( $this->rowCount() > 0 )
+		{
+            foreach($result as $key)
+            {
+                $weekday = date("N", strtotime($key->date));
+                $weekArray[$weekday][] = $key;
+            }
+		}
+		return $weekArray;
+    }
 
 	public function fetchAllRegisteredGivenMonth($month)
 	{
