@@ -8,13 +8,15 @@ $lastname = isset($_SESSION["lastname"]) ? $_SESSION["lastname"] : "";
 $limit = 7; //Posts per page
 $offset = validateIntGET("offset") ? $_GET["offset"] : 0; //Start index
 $guestbookObject = new GuestbookObject();
-
+$timeStart = time();
 
 function makePost($guestbookObject, $logged_in)
 {
     //log to file for debugging
     $myfile = fopen("logfile.txt", "a");
-    $dateIp = date("Y-m-d H:i:s",time()) . "        " . $_SERVER['REMOTE_ADDR'];
+    $timeStop = time();
+    $timeSpent = $timeStop - $_POST["timeStart"];
+    $dateIp = date("Y-m-d H:i:s",time()) . "        " . $_SERVER['REMOTE_ADDR'] . "        " . $timeSpent . "       "; 
     if(isCaptchaValid() || $logged_in)
     {
         if (validateStringPOST("name") && validateStringPOST("text"))
@@ -26,12 +28,12 @@ function makePost($guestbookObject, $logged_in)
             $max_name_length = 50;
             if (strlen($text) > $max_text_length)
             {
-                $dateIp .= "  - Failed - faulty text length\n";
+                $dateIp .= "Failed - faulty text length\n";
                 populateError("Text must not exceed " . $max_text_length . " characters.");
             }
             elseif (strlen($name) > $max_name_length)
             {
-                $dateIp .= "  - Failed - faulty name length\n";
+                $dateIp .= "Failed - faulty name length\n";
                 populateError("Name must not exceed " . $max_name_length . " characters.");
             }
             else
@@ -39,20 +41,20 @@ function makePost($guestbookObject, $logged_in)
                 $params = array('name' => $name, 'text' => $text);
                 $guestbookObject->insertEntyToDatabase($params);
                 
-                $dateIp .= "  - Success\n";
+                $dateIp .= "Success\n";
                 header("location: guestbook.php");
             }
         }
         else if (empty($name) || empty($text))
         {
-            $dateIp .= "  - Failed - field empty\n";
+            $dateIp .= "Failed - field empty\n";
             populateError("Fyll i alla fält.");
         }
     }
     else
     {
         populateError("Fel kontrollkod");
-        $dateIp .= "  - Failed - wrong control code\n";
+        $dateIp .= "Failed - wrong control code\n";
     }
     
     fwrite($myfile, $dateIp);
@@ -84,7 +86,8 @@ $postForm = '<div class="col-sm-4 col-sm-pull-8 elementBox">
 		<div class="gb_fields"><label>Text:</label><br><textarea name="text" rows="8" cols="40">'. printIfContent("text") . '</textarea></div>
 		' . $captcha . '
 		<div class="gb_fields"><input type="submit" class="btn btn-primary" name="submit" value="Skicka" onclick="return validate();"/></div>
-	</form>
+        <input type="hidden" name="timeStart" value="' . $timeStart . '">
+    </form>
 </div>';
 
 displayError();

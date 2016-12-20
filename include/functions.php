@@ -126,10 +126,10 @@ function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl="") // admin
     return $paging;
 }
 
-function presentEvent($username, $eventObject) //TODO userid istället för username, TODO hämtas alla veckans event på en gång? endast en databasförfrågan ska behövas
+function presentEvent($username, $eventObject)
 {
-    $events = $eventObject->getWeeklyEvents(); //TODO by day instead of week, alternativt göm med css
-    $regUsers = $eventObject->fetchAllRegisteredNext7Days(); //hämta alla anmälda för hela veckan i en multiarray
+    $events = $eventObject->getWeeklyEvents();
+    $regUsers = $eventObject->fetchAllRegisteredNext7Days();
     $highlightedDay = $_SESSION["highlighted"];
     $highlightedDayEvent = getWeekCalendarEvent($events[$highlightedDay], $regUsers[$highlightedDay]);
     $eventPreview = getEventPreview($events, $regUsers);
