@@ -17,7 +17,7 @@ function makePost($guestbookObject, $logged_in)
     $timeStop = time();
     $timeSpent = $timeStop - $_POST["timeStart"];
     $dateIp = date("Y-m-d H:i:s",time()) . "        " . $_SERVER['REMOTE_ADDR'] . "        " . $timeSpent . "       "; 
-    if(isCaptchaValid() || $logged_in)
+    if($timeSpent > 10 || $logged_in) //(isCaptchaValid() || $logged_in)
     {
         if (validateStringPOST("name") && validateStringPOST("text"))
         {
@@ -53,8 +53,10 @@ function makePost($guestbookObject, $logged_in)
     }
     else
     {
-        populateError("Fel kontrollkod");
-        $dateIp .= "Failed - wrong control code\n";
+        populateError("Du fyllde i formuläret på under 10 sekunder. Är du en bot? Försök att sakta ner.");
+        $dateIp .= "Failed - Too fast too furious\n";
+        //populateError("Fel kontrollkod");
+        //$dateIp .= "Failed - wrong control code\n";
     }
     
     fwrite($myfile, $dateIp);
@@ -77,7 +79,7 @@ else if($user->isAdmin() && validateIntGET("r"))
         populateInfo("Tog bort inlägg med id: " . $condition["id"]);
     }
 }
-$captcha = !$user->isLoggedIn() ? getCaptchaForm() : "";
+$captcha = ""; //!$user->isLoggedIn() ? getCaptchaForm() : "";
 
 $postForm = '<div class="col-sm-4 col-sm-pull-8 elementBox">
 	<h2>Gästbok</h2>
