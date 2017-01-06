@@ -16,7 +16,7 @@ function makePost($guestbookObject, $logged_in)
     $myfile = fopen("logfile.txt", "a");
     $timeStop = time();
     $timeSpent = $timeStop - $_POST["timeStart"];
-    $dateIp = date("Y-m-d H:i:s",time()) . "        " . $_SERVER['REMOTE_ADDR'] . "        " . $timeSpent . "       "; 
+    $dateIp = date("Y-m-d H:i:s",time()) . "        " . $_SERVER['REMOTE_ADDR'] . "        " . $timeSpent . "       ";
     if($timeSpent > 10 || $logged_in) //(isCaptchaValid() || $logged_in)
     {
         if (validateStringPOST("name") && validateStringPOST("text"))
@@ -40,7 +40,6 @@ function makePost($guestbookObject, $logged_in)
             {
                 $params = array('name' => $name, 'text' => $text);
                 $guestbookObject->insertEntyToDatabase($params);
-                
                 $dateIp .= "Success\n";
                 header("location: guestbook.php");
             }
@@ -58,14 +57,14 @@ function makePost($guestbookObject, $logged_in)
         //populateError("Fel kontrollkod");
         //$dateIp .= "Failed - wrong control code\n";
     }
-    
+
     fwrite($myfile, $dateIp);
     fclose($myfile);
 }
 
 if (isset($_POST["submit"]))
 {
-	makePost($guestbookObject, $user->isLoggedIn());
+    makePost($guestbookObject, $user->isLoggedIn());
 }
 else if($user->isAdmin() && validateIntGET("r"))
 {
@@ -82,12 +81,12 @@ else if($user->isAdmin() && validateIntGET("r"))
 $captcha = ""; //!$user->isLoggedIn() ? getCaptchaForm() : "";
 
 $postForm = '<div class="col-sm-4 col-sm-pull-8 elementBox">
-	<h2>Gästbok</h2>
-	<form action="' . $_SERVER["PHP_SELF"] . '" method="POST">
-		<div class="gb_fields"><label>Namn:</label><br><input type="text" name="name" value="' .  $username ." ". $lastname . '" size="20"/></div>
-		<div class="gb_fields"><label>Text:</label><br><textarea name="text" rows="8" cols="40">'. printIfContent("text") . '</textarea></div>
-		' . $captcha . '
-		<div class="gb_fields"><input type="submit" class="btn btn-primary" name="submit" value="Skicka" onclick="return validate();"/></div>
+    <h2>Gästbok</h2>
+    <form action="' . $_SERVER["PHP_SELF"] . '" method="POST">
+        <div class="gb_fields"><label>Namn:</label><br><input type="text" name="name" value="' .  $username ." ". $lastname . '" size="20"/></div>
+        <div class="gb_fields"><label>Text:</label><br><textarea name="text" rows="8" cols="40">'. printIfContent("text") . '</textarea></div>
+        ' . $captcha . '
+        <div class="gb_fields"><input type="submit" class="btn btn-primary" name="submit" value="Skicka" onclick="return validate();"/></div>
         <input type="hidden" name="timeStart" value="' . $timeStart . '">
     </form>
 </div>';

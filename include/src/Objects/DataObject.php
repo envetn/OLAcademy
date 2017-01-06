@@ -73,7 +73,7 @@ abstract class DataObject
 
         return 0;
     }
-    
+
     public function insertEntyToDatabase($values)
     {
         $query = $this->validateInputParametersData( $values );
@@ -125,12 +125,12 @@ abstract class DataObject
 
         return $result[0]->rows;
     }
-    
+
     public function useWildCard()
     {
         $this->useWildCard = true;
     }
-    
+
     public function unsetWildCard()
     {
         $this->useWildCard = false;
@@ -203,7 +203,7 @@ abstract class DataObject
                     $sql .= $name . self::EQUAL_SIGN . self::QUESTION_MARK;
                     // WHERE name=?
                 }
-                
+
                 $params[] = $value;
 
                 if( strlen( $next_val ) > 0 )
@@ -220,23 +220,23 @@ abstract class DataObject
 
         return array("sql" => $sql, "params" => $params );
     }
-    
+
     private function validateSelectCount($condition)
     {
         $sql = "SELECT COUNT(DISTINCT userID) AS count FROM registered";
         $params = array();
-    
+
         if( ! empty( $condition ) )
         {
             $nextIterator = $this->createArrayIterator( $condition );
             $sql .= " WHERE ";
-    
+
             foreach( $condition as $name => $value )
             {
                 $next_val = $nextIterator->current();
                 $sql .= $name . self::EQUAL_SIGN . self::QUESTION_MARK;
                 $params[] = $value;
-    
+
                 if( strlen( $next_val ) > 0 )
                 {
                     $sql .= " AND ";

@@ -1,8 +1,8 @@
 </main>
 <footer>
 	<div class="row">
-		<span class="text">Adress: Blekinge Tekniska Högskola, 371 79 Karlskrona</span><br /> 
-		<span class="text">Telefon: 0455-38 50 71 | E-post: <a href="mailto:info@olacademy.se">info@olacademy.se</a></span><br /> 
+		<span class="text">Adress: Blekinge Tekniska Högskola, 371 79 Karlskrona</span><br />
+		<span class="text">Telefon: 0455-38 50 71 | E-post: <a href="mailto:info@olacademy.se">info@olacademy.se</a></span><br />
 	</div>
 
 	<!--<p>

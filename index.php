@@ -11,27 +11,27 @@ $eventObject->updateEvents();
 
 if (validateIntGET("highlighted"))
 {
-	$_SESSION["highlighted"] = $_GET["highlighted"];
+    $_SESSION["highlighted"] = $_GET["highlighted"];
 }
 elseif (isset($_SESSION["highlighted"]))
 {
-	$_SESSION["highlighted"] = $_SESSION["highlighted"];
+    $_SESSION["highlighted"] = $_SESSION["highlighted"];
 }
 else
 {
-	$_SESSION["highlighted"] = date("N", time());
+    $_SESSION["highlighted"] = date("N", time());
 }
 
 registerUserToEvent($user, $eventObject);
 
 if (validateIntGET("r"))
 {
-	$id = $_GET["r"];
-	if ($eventObject->isAllowedToDeleteEntry($id))
-	{
-		$eventObject->unRegisterUserToEvent($id);
-	}
-	header("Location: index.php");
+    $id = $_GET["r"];
+    if ($eventObject->isAllowedToDeleteEntry($id))
+    {
+        $eventObject->unRegisterUserToEvent($id);
+    }
+    header("Location: index.php");
 }
 
 //'. /*$GLOBAL["error"]*/ .'
