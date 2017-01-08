@@ -19,7 +19,7 @@ function makePost($guestbookObject, $logged_in)
     $dateIp = date("Y-m-d H:i:s",time()) . "        " . $_SERVER['REMOTE_ADDR'] . "        " . $timeSpent . "       ";
     if($timeSpent > 10 || $logged_in) //TODO När vi är klara med allt loggande kanske vi kan göra en switch-sats av det här istället
     {
-        if($logged_in || $isCaptchaValid)
+        if($logged_in || isCaptchaValid())
         {
             if (validateStringPOST("name") && validateStringPOST("text"))
             {
