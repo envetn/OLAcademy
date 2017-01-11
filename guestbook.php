@@ -13,59 +13,56 @@ $timeStart = time();
 function makePost($guestbookObject, $logged_in)
 {
     //log to file for debugging
-    $myfile = fopen("logfile.txt", "a");
+    $logfile = fopen("logfile.txt", "a");
     $timeStop = time();
     $timeSpent = $timeStop - $_POST["timeStart"];
-    $dateIp = date("Y-m-d H:i:s",time()) . "        " . $_SERVER['REMOTE_ADDR'] . "        " . $timeSpent . "       ";
-    if($timeSpent > 10 || $logged_in) //TODO När vi är klara med allt loggande kanske vi kan göra en switch-sats av det här istället
+    $logText = date("Y-m-d H:i:s",time()) . "        " . $_SERVER['REMOTE_ADDR'] . "        " . $timeSpent . "       ";
+    $name = strip_tags($_POST["name"]);
+    $text = strip_tags($_POST["text"]);
+    $text = makeLinks($text);
+    $max_text_length = 2000;
+    $max_name_length = 50;
+
+    /*if (!$logged_in && !isCaptchaValid())
     {
-        if($logged_in || isCaptchaValid())
-        {
-            if (validateStringPOST("name") && validateStringPOST("text"))
-            {
-                $name = strip_tags($_POST["name"]);
-                $text = strip_tags($_POST["text"]);
-                $text = makeLinks($text);
-                $max_text_length = 2000;
-                $max_name_length = 50;
-                if (strlen($text) > $max_text_length)
-                {
-                    $dateIp .= "Failed - faulty text length\n";
-                    populateError("Text must not exceed " . $max_text_length . " characters.");
-                }
-                elseif (strlen($name) > $max_name_length)
-                {
-                    $dateIp .= "Failed - faulty name length\n";
-                    populateError("Name must not exceed " . $max_name_length . " characters.");
-                }
-                else
-                {
-                    $params = array('name' => $name, 'text' => $text);
-                    $guestbookObject->insertEntyToDatabase($params);
-                    $dateIp .= "Success\n";
-                    header("location: guestbook.php");
-                }
-            }
-            else if (empty($name) || empty($text))
-            {
-                $dateIp .= "Failed - field empty\n";
-                populateError("Fyll i alla fält.");
-            }
-        }
-        else
-        {
-            populateError("Fel kontrollkod");
-            $dateIp .= "Failed - wrong control code\n";
-        }
+        $logText .= "Failed - wrong control code\n";
+        populateError("Fel kontrollkod");
+    }*/
+    if (!$logged_in && strtolower($_POST["control"]) != "blå")
+    {
+        $logText .= "Failed - wrong control answer\n";
+        populateError("Fel kontrollssvar. Gissa på blå");
+    }
+    elseif (!$logged_in && $timeSpent <= 10)
+    {
+        $logText .= "Failed - Too fast too furious\n";
+        populateError("Du fyllde i formuläret på under 10 sekunder. Är du en bot? Försök att sakta ner.");
+    }
+    elseif (empty($name) || empty($text))
+    {
+        $logText .= "Failed - field empty\n";
+        populateError("Fyll i alla fält.");
+    }
+    elseif (strlen($text) > $max_text_length)
+    {
+        $logText .= "Failed - faulty text length\n";
+        populateError("Texten får inte överstiga " . $max_text_length . " tecken.");
+    }
+    elseif (strlen($name) > $max_name_length)
+    {
+        $logText .= "Failed - faulty name length\n";
+        populateError("Namn får inte överstiga " . $max_name_length . " tecken.");
     }
     else
     {
-        populateError("Du fyllde i formuläret på under 10 sekunder. Är du en bot? Försök att sakta ner.");
-        $dateIp .= "Failed - Too fast too furious\n";
+        $params = array('name' => $name, 'text' => $text);
+        $guestbookObject->insertEntyToDatabase($params);
+        $logText .= "Success\n";
+        header("location: guestbook.php");
     }
 
-    fwrite($myfile, $dateIp);
-    fclose($myfile);
+    fwrite($logfile, $logText);
+    fclose($logfile);
 }
 
 if (isset($_POST["submit"]))
@@ -84,8 +81,8 @@ else if($user->isAdmin() && validateIntGET("r"))
         populateInfo("Tog bort inlägg med id: " . $condition["id"]);
     }
 }
-$captcha = !$user->isLoggedIn() ? getCaptchaForm() : "";
 
+/*$captcha = !$user->isLoggedIn() ? getCaptchaForm() : "";
 $postForm = '<div class="col-sm-4 col-sm-pull-8 elementBox">
     <h2>Gästbok</h2>
     <form action="' . $_SERVER["PHP_SELF"] . '" method="POST">
@@ -96,6 +93,21 @@ $postForm = '<div class="col-sm-4 col-sm-pull-8 elementBox">
         <input type="hidden" name="timeStart" value="' . $timeStart . '">
     </form>
 </div>';
+ */
+
+$captcha = !$user->isLoggedIn() ? '<div class="gb_fields"><label>Kontrollfråga: Vilken färg har havet?</label><br><input type="text" name="control" size="20"/></div>' : "";
+$postForm = '
+    <div class="col-sm-4 col-sm-pull-8 elementBox">
+        <h2>Gästbok</h2>
+        <form action="' . $_SERVER["PHP_SELF"] . '" method="POST">
+            <div class="gb_fields"><label>Namn:</label><br><input type="text" name="name" value="' .  $username ." ". $lastname . '" size="20"/></div>
+            <div class="gb_fields"><label>Text:</label><br><textarea name="text" rows="8" cols="40">'. printIfContent("text") . '</textarea></div>
+            ' . $captcha . '
+            <div class="gb_fields"><input type="submit" class="btn btn-primary" name="submit" value="Skicka"/></div>
+            <input type="hidden" name="timeStart" value="' . $timeStart . '">
+        </form>
+    </div>';
+
 
 displayError();
 displayInfo();
