@@ -20,6 +20,11 @@ function exceptions_error_handler($severity, $message, $filename, $lineno)
     }
 }
 
+function issetor(&$var, $default = false)
+{
+    return isset($var) ? $var : $default;
+}
+
 function presentPost($guestbookObject, $offset, $limit, $isAdmin)
 {
     $result = $guestbookObject-> fetchEntryWithOffset($offset, $limit);
@@ -128,167 +133,126 @@ function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl="") // admin
 
 function presentEvent($username, $eventObject)
 {
-    $events = $eventObject->getWeeklyEvents();
-    $regUsers = $eventObject->fetchAllRegisteredNext7Days();
+    $events = $eventObject->getEvents(date("Y-m-d"), date("Y-m-d", time()+6*86400));
     $highlightedDay = $_SESSION["highlighted"];
-    $highlightedDayEvent = getWeekCalendarEvent($events[$highlightedDay], $regUsers[$highlightedDay]);
-    $eventPreview = getEventPreview($events, $regUsers);
+    $highlightedDayEvent = (isset($events[$highlightedDay]) ? getHighlightedEvents($events[$highlightedDay]) : "null");
+    $eventPreview = getEventPreview($events);
     return createWeekCalendar($highlightedDayEvent, $highlightedDay, $eventPreview);
 }
 
-function createWeekCalendar($event, $day, $preview)
+function createWeekCalendar($event, $highlighted, $preview)
 {
     $output = "";
     $weekdays = array(1 => "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lördag", "Söndag");
-    $startDay = date("N", time());
-    for($i = $startDay, $j = 0; $j < 7; $i = $i%7+1, $j++)
+    $startDay = date("N");
+    for($i = 0; $i < 7; $i++)
     {
-        $output .= "<h4><a href='?highlighted=$i'>";
-        $output .= $weekdays[$i];
-        $output .= "</a></h4>";
-        if($i == $day)
-        {
-            $output .= $event;
-        }
-        else
-        {
-            foreach($preview[$i] as $key)
-            {
-                $output .= $key;
-            }
-        }
+        $currentDay = date("Y-m-d", time()+86400*$i);
+        $output .= "<h4><a href='?highlighted=$currentDay'>";
+        $output .= $weekdays[date("N", strtotime($currentDay))] . "</a></h4>";
+        $output .= $currentDay == $highlighted ? $event : issetor($preview[$currentDay], "");
     }
     return $output;
 }
 
-function getWeekCalendarEvent($events, $regUsers)
+function getHighlightedEvents($events)
 {
     $html = "";
-    foreach ($events as $key)
+    foreach ($events as $event)
     {
-        $registeredUsersTable = "<table class='regTable'><tr><th>Anmälda</th><th>Kommentar</th>";
-        if($key->bus == 1)
-        {
-            $registeredUsersTable .= "<th colspan='2'>Buss</th></tr>";
-        }
-        $values = array("eventID" => $key->id);
-        $registered = false;
+        $eventData = $event['eventData'];
+        $html .= "
+            <div class='eventPost'>
+                <div class='eventHeader'>
+                    <span class='eventName'>" .$eventData->eventName . "</span>
+                    <span class='eventTime'>" .$eventData->startTime. "</span>
+                </div>
+                <span class='eventInfo'>" .$eventData->info. "</span>
+            </div>
+            <form method='POST' action='index.php'>
+                <input type='hidden' name='eventID' value=" . $eventData->id . ">
+                <input type='hidden' name='date' value=" . $eventData->eventDate . ">";
 
-        if($regUsers != null)
+        $userIsRegistered = false;
+        $userID = issetor($_SESSION["uid"]);
+        if ($userID)
         {
-            foreach($regUsers as $regUser)
+            foreach($event['registered'] as $regUser)
             {
-                if($regUser->eventID == $key->id)
+                if($regUser->userID === $userID)
                 {
-                    $registeredUsersTable .= "<tr class='regTableRow'><td class='regTableName'>" . $regUser->name .
-                    "</td><td class='regTableComment'>" . substr($regUser->comment, 0, 140) . "</td>";
-                    if($key->bus == 1)
-                    {
-                        $registeredUsersTable .= "<td class='regTableBus'>" . $regUser->bus . "</td>";
-                    }
-
-                    $userID = isset($_SESSION["uid"]) ? $_SESSION["uid"] : false;
-                    if ($regUser->userID === $userID)
-                    {
-                        $registeredUsersTable .= "<td class='regTableDel'><a href='?r=".$regUser->id."'><img src='img/cross.png' width='18px' height='18px'></a></td>";
-                        $registered = true;
-                    }
-                    else
-                    {
-                        $registeredUsersTable .= "<td class='regTableDel'></td>";
-                    }
-                    $registeredUsersTable .= "</tr>";
+                    $userIsRegistered = true;
                 }
             }
         }
 
-        $registeredUsersTable .= "</table>";
-
-        $html .=
-            "<div class='eventPost'>
-                <div class='eventHeader'>
-                    <span class='eventName'>" .$key->eventName . "</span>
-                    <span class='eventTime'>" .$key->startTime. "</span>
-                </div>
-                <span class='eventInfo'>" .$key->info. "</span>
-            </div>
-            <form method='POST' action='index.php'>
-                <input type='hidden' name='eventID' value=" . $key->id . ">
-                <input type='hidden' name='date' value=" . $key->eventDate . ">";
-
-        if(!$registered)
+        if(!$userIsRegistered)
         {
             $html .= "<input type='text' class='regInput' name='comment' placeholder='Kommentar'>";
-            if($key->bus == 1 )
+            if($eventData->bus == 1 )
             {
-                $html .= "<label class='busLabel'>Bussplats</label><input type='checkbox' name='bus' value='Ja' checked><br>";
+                $html .= "<label class='busLabel'>Bussplats</label><input type='checkbox' name='bus' value='Ja' checked>";
             }
-            else
-            {
-                $html .= "<br/>";
-            }
-
-            $html .= "<button type='submit' class='btn btn-primary regInput' name='register' value='Anmäl'>Anmäl</button>";
+            $html .= "<br><button type='submit' class='btn btn-primary regInput' name='register' value='Anmäl'>Anmäl</button>";
         }
 
         $html .="</form>";
-        if(count($regUsers) > 0)
-        {
-            $html .= $registeredUsersTable;
-        }
+        $html .= count($event['registered']) > 0 ? getRegisteredUsersTable($event['registered'], $eventData->bus, $userID) : "";
         $html .=  "<hr/>";
-        }
+    }
     return $html;
 }
 
-function getEventPreview($events, $regUsers)
+function getRegisteredUsersTable($regUsers, $bus, $userID)
 {
-    $eventPreview = array_fill_keys(range(1, 7), array());
-    $nrOfRegistered = getNrOfRegistered($regUsers);
-
-    foreach($events as $day => $key)
+    $html = "<table class='regTable'><tr><th>Anmälda</th><th>Kommentar</th>";
+    if($bus == 1)
     {
-        foreach($key as $value)
+        $html .= "<th colspan='2'>Buss</th></tr>";
+    }
+
+    foreach($regUsers as $regUser)
+    {
+        $html .= "<tr class='regTableRow'><td class='regTableName'>" . $regUser->name .
+        "</td><td class='regTableComment'>" . substr($regUser->comment, 0, 140) . "</td>";
+        if($bus == 1)
         {
-            $previewRegistered = 0;
-            if(array_key_exists($value->id, $nrOfRegistered))
-            {
-                $previewRegistered = $nrOfRegistered[$value->id];
-            }
+            $html .= "<td class='regTableBus'>" . $regUser->bus . "</td>";
+        }
+
+        $html .= "<td class='regTableDel'>";
+        $html .= $regUser->userID === $userID ? "<a href='?r=".$regUser->id."'><img src='img/cross.png' width='18px' height='18px'></a>" : "";
+        $html .="</td></tr>";
+    }
+    $html .= "</table>";
+    return $html;
+}
+
+function getEventPreview($events)
+{
+    foreach($events as $date => $day)
+    {
+        $eventPreview[$date] = "";
+        foreach($day as $event)
+        {
+            $previewRegistered = count($event['registered']);
             $html = "
                 <li class='register_preview'>
-                    <span class='register_preview_content'>".$value->eventName ." - ".$previewRegistered."
+                    <span class='register_preview_content'>".$event['eventData']->eventName ." - ".$previewRegistered."
                        <img src='img/runner.png' alt='runner'/>
                     </span><br/>
                 </li>";
-            $eventPreview[$day][] = $html;
+            $eventPreview[$date] .= $html;
         }
     }
     return $eventPreview;
 }
 
-function getNrOfRegistered($registered)
-{
-    $nrOfRegistered = array();
-    for($i = 1; $i < 8; $i++)
-    {
-        foreach($registered[$i] as $key)
-        {
-            if(!array_key_exists($key->eventID, $nrOfRegistered))
-            {
-                $nrOfRegistered[$key->eventID] = 0;
-            }
-            $nrOfRegistered[$key->eventID]++;
-        }
-    }
-    return $nrOfRegistered;
-}
-
 function makeLinks($text)
 {
-//Makes clickable links
-$text = preg_replace('!(((f|ht)tp(s)?://)[-a-zA-Zа-яА-Я()0-9@:%_+.~#?&;//=]+)!i', '<a href="$1" target="_blank">$1</a>', $text);
-return $text;
+    //Makes clickable links
+    $text = preg_replace('!(((f|ht)tp(s)?://)[-a-zA-Zа-яА-Я()0-9@:%_+.~#?&;//=]+)!i', '<a href="$1" target="_blank">$1</a>', $text);
+    return $text;
 }
 
 /*

@@ -9,7 +9,7 @@ $guestbookObject = new GuestbookObject();
 
 $eventObject->updateEvents();
 
-if (validateIntGET("highlighted"))
+if (validateStringGET("highlighted"))
 {
     $_SESSION["highlighted"] = $_GET["highlighted"];
 }
@@ -19,7 +19,7 @@ elseif (isset($_SESSION["highlighted"]))
 }
 else
 {
-    $_SESSION["highlighted"] = date("N", time());
+    $_SESSION["highlighted"] = date("Y-m-d");
 }
 
 registerUserToEvent($user, $eventObject);

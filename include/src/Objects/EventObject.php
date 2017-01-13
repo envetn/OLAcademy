@@ -38,7 +38,7 @@ class EventObject extends DataObject
         return true;
     }
 
-    public function getWeeklyEvents()
+    public function getEvents($start, $end)
     {
         $sql = "
             SELECT id, eventDate, DATE_FORMAT(startTime, '%H:%i') AS startTime, eventName, info, reccurance, bus
@@ -46,19 +46,19 @@ class EventObject extends DataObject
             WHERE eventDate BETWEEN ? AND ?
             ORDER BY eventDate, startTime
             ";
-        $params = array($this->today, $this->nextWeek );
-        $result = $this->database->queryAndFetch( $sql, $params );
+        $params = array($start, $end);
+        $events = $this->database->queryAndFetch( $sql, $params );
+        $registered = $this->getRegistered($start, $end);
 
-        $weekArray = array_fill_keys(range(1, 7), array());
         if( $this->rowCount() > 0 )
         {
-            foreach($result as $key)
+            foreach($events as $event)
             {
-                $weekday = date("N", strtotime($key->eventDate));
-                $weekArray[$weekday][] = $key;
+                $eventRegistered = issetor($registered[$event->id], array());
+                $result[$event->eventDate][$event->id] = array("eventData" => $event, "registered" => $eventRegistered);
             }
         }
-        return $weekArray;
+        return $result;
     }
 
     public function getEventByGivenMonth($month, $orderBy="eventDate")
@@ -148,26 +148,20 @@ class EventObject extends DataObject
         return $res;
     }
 
-    public function fetchAllRegisteredNext7Days()
+    public function getRegistered($start, $end)
     {
         $sql = " SELECT * FROM registered WHERE date BETWEEN ? AND ?";
+        $params = array($start, $end);
+        $registered = $this->database->queryAndFetch( $sql, $params );
 
-        $firstDay = date("Y-m-d", time());
-        $lastDay = date("Y-m-d", time() + 6 * 86400);
-
-        $params = array($firstDay, $lastDay );
-        $result = $this->database->queryAndFetch( $sql, $params );
-
-        $weekArray = array_fill_keys(range(1, 7), array());
         if( $this->rowCount() > 0 )
         {
-            foreach($result as $key)
+            foreach($registered as $person)
             {
-                $weekday = date("N", strtotime($key->date));
-                $weekArray[$weekday][] = $key;
+                $result[$person->eventID][] = $person;
             }
         }
-        return $weekArray;
+        return $result;
     }
 
     public function fetchAllRegisteredGivenMonth($month)
@@ -186,6 +180,7 @@ class EventObject extends DataObject
         }
         return array();
     }
+
 }
 
 ?>
