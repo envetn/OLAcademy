@@ -70,6 +70,17 @@
 	font-size: 1.4em;
 }
 
+#calendar_paging
+{
+    text-align: center;
+}
+
+#current_month
+{
+    font-size: 2em;
+    text-decoration: underline;
+}
+
 #calendarRegisterEvent
 {
 	width:50%;

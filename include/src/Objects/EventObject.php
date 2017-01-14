@@ -40,18 +40,13 @@ class EventObject extends DataObject
 
     public function getEvents($start, $end)
     {
-        $sql = "
-            SELECT id, eventDate, DATE_FORMAT(startTime, '%H:%i') AS startTime, eventName, info, reccurance, bus
-            FROM events
-            WHERE eventDate BETWEEN ? AND ?
-            ORDER BY eventDate, startTime
-            ";
+        $sql = "SELECT *, DATE_FORMAT(startTime, '%H:%i') AS startTime FROM events WHERE eventDate BETWEEN ? AND ? ORDER BY eventDate, startTime";
         $params = array($start, $end);
         $events = $this->database->queryAndFetch( $sql, $params );
-        $registered = $this->getRegistered($start, $end);
-
+        $result = array();
         if( $this->rowCount() > 0 )
         {
+            $registered = $this->getRegistered($start, $end);
             foreach($events as $event)
             {
                 $eventRegistered = issetor($registered[$event->id], array());
@@ -59,26 +54,6 @@ class EventObject extends DataObject
             }
         }
         return $result;
-    }
-
-    public function getEventByGivenMonth($month, $orderBy="eventDate")
-    {
-        $sql = " SELECT * FROM events WHERE eventDate BETWEEN ? AND ?";
-        if( $orderBy != "" )
-        {
-            $sql .= " ORDER BY " . $orderBy;
-        }
-
-        $firstDay = date("Y-m-d", mktime(0, 0, 0, $month, 1 ,date("Y")));
-        $lastDay = date("Y-m-d", mktime(0, 0, 0, $month+1, 0 ,date("Y")));
-        $params = array($firstDay, $lastDay );
-        $result = $this->database->queryAndFetch( $sql, $params );
-
-        if( $this->rowCount() > 0 )
-        {
-            return $result;
-        }
-        return 0;
     }
 
     public function updateEvents()
@@ -153,7 +128,7 @@ class EventObject extends DataObject
         $sql = " SELECT * FROM registered WHERE date BETWEEN ? AND ?";
         $params = array($start, $end);
         $registered = $this->database->queryAndFetch( $sql, $params );
-
+        $result = array();
         if( $this->rowCount() > 0 )
         {
             foreach($registered as $person)
@@ -162,23 +137,6 @@ class EventObject extends DataObject
             }
         }
         return $result;
-    }
-
-    public function fetchAllRegisteredGivenMonth($month)
-    {
-        $sql = " SELECT userID,eventID FROM registered WHERE date BETWEEN ? AND ?";
-
-        $firstDay = date("Y-m-d", mktime(0, 0, 0, $month, 1 ,date("Y")));
-        $lastDay = date("Y-m-d", mktime(0, 0, 0, $month+1, 0 ,date("Y")));
-
-        $params = array($firstDay, $lastDay );
-        $result = $this->database->queryAndFetch( $sql, $params );
-
-        if( $this->rowCount() > 0 )
-        {
-            return $result;
-        }
-        return array();
     }
 
 }

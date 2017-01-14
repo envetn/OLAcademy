@@ -55,54 +55,29 @@ function showSingleCalendarEvent($user, $eventObject)
     return "";
 }
 
-function getEventByDate($events, $date)
+function fetchRegisteredAtEvent($events, $month, $year)
 {
-    $eventResult = array();
-    $times = 0;
-    foreach( $events as $event )
+    $html = "";
+    foreach($events as $event)
     {
-        if( $event->eventDate == $date )
-        {
-            $eventResult[] = $event;
-            $times ++;
-            if( $times >= 4 )
-            {
-                break; // max 4 events per day..
-            }
-        }
+        $nrOfRegistered = count($event['registered']);
+        $html .= "<a href='calendar.php?event=" . $event['eventData']->id . "&month=$month&year=$year'>
+        <p class='event_p'>" . $event['eventData']->eventName ." [" . $nrOfRegistered . "]</p></a>";
     }
-    return $eventResult;
-}
-
-function fetchRegisteredAtEvent($eventResult, $registered, $month, $ear)
-{
-    $htmlReg = "";
-    foreach($eventResult as $row)
-    {
-        $nrOfRegistered = 0;
-        foreach($registered as $person)
-        {
-            if($row->id == $person->eventID)
-            {
-                $nrOfRegistered ++;
-            }
-        }
-        $htmlReg .= "<a href='calendar.php?event=" . $row->id . "&month=$month&year=$ear'>
-        <p class='event_p'>" . $row->eventName ." [" . $nrOfRegistered . "]</p></a>";
-    }
-    return $htmlReg;
+    return $html;
 }
 
 function makeCalendarPaging($month, $year)
 {
-    $months = array('Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December');
+    $months = array(1 => 'Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December');
     $prev_month = ($month - 2 + 12) % 12 + 1;
     $next_month = ($month + 12) % 12 + 1;
     $prev_year = ($prev_month == 12 ? $year-1 : $year);
     $next_year = ($next_month == 1 ? $year+1 : $year);
     $calendar_paging = "<div id='calendar_paging'>";
-    $calendar_paging .= "<span class='switch_month left'><a href='?month=$prev_month&year=$prev_year'>".$months[$prev_month-1]."</a></span>";
-    $calendar_paging .= "<span class='switch_month right'><a href='?month=$next_month&year=$next_year'>".$months[$next_month-1]."</a></span>";
+    $calendar_paging .= "<span class='switch_month left'><a href='?month=$prev_month&year=$prev_year'>".$months[$prev_month]."</a></span>";
+    $calendar_paging .= "<span id='current_month'>".$months[(int)$month]."</span>";
+    $calendar_paging .= "<span class='switch_month right'><a href='?month=$next_month&year=$next_year'>".$months[$next_month]."</a></span>";
     $calendar_paging .= "</div>";
     return $calendar_paging;
 }
@@ -110,15 +85,15 @@ function makeCalendarPaging($month, $year)
 
 function draw_calendar($month, $year, $userLoggedIn, $eventObject)
 {
-    $events = $eventObject->getEventByGivenMonth( $month );
-    $registered = $eventObject->fetchAllRegisteredGivenMonth($month);
-
     $prev_month = ($month - 2 + 12) % 12 + 1;
     $running_day = date( 'N', mktime( 0, 0, 0, $month, 1, $year));
     $days_in_month = date( 't', mktime( 0, 0, 0, $month, 1, $year));
     $days_in_prev_month = date( 't', mktime( 0, 0, 0, $prev_month, 1, $year));
     $prev_days = $days_in_prev_month - $running_day + 2;
     $day_counter = 0;
+    $first_day = date("Y-m-d", mktime(0,0,0,$month, 1, $year));
+    $last_day = date("Y-m-d", mktime(0,0,0,$month, $days_in_month, $year));
+    $events = $eventObject->getEvents($first_day, $last_day);
 
     $calendar = "<div id='calendar'>";
 
@@ -151,11 +126,10 @@ function draw_calendar($month, $year, $userLoggedIn, $eventObject)
         $day_number = "<span class='day_number'>$list_day</span>";
 
         $calender_event = "";
-        if($events != null)
+        $running_date = date( 'Y-m-d', mktime( 0, 0, 0, $month, $list_day, $year ) );
+        if(isset($events[$running_date]))
         {
-            $current_date = date( 'Y-m-d', mktime( 0, 0, 0, $month, $list_day, $year ) );
-            $eventResult = getEventByDate($events, $current_date);
-            $calender_event = fetchRegisteredAtEvent($eventResult, $registered, $month, $year);
+            $calender_event = fetchRegisteredAtEvent($events[$running_date], $month, $year);
         }
 
         $calendar .= "<div class='day'>" . $day_number . $addEvent_btn . $calender_event ."</div>";

@@ -142,16 +142,8 @@ function searchForNews($search, $newsObject)
 
 function getTableEvents($eventObject)
 {
-    if (isset($_GET["sort"]) || isset($_GET['showAll']) )
-    {
-        $orderby = validateStringGET("sort") ? $_GET["sort"] : "eventDate";
-        $res = $eventObject->fetchAllEntries($orderby);
-    }
-    else
-    {
-        $month = date('m', strtotime('0 month'));
-        $res = $eventObject->getEventByGivenMonth($month);
-    }
+    $orderby = validateStringGET("sort") ? $_GET["sort"] : "eventDate";
+    $res = $eventObject->fetchAllEntries($orderby);
 
     $htmlEvents = "<h3 id='tableHead'>Veckans träningar</h3>
             <a href='event.php?a=1'> < Lägg till > </a>

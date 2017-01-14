@@ -135,7 +135,7 @@ function presentEvent($username, $eventObject)
 {
     $events = $eventObject->getEvents(date("Y-m-d"), date("Y-m-d", time()+6*86400));
     $highlightedDay = $_SESSION["highlighted"];
-    $highlightedDayEvent = (isset($events[$highlightedDay]) ? getHighlightedEvents($events[$highlightedDay]) : "null");
+    $highlightedDayEvent = (isset($events[$highlightedDay]) ? getHighlightedEvents($events[$highlightedDay]) : null);
     $eventPreview = getEventPreview($events);
     return createWeekCalendar($highlightedDayEvent, $highlightedDay, $eventPreview);
 }
@@ -230,6 +230,7 @@ function getRegisteredUsersTable($regUsers, $bus, $userID)
 
 function getEventPreview($events)
 {
+    $eventPreview = array();
     foreach($events as $date => $day)
     {
         $eventPreview[$date] = "";
