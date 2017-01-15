@@ -118,15 +118,15 @@ function draw_calendar($month, $year, $userLoggedIn, $eventObject)
     /* keep going with days.... */
     for($list_day = 1; $list_day <= $days_in_month; $list_day++)
     {
+        $running_date = date( 'Y-m-d', mktime( 0, 0, 0, $month, $list_day, $year ) );
         $addEvent_btn = "";
         if($userLoggedIn)
         {
-            $addEvent_btn = "<a class='eventAdd_btn' href='event.php?a=1&day=" . $list_day . "'><img src='img/add.png' width=18px height=18px></a>";
+            $addEvent_btn = "<a class='eventAdd_btn' href='event.php?a=1&day=" . $running_date . "'><img src='img/add.png' width=18px height=18px></a>";
         }
         $day_number = "<span class='day_number'>$list_day</span>";
 
         $calender_event = "";
-        $running_date = date( 'Y-m-d', mktime( 0, 0, 0, $month, $list_day, $year ) );
         if(isset($events[$running_date]))
         {
             $calender_event = fetchRegisteredAtEvent($events[$running_date], $month, $year);

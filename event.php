@@ -11,20 +11,16 @@ if( ! isset( $_SESSION["Previous_page"] ) )
     $_SESSION["Previous_page"] = isset( $_SERVER["HTTP_REFERER"] ) ? $_SERVER["HTTP_REFERER"] : 'http://localhost/Webb/Olacademy/calendar.php';
 }
 
-function validateDay($day)
+function validateDay()
 {
-    if( ! is_numeric( $day ) )
+    if(isset($_GET["day"]) && strtotime($_GET["day"]) != false)
+    {
+        return date("Y-m-d", strtotime($_GET["day"]));
+    }
+    else
     {
         return date( 'Y-m-d' );
     }
-
-    if( strlen( $day ) == 1 ) // 8 -> 08
-    {
-        $day = "0" . $day;
-    }
-
-    $day = date( 'Y-m' ) . "-" . $day;
-    return $day;
 }
 
 function fetchEventAndValidateGET($eventObject, $user)
@@ -48,7 +44,7 @@ function fetchEventAndValidateGET($eventObject, $user)
     }
     else if( validateIntGET( "a" ) )
     {
-        $date = isset( $_GET["day"] ) ? $date = validateDay( $_GET["day"] ) : $date = date( 'Y-m-d' );
+        $date = validateDay();
         $time = date( 'H:i:s', time() - date( 'Z' ) );
 
         $data = array("startTime" => $time, "eventDate" => $date, "button" => "btn_add", "action" => "Spara" );
