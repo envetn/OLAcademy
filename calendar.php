@@ -10,6 +10,10 @@ function showSingleCalendarEvent($user, $eventObject)
     {
         $condition["id"] = $_GET["event"];
         $event = $eventObject->fetchSingleEntryByValue( $condition );
+        if ($event == null)
+        {
+            return "";
+        }
         $createdBy = $user->fetchUsernameById($event->createdBy);
 
         $singleEvent = "<div class='eventPost' id='calendarRegisterEvent'>
@@ -22,9 +26,9 @@ function showSingleCalendarEvent($user, $eventObject)
                                 <input type='hidden' name='eventID' value=" . $event->id . ">
                                 <input type='hidden' name='date' value=" . $event->eventDate . ">";
 
+        $userId = isset( $_SESSION["uid"] ) ? $_SESSION["uid"] : false;
         if( $user->isLoggedIn() )
         {
-            $userId = isset( $_SESSION["uid"] ) ? $_SESSION["uid"] : false;
             $regCondition["userID"] = $userId;
             $regCondition["eventID"] = $event->id;
 
@@ -49,6 +53,12 @@ function showSingleCalendarEvent($user, $eventObject)
         else
         {
             $singleEvent .= "<span class='error'> Logga in för att anmäla dig</span>";
+        }
+
+        $registered = $eventObject->getRegisteredByValue(array('eventId' => $condition["id"]));
+        if(count($registered) > 0)
+        {
+            $singleEvent .= "<span class='eventInfo'>" . getRegisteredUsersTable($registered, $event->bus, $userId) . "</span>";
         }
         return $singleEvent .= "</div>";
     }
