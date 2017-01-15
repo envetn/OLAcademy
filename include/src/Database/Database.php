@@ -20,7 +20,7 @@ final class Database
 		}
 		catch (Exception $e)
 		{
-			throw $e; // for debugging
+			//throw $e; // for debugging
 			throw new PDOException('Could not connect');
 		}
 		// $this->db->SetAttribute(PDO::ATTR_DEFAULT_FETCH_MODE,
