@@ -3,16 +3,12 @@ include ("DataObject.php");
 include ("Registered.php");
 class EventObject extends DataObject
 {
-    private $today;
-    private $nextWeek;
     private $registered;
 
     function __construct()
     {
         parent::__construct( "events" );
 
-        $this->today = date( "Y-m-d" );
-        $this->nextWeek = date( "Y-m-d", time() + (6 * 24 * 60 * 60) );
         $this->registered = new Registered();
     }
 
@@ -42,6 +38,7 @@ class EventObject extends DataObject
     {
         $sql = "SELECT *, DATE_FORMAT(startTime, '%H:%i') AS startTime FROM events WHERE eventDate BETWEEN ? AND ? ORDER BY eventDate, startTime";
         $params = array($start, $end);
+
         $events = $this->database->queryAndFetch( $sql, $params );
         $result = array();
         if( $this->rowCount() > 0 )
@@ -55,16 +52,15 @@ class EventObject extends DataObject
         }
         return $result;
     }
-
+    
     public function updateEvents()
     {
-        $sql = "
-        SELECT id,eventDate,reccurance
+        $sql = "SELECT *
                 FROM events
                 WHERE eventDate BETWEEN ? AND ?
                 AND reccurance=1";
 
-        $currentDate = date( 'Y-m-d', strtotime( $this->today . ' -1 day' ) );
+        $currentDate = date( 'Y-m-d', strtotime( date( "Y-m-d" ) . ' -1 day' ) );
         $prev_date = date( 'Y-m-d', strtotime( $currentDate . ' -90 day' ) );
         $params = array($prev_date, $currentDate );
 
@@ -73,18 +69,23 @@ class EventObject extends DataObject
         {
             foreach( $res as $event )
             {
-                if( $event->reccurance === "1" )
-                {
                     // append 7 days.
                     $newDate = date( 'Y-m-d', strtotime( $event->eventDate . ' + 7 day' ) );
 
-                    $values = array('eventDate' => $newDate );
+                    $values = array('reccurance' => 0 );
                     $condition = array('id' => $event->id );
-                    parent::editSingleEntry( $values, $condition );
-
-                    $this->registered->removeSingleRegistered( $event->id );
+                    parent::editSingleEntry( $values, $condition ); //Change reccurence to 0 on old event
+                    
+                    $params = array('eventName' => $event->eventName,
+                    		'info' => $event->info,
+                    		'startTime' => $event->startTime,
+                    		'eventDate' => $newDate,
+                    		'reccurance' => "1",
+                    		'bus' => $event->bus,
+                    		'createdBy' => $event->createdBy );
+                    
+                    parent::insertEntyToDatabase($params);
                 }
-            }
         }
     }
 
@@ -138,7 +139,6 @@ class EventObject extends DataObject
         }
         return $result;
     }
-
 }
 
 ?>

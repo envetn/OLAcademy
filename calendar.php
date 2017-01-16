@@ -20,8 +20,10 @@ function showSingleCalendarEvent($user, $eventObject)
                             <div class='eventHeader'>
                                 <span class='eventName'>" . $event->eventName . "</span>
                                 <span class='eventTime'>" . $event->startTime . "</span>
-                            </div>
-                            <span class='eventInfo'>" . $event->info . "<br>Av: " .$createdBy. " </span>
+                            </div>";
+
+        
+        $singleEvent .= "<span class='eventInfo'>" . $event->info . "<br>Av: " .$createdBy. " </span>
                             <form method='POST' style='padding:7px;' >
                                 <input type='hidden' name='eventID' value=" . $event->id . ">
                                 <input type='hidden' name='date' value=" . $event->eventDate . ">";
@@ -33,19 +35,16 @@ function showSingleCalendarEvent($user, $eventObject)
             $regCondition["eventID"] = $event->id;
 
             $res = $eventObject->getRegisteredByValue( $regCondition );
+
             if( $res == null )
             {
                 $singleEvent .= "<button type='submit' class='btn btn-primary regInput' name='register' value='Anmäl'>Anmäl</button>";
             }
-            else
-            {
-                $singleEvent .= "<span class='info'> Du är redan anmäld</span>
-                            <button type='submit' class='btn btn-primary regInput' name='unRegister' value='Avanmäl'>Avanmäl</button>";
-            }
-
+            
             if($user->isAllowedToEditEvent($event->createdBy))
             {
-                $singleEvent .= "<button type='submit' style='float:right' class='btn btn-primary regInput' name='Edit' value='Edit'>Editera</button>";
+            	$singleEvent .= "<span class='right'><button type='submit' class='btn btn-primary regInput' name='Edit' value='Edit'>Editera</button>
+                				 <button type='submit' class='btn btn-primary regInput' name='Remove' value='Ta bort'>Ta bort</button></span>";
             }
 
             $singleEvent .= "</form>";

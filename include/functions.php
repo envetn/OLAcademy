@@ -332,7 +332,6 @@ if(isset($_SESSION["uid"]))
 }
 function registerUserToEvent($user, $eventObject)
 {
-
     if (isset($_POST["register"]))
     {
         if (! $user->isLoggedIn())
@@ -382,6 +381,12 @@ function registerUserToEvent($user, $eventObject)
     {
         $eventId = $_POST["eventID"];
         header("location: event.php?event=" . $eventId);
+    }
+    else if(isset($_POST["Remove"]))
+    {
+    	$eventId = $_POST["eventID"];
+    	$eventObject->removeEventAndRegisteredById($eventId);
+    	populateError("Träning borttagen");
     }
 }
 
@@ -451,9 +456,7 @@ function logError($message)
 
 function dump($value)
 {
-    echo "<div style='background:white'>";
-    print_r($value);
-    echo "</div>";
+	echo "<pre>" . print_r($value, true) . "</pre>";
 }
 
 function isCaptchaValid()

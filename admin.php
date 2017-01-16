@@ -147,16 +147,15 @@ function getTableEvents($eventObject)
 
     $htmlEvents = "<h3 id='tableHead'>Veckans träningar</h3>
             <a href='event.php?a=1'> < Lägg till > </a>
-            <a href='admin.php?c=1&showAll=true'> < Visa alla > </a>
             <table class='tableContent'>
             <tr class='admin_rowHead'>
                 <th>Event</th>
                <th id='thText'>Info</th>
-                <th><a href='admin.php?c=1&sort=startTime'> När &#8595;</a> </th>
-                <th><a href='admin.php?c=1&sort=eventDate'> Datum &#8595;</a> </th>
+                <th><a href='admin.php?c=1&sort=startTime desc'> När &#8595;</a> </th>
+                <th><a href='admin.php?c=1&sort=eventDate desc'> Datum &#8595;</a> </th>
                 <th>Anmälda</th>
-                <th><a href='admin.php?c=1&sort=reccurance'> Återkommande &#8595;</a></th>
-                <th><a href='admin.php?c=1&sort=bus'> Buss &#8595;</a></th>
+                <th><a href='admin.php?c=1&sort=reccurance desc'> Återkommande &#8595;</a></th>
+                <th><a href='admin.php?c=1&sort=bus desc'> Buss &#8595;</a></th>
                 <th>Edit</th>
             </tr>";
     foreach ( $res as $events )
@@ -293,18 +292,15 @@ function generateSelect($privilege)
     switch ($privilege)
     {
         case 2 :
-            $html .= "<option value='2' selected='selected' > Admin </option> <option value='1'> Användare </option><option value='0' > Student </option><option value='-1'> Blockad</option>";
+            $html .= "<option value='2' selected='selected' > Admin </option> <option value='1'> Användare </option><option value='0' > Student </option>";
             break;
 
         case 1 :
-            $html .= "<option value='2' > Admin </option> <option value='1' selected='selected' > Användare </option><option value='0' > Student </option><option value='-1'> Blockad</option>";
+            $html .= "<option value='2' > Admin </option> <option value='1' selected='selected' > Användare </option><option value='0' > Student </option>";
             break;
 
         case 0 :
-            $html .= "<option value='2' > Admin </option> <option value='1'> Användare </option><option value='0' selected='selected'  > Student </option><option value='-1'> Blockad</option>";
-            break;
-        case -1 :
-            $html .= "<option value='2' > Admin </option> <option value='1'> Användare </option><option value='0'  > Student </option><option value='-1' selected='selected' > Blockad</option>";
+            $html .= "<option value='2' > Admin </option> <option value='1'> Användare </option><option value='0' selected='selected'  > Student </option>";
             break;
     }
     $html .= "  </select> </td>";

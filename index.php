@@ -34,7 +34,7 @@ if (validateIntGET("r"))
     header("Location: index.php");
 }
 
-//'. /*$GLOBAL["error"]*/ .'
+/*$GLOBAL["error"]*/
 displayError();
 echo '<div class="row">';
 echo '<article class="col-sm-4 col-sm-push-8 elementBox"><h1>Träningar</h1>' . presentEvent($username, $eventObject) . ' </article>';
