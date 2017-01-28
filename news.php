@@ -106,8 +106,6 @@ function getEditForm($newsObject)
 
 function getArticleSideBar($newsObject, $offset, $limit)
 {
-    $res = $newsObject->fetchEntryWithOffset( $offset, $limit );
-
     $side_article = "";
     if( $newsObject->isAllowedToDeleteEntry( "" ) ) // only admin
     {

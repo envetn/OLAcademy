@@ -38,10 +38,10 @@ function presentPost($guestbookObject, $offset, $limit, $isAdmin)
                     <div class='guestbookHeader'>
                         <span class='guestbookName'>" . $row->name . "</span>
                         <span class='guestbookDate'>" . $row->added . "</span>";
-                    if($isAdmin)
-                    {
-                        $post .= "<a href='guestbook.php?r=".$row->id."'> <img src='img/cross.png' width=18px height=18px style='float:right'/></a>";
-                    }
+		if($isAdmin)
+        {
+        	$post .= "<a href='guestbook.php?r=".$row->id."'> <img src='img/cross.png' width=18px height=18px style='float:right'/></a>";
+        }
         $post .= "</div>
                   <pre class='guestbookText'>" . $text . "</pre>
                   </div>";
@@ -49,18 +49,15 @@ function presentPost($guestbookObject, $offset, $limit, $isAdmin)
     return $post;
 }
 
-
 function presentNews($newsObject, $offset, $limit, $showEdit)
 {
     $res = $newsObject->fetchEntryWithOffset($offset, $limit);
     $news = "";
     foreach($res as $row)
     {
-        $content = $content = \Michelf\Markdown::defaultTransform($row->content);
-        if(strlen($content) > 400)
-        {
-            $content =  substr($content, 0, 400) . " ...";
-        }
+        $content = substrContent($row->content, 400);
+        $content = \Michelf\Markdown::defaultTransform($content);
+
         $news .=
                 "<div class='newsPost'>
                     <a href='news.php?offset=$offset&amp;p=$row->id'><span class='boxLink'></span></a>
@@ -80,6 +77,27 @@ function presentNews($newsObject, $offset, $limit, $showEdit)
     return $news;
 }
 
+function substrContent($content, $concatValue, $link = "")
+{
+	if(strlen($content) > $concatValue)
+	{
+		$http = '<a href="http';
+		$strpos = strpos($content, $http);
+
+		if($strpos != 0 && $strpos < $concatValue)
+		{
+			$concatValue = $strpos;
+
+		}
+
+		$subStrEnding = $link != ""
+				? "<a href='$link'> Mer info</a>"
+				: "...";
+		$content =  substr($content, 0, $concatValue) . $subStrEnding;
+	}
+	return $content;
+}
+
 /*
  * Paging
  *
@@ -92,8 +110,13 @@ function paging($limit, $offset, $nrOfRows, $numbers=5, $currentUrl="") // admin
     $cur_page = $offset/$limit + 1;
     $paging = "";
 
-    $j = $numbers >= $num_page || $cur_page <= ceil($numbers/2) ? 0 : $cur_page - ceil($numbers/2);
-    if($cur_page > $num_page-ceil($numbers/2) && $num_page - $numbers > 0) $j = $num_page - $numbers;
+    $j = $numbers >= $num_page || $cur_page <= ceil($numbers/2)
+    ? 0
+    : $cur_page - ceil($numbers/2);
+    if($cur_page > $num_page-ceil($numbers/2) && $num_page - $numbers > 0)
+    {
+    	$j = $num_page - $numbers;
+    }
 
     if($nrOfRows > $limit)
     {
@@ -135,7 +158,10 @@ function presentEvent($username, $eventObject)
 {
     $events = $eventObject->getEvents(date("Y-m-d"), date("Y-m-d", time()+6*86400));
     $highlightedDay = $_SESSION["highlighted"];
-    $highlightedDayEvent = (isset($events[$highlightedDay]) ? getHighlightedEvents($events[$highlightedDay]) : null);
+    $highlightedDayEvent = (isset($events[$highlightedDay])
+    		? getHighlightedEvents($events[$highlightedDay])
+    		: null);
+
     $eventPreview = getEventPreview($events);
     return createWeekCalendar($highlightedDayEvent, $highlightedDay, $eventPreview);
 }
@@ -161,13 +187,15 @@ function getHighlightedEvents($events)
     foreach ($events as $event)
     {
         $eventData = $event['eventData'];
+        $content = substrContent($eventData->info, 140, "calendar.php?event=" . $eventData->id);
+
         $html .= "
             <div class='eventPost'>
                 <div class='eventHeader'>
                     <span class='eventName'>" .$eventData->eventName . "</span>
                     <span class='eventTime'>" .$eventData->startTime. "</span>
                 </div>
-                <span class='eventInfo'>" .$eventData->info. "</span>
+                <span class='eventInfo'>" .$content. "</span>
             </div>
             <form method='POST' action='index.php'>
                 <input type='hidden' name='eventID' value=" . $eventData->id . ">
@@ -214,7 +242,7 @@ function getRegisteredUsersTable($regUsers, $bus, $userID)
     foreach($regUsers as $regUser)
     {
         $html .= "<tr class='regTableRow'><td class='regTableName'>" . $regUser->name .
-        "</td><td class='regTableComment'>" . substr($regUser->comment, 0, 140) . "</td>";
+        "</td><td class='regTableComment'>" . substrContent($regUser->comment, 140) . "</td>";
         if($bus == 1)
         {
             $html .= "<td class='regTableBus'>" . $regUser->bus . "</td>";
@@ -263,16 +291,16 @@ function makeLinks($text)
 */
 function getExtensionOnUrl()
 {
-try
-{
-    preg_match("/\?.*/", $_SERVER["HTTP_REFERER"], $result);
-    $extension = implode($result);
-}
-catch(Exception $e)
-{
-    $extension = $e;
-}
-return $extension;
+	try
+	{
+	    preg_match("/\?.*/", $_SERVER["HTTP_REFERER"], $result);
+	    $extension = implode($result);
+	}
+	catch(Exception $e)
+	{
+	    $extension = $e;
+	}
+	return $extension;
 }
 
 /*
@@ -288,34 +316,34 @@ return $extension;
 
 function showLoginLogout($user)
 {
-if(isset($_COOKIE["rememberme_olacademy"]))
-{
-    $user->getUserByCookie();
-}
-else if(isset($_POST["login"]) && !( isset($_SESSION["uid"]) && isset($_SESSION["username"]) ) )
-{
-    $email = strip_tags($_POST["email"]);
+	if(isset($_COOKIE["rememberme_olacademy"]))
+	{
+	    $user->getUserByCookie();
+	}
+	else if(isset($_POST["login"]) && !( isset($_SESSION["uid"]) && isset($_SESSION["username"]) ) )
+	{
+	    $email = strip_tags($_POST["email"]);
 
-    if(!$user->login($email,$_POST["passwd"]))
-    {
-        populateError("Fel lösenord eller email <a href='user.php?renew'>Glömt lösenord?</a>");
-    }
-    else
-    {
-        if($_SESSION["changePassword"] == 1)
-        {
-            header("location: user.php");
-        }
-        //header("location: ". $_SERVER["PHP_SELF"]);
-    }
-}
-else if(isset($_POST["Registera"]))
-{
-    header("location: user.php");
-}
+	    if(!$user->login($email,$_POST["passwd"]))
+	    {
+	        populateError("Fel lösenord eller email <a href='user.php?renew'>Glömt lösenord?</a>");
+	    }
+	    else
+	    {
+	        if($_SESSION["changePassword"] == 1)
+	        {
+	            header("location: user.php");
+	        }
+	        //header("location: ". $_SERVER["PHP_SELF"]);
+	    }
+	}
+	else if(isset($_POST["Registera"]))
+	{
+	    header("location: user.php");
+	}
 
-if(isset($_SESSION["uid"]))
-{
+	if(isset($_SESSION["uid"]))
+	{
     $form = "<form method='post' class='navbar-form navbar-right'><a href='user.php'>" . $_SESSION["username"] . "</a>&nbsp;&nbsp;&nbsp;<button type='submit' class='btn btn-primary' name='logout'>Logout</button></form>";
     if(isset($_POST["logout"]))
         {
