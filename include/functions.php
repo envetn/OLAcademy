@@ -51,30 +51,33 @@ function presentPost($guestbookObject, $offset, $limit, $isAdmin)
 
 function presentNews($newsObject, $offset, $limit, $showEdit)
 {
-    $res = $newsObject->fetchEntryWithOffset($offset, $limit);
-    $news = "";
-    foreach($res as $row)
-    {
-        $content = substrContent($row->content, 400);
-        $content = \Michelf\Markdown::defaultTransform($content);
+	$res = $newsObject->fetchEntryWithOffset($offset, $limit);
+	$news = "";
+	foreach($res as $row)
+	{
+		$content = $content = \Michelf\Markdown::defaultTransform($row->content);
+		if(strlen($content) > 400)
+		{
+			$content =  substr($content, 0, 400) . " ...";
+		}
 
-        $news .=
-                "<div class='newsPost'>
-                    <a href='news.php?offset=$offset&amp;p=$row->id'><span class='boxLink'></span></a>
-                    <div class='newsHeader'>
-                        <span class='newsTitle'>".$row->title."</span>";
-        if ($showEdit && $newsObject->isAllowedToDeleteEntry("")) // admin, show all
-        {
-            $news .= "<a class='newsEdit' href='news.php?action=edit&amp;id=" . $row->id . "'><img src='img/edit.png' width=18px height=18px></a>";
-            $news .= "<a class='newsEdit' href='news.php?action=remove&amp;id=" . $row->id . "'><img src='img/cross.png' width=18px height=18px></a>";
-        }
-        $news .="<span class='newsAdded'>" . $row->added . " </span>
+		$news .=
+		"<div class='newsPost'>
+		<a href='news.php?offset=$offset&amp;p=$row->id'><span class='boxLink'></span></a>
+		<div class='newsHeader'>
+		<span class='newsTitle'>".$row->title."</span>";
+		if ($showEdit && $newsObject->isAllowedToDeleteEntry("")) // admin, show all
+		{
+			$news .= "<a class='newsEdit' href='news.php?action=edit&amp;id=" . $row->id . "'><img src='img/edit.png' width=18px height=18px></a>";
+			$news .= "<a class='newsEdit' href='news.php?action=remove&amp;id=" . $row->id . "'><img src='img/cross.png' width=18px height=18px></a>";
+		}
+		$news .="<span class='newsAdded'>" . $row->added . " </span>
                 </div>
                 <pre class='newsText'>" . $content . "</pre>
                 </div>";
 
-    }
-    return $news;
+	}
+	return $news;
 }
 
 function substrContent($content, $concatValue, $link = "")

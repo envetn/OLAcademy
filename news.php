@@ -48,7 +48,6 @@ function validateParameters()
 {
     $title = strip_tags( $_POST["title"] );
     $content = strip_tags( $_POST["content"] );
-    $content = makeLinks( $content );
     $date = date( "Y-m-d H:i:s" );
     $author = isset( $_SESSION["username"] ) ? $_SESSION["username"] : "";
 
@@ -95,7 +94,7 @@ function getEditForm($newsObject)
                 <input name='id' value='" . $id . "' type='hidden'/>
                 <input name='title' value='" . $res->title . "' type='text'/><br/>
                 <textarea name='content' value='' type='text' cols='50' rows='5'>" . $res->content . "</textarea><br/>
-                <label/>Av : " . $res->title . "</label><br/>
+                <label/>Av : " . $res->author . "</label><br/>
                 <input type='submit' name='btn_Edit' id='btn_addnew' value='Spara'/>
                 </form>";
         }
@@ -165,7 +164,10 @@ try
     if( empty( $singleArticle ) )
     {
         $res = validateSelectedPage( $newsObject );
-        $content = \Michelf\Markdown::defaultTransform( $res->content ); // Need to format text in someway..
+
+
+        $content = \Michelf\Markdown::defaultTransform(  $res->content  ); // Need to format text in someway..
+        $content = makeLinks($content );
 
         $singleArticle = "<article id='singleArticle'><h3 style=''>" . $res->title . "</h3><hr style='width:80%;'/>";
         $singleArticle .= "<pre class='newsText'>" . $content . "</pre>";
