@@ -15,4 +15,8 @@ $GLOBAL['pageTitle']                    = "OL-Academy";
 $_SESSION['error'] = "";
 $_SESSION['info'] = "";
 
+/*$URL = 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'];
+if (!isset($_SERVER['HTTPS']))
+    header("Location: $URL");
+ */
 ?>
