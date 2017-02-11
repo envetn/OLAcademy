@@ -182,12 +182,12 @@ class UserObject extends DataObject
         return '<form class="loginForm" method="post">
                 <div class="loginGroup">
                 <span class="inputGroup">
-                    <span class="loginIcon"><img src="img/user.png" alt="user" /></span>
-                    <input id="email" type="email" class="loginField" name="email" value="" placeholder="E-post">
+                    <span class="loginIcon"><img src="img/user.png" alt="user" />
+                    </span><input id="email" type="email" class="loginField" name="email" value="" placeholder="E-post">
                 </span>
                 <span class="inputGroup">
-                <span class="loginIcon"><img src="img/lock.png" alt="pwd" /></span>
-                    <input id="password" type="password" class="loginField" name="passwd" value="" placeholder="Lösenord">
+                    <span class="loginIcon"><img src="img/lock.png" alt="pwd" />
+                    </span><input id="password" type="password" class="loginField" name="passwd" value="" placeholder="Lösenord">
                 </span>
                 </div>
 
