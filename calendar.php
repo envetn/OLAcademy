@@ -38,7 +38,12 @@ function showSingleCalendarEvent($user, $eventObject)
 
             if( $res == null )
             {
-                $singleEvent .= "<button type='submit' class='btn btn-primary regInput' name='register' value='Anmäl'>Anmäl</button>";
+		$singleEvent .= "<input type='text' class='regInput' name='comment' placeholder='Kommentar'>";
+		if($event->bus == 1 )
+		{
+			$singleEvent .= "<label class='busLabel'>Bussplats</label><input type='checkbox' name='bus' value='Ja' checked>";
+		}
+                $singleEvent .= "<br><button type='submit' class='btn btn-primary regInput' name='register' value='Anmäl'>Anmäl</button>";
             }
             
             if($user->isAllowedToEditEvent($event->createdBy))
