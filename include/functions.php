@@ -565,4 +565,40 @@ function getUrlPath()
 {
     return $_SERVER["PHP_SELF"] . "?" . $_SERVER["QUERY_STRING"];
 }
+
+function createRSSFeed()
+{
+    $xmlfile = fopen("rssfeed.xml", "w") or die("Unable to open file!");
+    $content = "<?xml version=\"1.0\" encoding=\"utf-8\"?>
+<rss version=\"2.0\">
+<channel> 
+<title>OLAcademy RSS Feed</title>
+<link>olacademy.se</link>
+<description>Idrottsakademins OL-sektion</description>"; 
+    $eventObject = new EventObject();
+    $events = $eventObject->getEvents(date("Y-m-d"), date("Y-m-d", time()+7*86400));
+    foreach ($events as $eventDays)
+    {
+	foreach ($eventDays as $event)
+	{	
+	    $event = $event['eventData'];
+	    $content .= "
+<item>
+    <title>$event->eventDate - $event->eventName</title>
+    <link>https://olacademy.se</link>
+    <guid>$event->id</guid>
+    <pubDate>".date("r")."</pubDate>
+    <description>$event->info</description>
+</item>
+";
+	}
+    }
+    $content .= "
+</channel>
+</rss>
+";
+
+    fwrite($xmlfile, $content);
+    fclose($xmlfile);
+}
 ?>

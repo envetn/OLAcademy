@@ -116,7 +116,8 @@ function validateEventAction($eventObject)
             else if( $choice === "Spara" )
             {
                 $success = $eventObject->insertEntyToDatabase( $params );
-            }
+		createRSSFeed();
+	    }
         }
 
         if( $success )

@@ -85,7 +85,8 @@ class EventObject extends DataObject
                     		'createdBy' => $event->createdBy );
                     
                     parent::insertEntyToDatabase($params);
-                }
+		    createRSSFeed();
+	    }
         }
     }
 
