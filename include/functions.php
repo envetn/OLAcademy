@@ -576,7 +576,7 @@ function createRSSFeed()
 <link>olacademy.se</link>
 <description>Idrottsakademins OL-sektion</description>"; 
     $eventObject = new EventObject();
-    $events = $eventObject->getEvents(date("Y-m-d"), date("Y-m-d", time()+7*86400));
+    $events = $eventObject->getEvents(date("Y-m-d"), date("Y-m-d", time()+3*86400));
     foreach ($events as $eventDays)
     {
 	foreach ($eventDays as $event)
@@ -584,9 +584,9 @@ function createRSSFeed()
 	    $event = $event['eventData'];
 	    $content .= "
 <item>
-    <title>$event->eventDate - $event->eventName</title>
+    <title>$event->eventDate - $event->eventName $event->startTime</title>
     <link>https://olacademy.se</link>
-    <guid>$event->id</guid>
+    <guid>https://olacademy.se/calendar.php?event=$event->id</guid>
     <pubDate>".date("r")."</pubDate>
     <description>$event->info</description>
 </item>
