@@ -8,6 +8,7 @@ $newsObject = new NewsObject();
 $guestbookObject = new GuestbookObject();
 
 $eventObject->updateEvents();
+createRSSFeed();
 
 if (validateStringGET("highlighted"))
 {
