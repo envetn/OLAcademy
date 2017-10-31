@@ -1,4 +1,3 @@
 # OLAcademy
-Website for ol academy
-
-I'M A MOTHERF**KING UNICORN!
+Website for OL-Academy  
+https://olacademy.se/
